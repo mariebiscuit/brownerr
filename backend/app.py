@@ -1,18 +1,11 @@
 from flask import Flask
-from handlers.database import *
+from handlers.database.userAPI import user
 
 def create_app(config_name=None):
     app = Flask(__name__)
-    
-    # load config file
-    app.config.from_object(config.get(config_name or 'dev'))
 
     # register blueprints
-    # with app.app_context():
-    app.register_blueprint(authentication)
-    app.register_blueprint(product)
     app.register_blueprint(user)
-    app.register_blueprint(recommender)
 
     @app.route('/',  methods=['GET'])
     def index():
@@ -20,8 +13,7 @@ def create_app(config_name=None):
 
     return app
 
-# EB looks for an 'application' callable by default.
-application = app = create_app()
+app = create_app()
 
 # run the app.
 if __name__ == "__main__":
