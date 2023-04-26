@@ -1,8 +1,7 @@
-import json
 import os.path
 from os import abort
 
-from flask import Flask, render_template, jsonify, request
+from flask import Flask, jsonify, request
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import func, CheckConstraint
 
@@ -23,7 +22,8 @@ class User(db.Model):
     name = db.Column(db.String(100), nullable=False)
     bio = db.Column(db.Text)
     email = db.Column(db.String(80), unique=True, nullable=False)
-    rating = db.Column(db.Float)
+    rating_provider = db.Column(db.Float) # Should be an average of all reviews and cannot be modified by the user
+    rating_recipient = db.Column(db.Float) # Should be an average of all reviews and cannot be modified by the user
     created_at = db.Column(db.DateTime(timezone=True), server_default=func.now())
 
     __table_args__ = (
@@ -37,7 +37,8 @@ class User(db.Model):
             'name': self.name,
             'bio': self.bio,
             'email': self.email,
-            'rating': self.rating
+            'rating_provider': self.rating_provider,
+            'rating_recipient': self.rating_recipient
             # 'created at': self.created_at,
         }
 
@@ -46,13 +47,35 @@ class User(db.Model):
         return f'<User {self.name}>'
 
 
+# Creating the schema for Transaction table in the database
+class Transcation(db.Model):
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    provider = db.Column(db.Integer) # foreign key that should point to id in User
+    recipient = db.Column(db.Integer) # foreign key that should point to id in User
+    rating_provider = db.Column(db.Float) # Should be an average of all reviews and cannot be modified by the user
+    rating_recipient = db.Column(db.Float) # Should be an average of all reviews and cannot be modified by the user
+    transaction_timestamp = db.Column(db.DateTime(timezone=True), server_default=func.now())
+
+    # Serializing the response
+    def to_json(self):
+        return {
+            'id': self.id,
+            'provider': self.provider,
+            'recipient': self.recipient,
+            'rating_provider': self.rating_provider,
+            'rating_recipient': self.rating_recipient,
+            'transaction_timestamp': self.transaction_timestamp,
+            # 'created at': self.created_at,
+        }
+
+
 # Creating the database with above defined table(s)
 db.create_all()
+
 
 """
 -------- Read Functionality --------
 """
-
 
 # Seeing all users in the database
 @app.route("/user/list/", methods=["GET"])
@@ -76,6 +99,13 @@ def get_users(name):
     users = User.query.filter_by(name=name).all()
     users_json = [user.to_json() for user in users]
     return jsonify(users_json)
+
+
+# Seeing all transactions in the database
+@app.route("/transaction/list/", methods=["GET"])
+def get_all_users():
+    transactions = Transcation.query.all()
+    return jsonify([transaction.to_json() for transaction in transactions])
 
 
 """
