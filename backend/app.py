@@ -19,7 +19,7 @@ app.app_context().push()
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    first_name = db.Column(db.String(100), nullable=False, primary_key=True)
+    first_name = db.Column(db.String(100), nullable=False)
     last_name = db.Column(db.String(100), nullable=False)
     email = db.Column(db.String(80), unique=True, nullable=False)
     created_at = db.Column(db.DateTime(timezone=True), server_default=func.now())
@@ -43,9 +43,24 @@ db.create_all()
 
 
 @app.route("/user/list", methods=["GET"])
-def get_users():
+def get_all_users():
     users = User.query.all()
     return jsonify([user.to_json() for user in users])
+
+
+@app.route("/user/<int:id_user>", methods=["GET"])
+def get_user(id_user):
+    user = User.query.get(id_user)
+    if user is None:
+        abort()
+    return jsonify(user.to_json())
+
+
+@app.route("/user/name/<first_name>", methods=["GET"])
+def get_users(first_name):
+    users = User.query.filter_by(first_name=first_name).all()
+    users_json = [user.to_json() for user in users]
+    return jsonify(users_json)
 
 
 @app.route("/user/delete", methods=["DELETE"])
@@ -58,20 +73,27 @@ def delete_users():
 
 @app.route("/user/add", methods=["POST"])
 def create_user():
-    if not request.json:
-        abort()
+    try:
+        data = request.get_json()
+        id = data['id']
+        first_name = data['first_name']
+        last_name = data['last_name']
+        email = data['email']
+        bio = data['bio']
 
-    user = User(
-        id=request.json.get('id'),
-        first_name=request.json.get('first_name'),
-        last_name=request.json.get('last_name'),
-        email=request.json.get('email'),
-        bio=request.json.get('bio')
-    )
+        # Create a new User object
+        user = User(id=id,
+                    first_name=first_name,
+                    last_name=last_name,
+                    email=email,
+                    bio=bio)
+        db.session.add(user)
+        db.session.commit()
 
-    db.session.add(user)
-    db.session.commit()
-    return jsonify(user.to_json()), 201
+        return jsonify({'message': 'User added successfully'})
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'error': str(e)}), 500
 
 
 # @app.route("/user/<int:id>", methods=["GET"])
