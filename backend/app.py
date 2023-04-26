@@ -2,6 +2,7 @@ import json
 import os.path
 from os import abort
 
+
 from flask import Flask, render_template, jsonify, request
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import func
@@ -62,6 +63,10 @@ def get_users(first_name):
     users_json = [user.to_json() for user in users]
     return jsonify(users_json)
 
+
+@app.route('/user/create', methods=["GET", "POST"])
+def create():
+    return render_template('index.html')
 
 @app.route("/user/delete", methods=["DELETE"])
 def delete_users():
