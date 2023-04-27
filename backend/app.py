@@ -1,7 +1,7 @@
 import os.path
 from os import abort
 
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, render_template
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import func, CheckConstraint
 
@@ -22,12 +22,14 @@ class User(db.Model):
     name = db.Column(db.String(100), nullable=False)
     bio = db.Column(db.Text)
     email = db.Column(db.String(80), unique=True, nullable=False)
-    rating_provider = db.Column(db.Float) # Should be an average of all reviews and cannot be modified by the user
-    rating_recipient = db.Column(db.Float) # Should be an average of all reviews and cannot be modified by the user
+    rating_provider = db.Column(db.Float)  # Should be an average of all reviews and cannot be modified by the user
+    rating_recipient = db.Column(db.Float)  # Should be an average of all reviews and cannot be modified by the user
+    available_provider = db.Column(db.Integer)  # 0 if unavailable, 1 if available
     created_at = db.Column(db.DateTime(timezone=True), server_default=func.now())
 
     __table_args__ = (
-        CheckConstraint('rating >= 1.0 AND rating <= 5.0', name='rating_range'),
+        CheckConstraint('rating_provider >= 1.0 AND rating_recipient <= 5.0', name='rating_recipient_range'),
+        CheckConstraint('rating_recipient >= 1.0 AND rating_recipient <= 5.0', name='rating_recipient_range'),
     )
 
     # Serializing the response
@@ -38,8 +40,9 @@ class User(db.Model):
             'bio': self.bio,
             'email': self.email,
             'rating_provider': self.rating_provider,
-            'rating_recipient': self.rating_recipient
-            # 'created at': self.created_at,
+            'rating_recipient': self.rating_recipient,
+            'available_provider': self.available_provider,
+            'created at': self.created_at
         }
 
     # Associating the records to user's first name
@@ -50,32 +53,33 @@ class User(db.Model):
 # Creating the schema for Transaction table in the database
 class Transcation(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    provider = db.Column(db.Integer) # foreign key that should point to id in User
-    recipient = db.Column(db.Integer) # foreign key that should point to id in User
-    rating_provider = db.Column(db.Float) # Should be an average of all reviews and cannot be modified by the user
-    rating_recipient = db.Column(db.Float) # Should be an average of all reviews and cannot be modified by the user
+    job_id = db.Column(db.Integer)  # foreign key that should point to id in Job
+    provider = db.Column(db.Integer)  # foreign key that should point to id in User
+    recipient = db.Column(db.Integer)  # foreign key that should point to id in User
+    rating_provider = db.Column(db.Float)  # Should be an average of all reviews and cannot be modified by the user
+    rating_recipient = db.Column(db.Float)  # Should be an average of all reviews and cannot be modified by the user
     transaction_timestamp = db.Column(db.DateTime(timezone=True), server_default=func.now())
 
     # Serializing the response
     def to_json(self):
         return {
             'id': self.id,
+            'job_id': self.job_id,
             'provider': self.provider,
             'recipient': self.recipient,
             'rating_provider': self.rating_provider,
             'rating_recipient': self.rating_recipient,
             'transaction_timestamp': self.transaction_timestamp,
-            # 'created at': self.created_at,
         }
 
 
 # Creating the database with above defined table(s)
 db.create_all()
 
-
 """
 -------- Read Functionality --------
 """
+
 
 # Seeing all users in the database
 @app.route("/user/list/", methods=["GET"])
@@ -103,7 +107,7 @@ def get_users(name):
 
 # Seeing all transactions in the database
 @app.route("/transaction/list/", methods=["GET"])
-def get_all_users():
+def get_all_transcations():
     transactions = Transcation.query.all()
     return jsonify([transaction.to_json() for transaction in transactions])
 
@@ -117,86 +121,49 @@ def get_all_users():
 def create():
     data = request.get_json()
     name = data['name']
-    email = data['email']
     bio = data['bio']
+    email = data['email']
+    rating_provider = data['rating_provider']
+    rating_recipient = data['rating_recipient']
+    available_provider = data['available_provider']
 
     # Create a new User object
     user = User(name=name,
+                bio=bio,
                 email=email,
-                bio=bio)
+                rating_provider=rating_provider,
+                rating_recipient=rating_recipient,
+                available_provider=available_provider)
     db.session.add(user)
     db.session.commit()
-    return {'message': 'User added succesfully'}
-    # return render_template('add_user.html')
-
-
-#
-# @app.route("/user/add", methods=["POST"])
-# def create_user():
-#     try:
-#         data = request.get_json()
-#         id = data['id']
-#         first_name = data['first_name']
-#         last_name = data['last_name']
-#         email = data['email']
-#         bio = data['bio']
-#
-#         # Create a new User object
-#         user = User(id=id,
-#                     first_name=first_name,
-#                     last_name=last_name,
-#                     email=email,
-#                     bio=bio)
-#         db.session.add(user)
-#         db.session.commit()
-#
-#         return jsonify({'message': 'User added successfully'})
-#     except Exception as e:
-#         db.session.rollback()
-#         return jsonify({'error': str(e)}), 500
+    return {'message': 'User added successfully.'}
 
 
 """
-@app.route("/user/delete", methods=["DELETE"])
+-------- Delete Functionality --------
+"""
+
+@app.route("/user/delete/all/", methods=["DELETE"])
 def delete_users():
     users = User.query.all()
-    db.session.delete(users)
+    for user in users:
+        db.session.delete(user)
     db.session.commit()
-    return jsonify({'result': True})
-"""
+    return {'message': 'All users deleted successfully.'}
 
-# @app.route("/user/<int:id>", methods=["GET"])
-# def get_user(id):
-#     user = User.query.get(id)
-#     if user is None:
-#         abort()
-#     return jsonify(user.to_json())
 
-# def index():
-#     users = User.query.all()
-#     return render_template('add_user.html', users=users)
-#
-#
-# @app.route("/user")
-# def hello():
-#     return "Commands available for user is: adding a description for the service they are offering, " \
-#            "deleting their account, updating their bio and etc. "
-#
-#
-# @app.route("/user/create/<username>")
-# def user_create(username):
-#     return f"Adding a user with username {username} to the database...."
-#
-#
-# @app.route("/user/delete/<username>")
-# def user_delete(username):
-#     return f"Removing the user with username {username} from the database..."
-#
-#
-# @app.route("/user/bio/<username>/<bio>")
-# def user_bio(username, bio):
-#     return f"Updating bio for user with username {username}. Adding the following bio: '{bio}'"
-#
-#
+@app.route("/user/delete/<int:id>/", methods=["DELETE"])
+def delete_user(id):
+    user = User.query.get(id)
+    if user is None:
+        abort()
+    db.session.delete(user)
+    db.session.commit()
+    return {'message': 'User deleted successfully.'}
+
+
+
+
+
 if __name__ == "__main__":
     app.run(debug=True, host="0.0.0.0", port=2000)

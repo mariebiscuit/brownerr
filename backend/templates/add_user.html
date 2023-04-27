@@ -30,7 +30,7 @@
             };
             $.ajax({
                 type: 'POST',
-                url: '/user/create',
+                url: '/user/create/',
                 data: JSON.stringify(formData),
                 contentType: 'application/json',
                 success: function(data) {
