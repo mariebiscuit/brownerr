@@ -77,7 +77,6 @@ class Transaction(db.Model):
         }
 
 
-
 """
 -------- Read Functionality --------
 """
@@ -163,6 +162,31 @@ def delete_user(id):
     db.session.delete(user)
     db.session.commit()
     return {'message': 'User deleted successfully.'}
+
+
+@app.route("/transaction/delete/all", methods=["DELETE"])
+def delete_transactions():
+    transactions = Transaction.query.all()
+    for transaction in transactions:
+        db.session.delete(transaction)
+    db.session.commit()
+    return {'message': 'All transactions deleted successfully.'}
+
+
+"""
+-------- Update Functionality --------
+"""
+
+
+@app.route("/user/update/<int:id>/", methods=["PUT"])
+def update_user_bio(id):
+    user = User.query.get(id)
+    if user is None:
+        abort()
+    user.bio = request.json.get('bio', user.bio)
+    user.available_provider = request.json.get('available_provider', user.available_provider)
+    db.session.commit()
+    return {'message': 'Bio and availability successfully updated.'}
 
 
 if __name__ == "__main__":
