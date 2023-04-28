@@ -4,104 +4,13 @@
   text-align: center;
 }
 
-.repl {
-  position: relative;
-  height: 100vh;
-}
-
-@media screen and ( max-width: 800px ) {
-  .repl-history{
-    height: 50% !important;
-  }
-  .header{
-    font-size: 5vh !important;
-  }
-  
-}
-
-@media screen and ( max-width: 400px ) {
-  .repl-history{
-    height: 30% !important;
-  }
-  .header{
-    font-size: 5vh !important;
-  }
-  
-  
-}
-
-
-.repl-history {
-  height: 70%;
-  margin: auto;
-  display: block;
-  overflow: auto;
-  display: flex;
-  flex-direction: column-reverse;
-}
-
-.instructions {
-  color:rgb(132, 132, 132);
-  font-style: italic;
-  font-size: 12px;
-}
 
 .header{
   max-height: 10%;
 }
 
-.message {
-  margin: 0 10px;
-  padding: 5px 5px;
-  border-bottom: 1px solid rgb(192, 192, 192);
-}
-.innerMessage {
-  padding: 10px 10px;
-}
-.repl-input {
-  padding-top: 10px;
-  margin: auto;
-  height: 10%;
-}
-
-.repl-command-box {
-  width: 90%;
-  margin: 10px 10px;
-  display: block;
-}
 
 
-table {
-  border-collapse: collapse;
-  border: 1px solid lightgray;
-  margin: 20px 20px;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-th {
-  border: 1px solid #dddddd;
-  text-align: left;
-  padding: 8px;
-  font-weight: 700;
-}
-
-td {
-  border: 1px solid #dddddd;
-  text-align: left;
-  padding: 8px;
-  font-weight: 400;
-}
-
-tr:nth-child(even) {
-  background-color: #eeeeee;
-}
-
-.card-img {
-  width: 100%;
-  height: 25vw;
-  object-fit: cover;
-}
 
 .card-tag {
   width: 100% !important;
@@ -111,6 +20,7 @@ tr:nth-child(even) {
   border-radius: 8px;
   color:black;
   font-size: 12px !important;
+  pointer-events:none;
 
 
 }
@@ -133,4 +43,94 @@ tr:nth-child(even) {
   border-radius: 8px;
   color:black;
   font-size: 12px !important;
+}
+
+.talent-card-stars{
+  pointer-events:none;
+  padding-bottom: 5px;
+}
+
+.second-row-talent-card{
+  margin-top: 3rem;
+}
+
+
+.talent-card-title{
+  font-family: 'Roboto', sans-serif;
+  
+  font-style: normal;
+  font-weight: 900;
+  font-size: 24px;
+  line-height: 28px;
+}
+
+.talent-num-div{
+  background-color: #E4E4E4;
+  border-radius: 14px;
+  padding: 15px;
+  margin-bottom: 2rem;
+}
+
+.talent-card{
+  width: 40rem;
+  border-radius: 30px;
+  scale: 0.8;
+}
+
+@media screen and ( max-width: 800px ) {
+  .talent-card{
+    width: 30rem;
+    border-color: #E9E7E5;
+    border-width: 3px;
+    scale: 0.8;
+  }
+  .talent-card-img{
+    border-radius: 30px 30px 0px 0px;
+    width: 100%;
+    height: 60vw !important;
+    object-fit: cover;
+  }
+
+  
+}
+
+.talent-card-img{
+  border-radius: 30px 30px 0px 0px;
+  width: 100%;
+  height: 30vw;
+  object-fit: cover;
+}
+
+.talent-num-title{
+  color: #676767;
+}
+
+.availability{
+  position: absolute!important;
+  margin-left: 20px;
+  margin-top: 20px;
+  display: flex;
+  border-radius: 9px;
+  font-weight: 900;
+  pointer-events:none;
+}
+
+.green{
+  background-color: #00bc61c6;
+  border-color: #00bc61c6;
+
+}
+
+.orange{
+  background-color: #ff7b00c6;
+  border-color: #ff7b00c6;
+}
+
+.red{
+  background-color: #db0000c6;
+  border-color: #db0000c6;
+}
+
+.avail-icons{
+  margin-right: 1rem;
 }
