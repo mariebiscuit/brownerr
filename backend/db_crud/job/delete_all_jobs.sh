@@ -1,0 +1,1 @@
+curl http://localhost:2000/job/delete/all/ -X DELETE

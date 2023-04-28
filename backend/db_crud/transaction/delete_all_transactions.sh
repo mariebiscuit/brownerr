@@ -1,0 +1,1 @@
+curl http://localhost:2000/transaction/delete/all/ -X DELETE
