@@ -15,10 +15,10 @@ interface AppProps {
  */
 function App(props: AppProps) {
 
-  let user: User = { name: "Gus",
-                     profilePicPath: "",
-                     categories: [],
-                     subcategories: [],
+  let user1: User = { name: "Gus",
+                     profilePicPath: "../user_img.jpeg",
+                     categories: ["Music"],
+                     subcategories: ["DJ", "Performance"],
                       bio: "",
                       rate: 12,
                       rating: 5,
@@ -36,7 +36,7 @@ function App(props: AppProps) {
       <div className="repl">
       <Header/>
       
-      <TalentCard user = {user}/>
+      <TalentCard user = {user1}/>
       </div>
     </div>
   );

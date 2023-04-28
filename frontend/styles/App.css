@@ -96,3 +96,41 @@ td {
 tr:nth-child(even) {
   background-color: #eeeeee;
 }
+
+.card-img {
+  width: 100%;
+  height: 25vw;
+  object-fit: cover;
+}
+
+.card-tag {
+  width: 100% !important;
+  background-color: white;
+  border-color: #994E03;
+  border-width: 2px;
+  border-radius: 8px;
+  color:black;
+  font-size: 12px !important;
+
+
+}
+
+.card-tag:hover {
+  width: 100% !important;
+  background-color: white;
+  border-color: #994E03;
+  border-width: 2px;
+  border-radius: 8px;
+  color:black;
+  font-size: 12px !important;
+}
+
+.card-tag:active {
+  width: 100% !important;
+  background-color: white !important;
+  border-color: #994E03 !important;
+  border-width: 2px;
+  border-radius: 8px;
+  color:black;
+  font-size: 12px !important;
+}
