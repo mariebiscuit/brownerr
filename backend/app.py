@@ -19,9 +19,10 @@ app.app_context().push()
 
 # Creating the schema for User table in the database
 class User(db.Model):
+    __tablename__ = 'user'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(100), nullable=False)
-    service = db.Column(db.String(100)) # points to jobs name
+    service = db.Column(db.Integer, db.ForeignKey('job.id')) # points to jobs id
     bio = db.Column(db.Text)
     email = db.Column(db.String(80), unique=True, nullable=False)
     rating_provider = db.Column(db.Float)  # Should be an average of all reviews and cannot be modified by the user
@@ -55,10 +56,11 @@ class User(db.Model):
 
 # Creating the schema for Transaction table in the database
 class Transaction(db.Model):
+    __tablename__ = 'transaction'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     job_id = db.Column(db.Integer)  # foreign key that should point to id in Job
-    provider = db.Column(db.Integer)  # foreign key that should point to id in User
-    recipient = db.Column(db.Integer)  # foreign key that should point to id in User
+    provider = db.Column(db.Integer, db.ForeignKey('user.id'))  # foreign key that should point to id in User
+    recipient = db.Column(db.Integer, db.ForeignKey('user.id'))  # foreign key that should point to id in User
     rating_provider = db.Column(db.Float)  # Should be an average of all reviews and cannot be modified by the user
     rating_recipient = db.Column(db.Float)  # Should be an average of all reviews and cannot be modified by the user
     transaction_timestamp = db.Column(db.DateTime(timezone=True), server_default=func.now())
@@ -78,6 +80,7 @@ class Transaction(db.Model):
 
 # Creating the schema for Jobs table in the database
 class Job(db.Model):
+    __tablename__ = 'job'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(100), nullable=False, unique=True)
     average_rate = db.Column(db.Float)
@@ -116,14 +119,14 @@ def get_user(id_user):
 
 
 # Searching for users by their job
-@app.route("/user/name/<job>/", methods=["GET"])
+@app.route("/user/job/<job>/", methods=["GET"])
 def get_users_job(job):
     users = User.query.filter_by(service=job).all()
     users_json = [user.to_json() for user in users]
     return jsonify(users_json)
 
 
-# Searching for users by their first name
+# Searching for users by their name
 @app.route("/user/name/<name>/", methods=["GET"])
 def get_users(name):
     users = User.query.filter_by(name=name).all()
@@ -143,15 +146,6 @@ def get_all_transactions():
 def get_all_jobs():
     jobs = Job.query.all()
     return jsonify([job.to_json() for job in jobs])
-
-
-# Searching for job by unique name
-@app.route("/job/<name>/", methods=["GET"])
-def get_job(name):
-    job = Job.query.get(name)
-    if name is None:
-        abort()
-    return jsonify(job.to_json())
 
 
 """
