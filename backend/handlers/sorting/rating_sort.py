@@ -1,5 +1,11 @@
 import json
 
-def sort(data):
-    sorted_data = sorted(data, key=lambda x: x['rating'], reverse=True)
+
+def sort_provider(data):
+    sorted_data = sorted(data, key=lambda x: x['rating_provider'], reverse=True)
+    return json.dumps(sorted_data)
+
+
+def sort_recipient(data):
+    sorted_data = sorted(data, key=lambda x: x['rating_recipient'], reverse=True)
     return json.dumps(sorted_data)

@@ -20,9 +20,10 @@ app.app_context().push()
 # Creating the schema for User table in the database
 class User(db.Model):
     __tablename__ = 'user'
+
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(100), nullable=False)
-    service = db.Column(db.Integer, db.ForeignKey('job.id')) # points to jobs id
+    service = db.Column(db.Integer, db.ForeignKey('job.id'))  # points to jobs id
     bio = db.Column(db.Text)
     email = db.Column(db.String(80), unique=True, nullable=False)
     rating_provider = db.Column(db.Float)  # Should be an average of all reviews and cannot be modified by the user
@@ -57,6 +58,7 @@ class User(db.Model):
 # Creating the schema for Transaction table in the database
 class Transaction(db.Model):
     __tablename__ = 'transaction'
+
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     job_id = db.Column(db.Integer)  # foreign key that should point to id in Job
     provider = db.Column(db.Integer, db.ForeignKey('user.id'))  # foreign key that should point to id in User
@@ -81,6 +83,7 @@ class Transaction(db.Model):
 # Creating the schema for Jobs table in the database
 class Job(db.Model):
     __tablename__ = 'job'
+
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(100), nullable=False, unique=True)
     average_rate = db.Column(db.Float)
