@@ -21,7 +21,7 @@ app.app_context().push()
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(100), nullable=False)
-    service = db.Column(db.String(100))
+    service = db.Column(db.String(100)) # points to jobs name
     bio = db.Column(db.Text)
     email = db.Column(db.String(80), unique=True, nullable=False)
     rating_provider = db.Column(db.Float)  # Should be an average of all reviews and cannot be modified by the user
