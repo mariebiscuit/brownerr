@@ -30,8 +30,6 @@ export interface Opportunity{
   category: string;
   subcategory: string;
   content: string;
-  title: string;
-  profilePicPath: string;
   poster: User;
   location: string;
   startDate: MyDate;
