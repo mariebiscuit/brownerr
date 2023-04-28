@@ -1,0 +1,136 @@
+#root {
+  max-width: 1280px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.repl {
+  position: relative;
+  height: 100vh;
+}
+
+@media screen and ( max-width: 800px ) {
+  .repl-history{
+    height: 50% !important;
+  }
+  .header{
+    font-size: 5vh !important;
+  }
+  
+}
+
+@media screen and ( max-width: 400px ) {
+  .repl-history{
+    height: 30% !important;
+  }
+  .header{
+    font-size: 5vh !important;
+  }
+  
+  
+}
+
+
+.repl-history {
+  height: 70%;
+  margin: auto;
+  display: block;
+  overflow: auto;
+  display: flex;
+  flex-direction: column-reverse;
+}
+
+.instructions {
+  color:rgb(132, 132, 132);
+  font-style: italic;
+  font-size: 12px;
+}
+
+.header{
+  max-height: 10%;
+}
+
+.message {
+  margin: 0 10px;
+  padding: 5px 5px;
+  border-bottom: 1px solid rgb(192, 192, 192);
+}
+.innerMessage {
+  padding: 10px 10px;
+}
+.repl-input {
+  padding-top: 10px;
+  margin: auto;
+  height: 10%;
+}
+
+.repl-command-box {
+  width: 90%;
+  margin: 10px 10px;
+  display: block;
+}
+
+
+table {
+  border-collapse: collapse;
+  border: 1px solid lightgray;
+  margin: 20px 20px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+th {
+  border: 1px solid #dddddd;
+  text-align: left;
+  padding: 8px;
+  font-weight: 700;
+}
+
+td {
+  border: 1px solid #dddddd;
+  text-align: left;
+  padding: 8px;
+  font-weight: 400;
+}
+
+tr:nth-child(even) {
+  background-color: #eeeeee;
+}
+
+.card-img {
+  width: 100%;
+  height: 25vw;
+  object-fit: cover;
+}
+
+.card-tag {
+  width: 100% !important;
+  background-color: white;
+  border-color: #994E03;
+  border-width: 2px;
+  border-radius: 8px;
+  color:black;
+  font-size: 12px !important;
+
+
+}
+
+.card-tag:hover {
+  width: 100% !important;
+  background-color: white;
+  border-color: #994E03;
+  border-width: 2px;
+  border-radius: 8px;
+  color:black;
+  font-size: 12px !important;
+}
+
+.card-tag:active {
+  width: 100% !important;
+  background-color: white !important;
+  border-color: #994E03 !important;
+  border-width: 2px;
+  border-radius: 8px;
+  color:black;
+  font-size: 12px !important;
+}
