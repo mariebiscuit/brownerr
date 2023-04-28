@@ -1,0 +1,1 @@
+curl http://localhost:2000/user/delete/all/ -X DELETE

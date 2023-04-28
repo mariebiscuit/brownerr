@@ -1,9 +1,10 @@
 import os.path
 from os import abort
 
-from flask import Flask, jsonify, request, render_template
-from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import func, CheckConstraint
+
+from flask import Flask, jsonify, request
+from flask_sqlalchemy import SQLAlchemy
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
@@ -14,6 +15,9 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
 app.app_context().push()
+
+# Creating the database with above defined table(s)
+db.create_all()
 
 
 # Creating the schema for User table in the database
@@ -51,7 +55,7 @@ class User(db.Model):
 
 
 # Creating the schema for Transaction table in the database
-class Transcation(db.Model):
+class Transaction(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     job_id = db.Column(db.Integer)  # foreign key that should point to id in Job
     provider = db.Column(db.Integer)  # foreign key that should point to id in User
@@ -73,8 +77,6 @@ class Transcation(db.Model):
         }
 
 
-# Creating the database with above defined table(s)
-db.create_all()
 
 """
 -------- Read Functionality --------
@@ -106,9 +108,9 @@ def get_users(name):
 
 
 # Seeing all transactions in the database
-@app.route("/transaction/list/", methods=["GET"])
-def get_all_transcations():
-    transactions = Transcation.query.all()
+@app.route("/transactions/list/", methods=["GET"])
+def get_all_transactions():
+    transactions = Transaction.query.all()
     return jsonify([transaction.to_json() for transaction in transactions])
 
 
@@ -143,6 +145,7 @@ def create():
 -------- Delete Functionality --------
 """
 
+
 @app.route("/user/delete/all/", methods=["DELETE"])
 def delete_users():
     users = User.query.all()
@@ -160,9 +163,6 @@ def delete_user(id):
     db.session.delete(user)
     db.session.commit()
     return {'message': 'User deleted successfully.'}
-
-
-
 
 
 if __name__ == "__main__":
