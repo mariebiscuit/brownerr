@@ -30,7 +30,7 @@ export default function OpportunityCard(props: OpportunityCardProps) {
       <Card.Body className="opportunity-card-body">
         <Card.Text style={{color: "#8A8A8A"}}>{props.job.type} - {props.job.category} - {props.job.subcategory}</Card.Text>
         <Card.Title className="text-left opportunity-card-title" >{props.job.name}</Card.Title>
-        <Card.Text>Posted by <span><Card.Img className="avatar" src={props.job.poster.profilePicPath} /></span> <u>{props.job.poster.name}</u> </Card.Text>
+        <Card.Text>Posted by <span><Card.Img className="avatar" src={props.job.poster.profilePicPath} /></span> <u>{props.job.poster.firstName} {props.job.poster.lastName}</u> </Card.Text>
         <hr
         style={{
             color: "#A8A8A8",
