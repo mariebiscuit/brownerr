@@ -71,6 +71,10 @@ class Transaction(db.Model):
     recipient_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     rating_provider = db.Column(db.Float, default=0.0)
     rating_recipient = db.Column(db.Float, default=0.0)
+    review_provider = db.Column(db.Text)
+    review_provider_summary = db.Column(db.Text)
+    review_recipient = db.Column(db.Text)
+    review_recipient_summary = db.Column(db.Text)
     transaction_timestamp = db.Column(db.DateTime(timezone=True), server_default=func.now())
 
     provider = db.relationship('User', backref='provider_transactions', foreign_keys=[provider_id], lazy='joined')
@@ -85,6 +89,10 @@ class Transaction(db.Model):
             'recipient_id': self.recipient_id,
             'rating_provider': self.rating_provider,
             'rating_recipient': self.rating_recipient,
+            'review_provider': self.review_provider,
+            'review_provider_summary': self.review_provider_summary,
+            'review_recipient': self.review_recipient,
+            'review_recipient_summary': self.review_recipient_summary,
             'transaction_timestamp': self.transaction_timestamp,
         }
 
@@ -190,8 +198,8 @@ def create_user():
     service = data['service']
     bio = data['bio']
     email = data['email']
-    rating_provider = data['rating_provider']
-    rating_recipient = data['rating_recipient']
+    # rating_provider = data['rating_provider']
+    # rating_recipient = data['rating_recipient']
     available_provider = data['available_provider']
 
     # Create a new User object
@@ -199,8 +207,8 @@ def create_user():
                 service=service,
                 bio=bio,
                 email=email,
-                rating_provider=rating_provider,
-                rating_recipient=rating_recipient,
+                # rating_provider=rating_provider,
+                # rating_recipient=rating_recipient,
                 available_provider=available_provider)
     db.session.add(user)
     db.session.commit()
@@ -215,13 +223,17 @@ def create_transaction():
     recipient = data['recipient_id']
     rating_provider = data['rating_provider']
     rating_recipient = data['rating_recipient']
+    review_provider = data['review_provider']
+    review_recipient = data['review_recipient']
 
     # Create a new User object
     transaction = Transaction(job_id=job_id,
                               provider_id=provider,
                               recipient_id=recipient,
                               rating_provider=rating_provider,
-                              rating_recipient=rating_recipient)
+                              rating_recipient=rating_recipient,
+                              review_provider=review_provider,
+                              review_recipient=review_recipient)
 
     db.session.add(transaction)
     db.session.commit()

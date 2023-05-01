@@ -5,35 +5,29 @@
 curl --location --request POST 'http://localhost:2000/user/create/' \
 --header 'Content-Type: application/json' \
 --data-raw '{
-    "name": "John Doe",
+    "name": "John Doe2",
     "service": 2,
     "bio": "I am a professional electrician",
-    "email": "john.doe@example.com",
-    "rating_provider": 0.0,
-    "rating_recipient": 0.0,
+    "email": "john.doe2@example.com",
     "available_provider": 1
 }'
 
 curl --location --request POST 'http://localhost:2000/user/create/' \
 --header 'Content-Type: application/json' \
 --data-raw '{
-    "name": "Jane Smith",
+    "name": "Jane Smith2",
     "service": 1,
     "bio": "I am a certified plumber",
-    "email": "jane.smith@example.com",
-    "rating_provider": 0.0,
-    "rating_recipient": 0.0,
+    "email": "jane.smith2@example.com",
     "available_provider": 1
 }'
 
 curl --location --request POST 'http://localhost:2000/user/create/' \
 --header 'Content-Type: application/json' \
 --data-raw '{
-    "name": "Bob Johnson",
+    "name": "Bob Johnson2",
     "service": 3,
     "bio": "I am a professional landscaper",
-    "email": "bob.johnson@example.com",
-    "rating_provider": 0.0,
-    "rating_recipient": 0.0,
+    "email": "bob.johnson2@example.com",
     "available_provider": 1
 }'
