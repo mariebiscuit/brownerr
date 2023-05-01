@@ -1,7 +1,7 @@
 import os.path
 from os import abort
 
-from sqlalchemy import func, CheckConstraint
+from sqlalchemy import func, CheckConstraint, event
 
 from flask import Flask, jsonify, request
 from flask_sqlalchemy import SQLAlchemy
@@ -23,18 +23,25 @@ class User(db.Model):
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(100), nullable=False)
-    service = db.Column(db.Integer, db.ForeignKey('job.id'))  # points to jobs id
+    service = db.Column(db.Integer, db.ForeignKey('job.id'))
     bio = db.Column(db.Text)
     email = db.Column(db.String(80), unique=True, nullable=False)
-    rating_provider = db.Column(db.Float)  # Should be an average of all reviews and cannot be modified by the user
-    rating_recipient = db.Column(db.Float)  # Should be an average of all reviews and cannot be modified by the user
-    available_provider = db.Column(db.Integer)  # 0 if unavailable, 1 if available
+    rating_provider = db.Column(db.Float, default=0.0)
+    rating_recipient = db.Column(db.Float, default=0.0)
+    num_ratings_provider = db.Column(db.Integer, default=0)
+    num_ratings_recipient = db.Column(db.Integer, default=0)
+    available_provider = db.Column(db.Integer, default=1)
     created_at = db.Column(db.DateTime(timezone=True), server_default=func.now())
 
     __table_args__ = (
-        CheckConstraint('rating_provider >= 1.0 AND rating_recipient <= 5.0', name='rating_recipient_range'),
-        CheckConstraint('rating_recipient >= 1.0 AND rating_recipient <= 5.0', name='rating_recipient_range'),
+        CheckConstraint('rating_provider >= 0.0 AND rating_recipient <= 5.0', name='rating_provider_range'),
+        CheckConstraint('rating_recipient >= 0.0 AND rating_recipient <= 5.0', name='rating_recipient_range'),
     )
+
+    transactions_as_provider = db.relationship('Transaction', backref='provider_transactions',
+                                               foreign_keys='Transaction.provider_id')
+    transactions_as_recipient = db.relationship('Transaction', backref='recipient_transactions',
+                                                foreign_keys='Transaction.recipient_id')
 
     # Serializing the response
     def to_json(self):
@@ -47,7 +54,7 @@ class User(db.Model):
             'rating_provider': self.rating_provider,
             'rating_recipient': self.rating_recipient,
             'available_provider': self.available_provider,
-            'created at': self.created_at
+            'created_at': self.created_at
         }
 
     # Associating the records to user's first name
@@ -55,29 +62,52 @@ class User(db.Model):
         return f'<User {self.name}>'
 
 
-# Creating the schema for Transaction table in the database
 class Transaction(db.Model):
     __tablename__ = 'transaction'
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    job_id = db.Column(db.Integer)  # foreign key that should point to id in Job
-    provider = db.Column(db.Integer, db.ForeignKey('user.id'))  # foreign key that should point to id in User
-    recipient = db.Column(db.Integer, db.ForeignKey('user.id'))  # foreign key that should point to id in User
-    rating_provider = db.Column(db.Float)  # Should be an average of all reviews and cannot be modified by the user
-    rating_recipient = db.Column(db.Float)  # Should be an average of all reviews and cannot be modified by the user
+    job_id = db.Column(db.Integer, db.ForeignKey('job.id'))
+    provider_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    recipient_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    rating_provider = db.Column(db.Float, default=0.0)
+    rating_recipient = db.Column(db.Float, default=0.0)
     transaction_timestamp = db.Column(db.DateTime(timezone=True), server_default=func.now())
+
+    provider = db.relationship('User', backref='provider_transactions', foreign_keys=[provider_id], lazy='joined')
+    recipient = db.relationship('User', backref='recipient_transactions', foreign_keys=[recipient_id], lazy='joined')
 
     # Serializing the response
     def to_json(self):
         return {
             'id': self.id,
             'job_id': self.job_id,
-            'provider': self.provider,
-            'recipient': self.recipient,
+            'provider_id': self.provider_id,
+            'recipient_id': self.recipient_id,
             'rating_provider': self.rating_provider,
             'rating_recipient': self.rating_recipient,
             'transaction_timestamp': self.transaction_timestamp,
         }
+
+
+@event.listens_for(Transaction, 'after_insert')
+def update_user_ratings(target, connection, transaction):
+    provider = db.session.query(User).filter_by(id=transaction.provider_id).first()
+    recipient = db.session.query(User).filter_by(id=transaction.recipient_id).first()
+    if provider is not None:
+        provider_ratings = [transaction.rating_provider for transaction in provider.transactions_as_provider]
+        provider.rating_provider = sum(provider_ratings) / len(provider_ratings)
+        provider.num_ratings_provider = len(provider_ratings)
+        connection.execute(
+            User.__table__.update().where(User.id == provider.id).values(rating_provider=provider.rating_provider,
+                                                                         num_ratings_provider=provider.num_ratings_provider))
+    if recipient is not None:
+        recipient_ratings = [transaction.rating_recipient for transaction in recipient.transactions_as_recipient]
+        recipient.rating_recipient = sum(recipient_ratings) / len(recipient_ratings)
+        recipient.num_ratings_recipient = len(recipient_ratings)
+        connection.execute(
+            User.__table__.update().where(User.id == recipient.id).values(rating_recipient=recipient.rating_recipient,
+                                                                          num_ratings_recipient=recipient.num_ratings_recipient))
+
 
 
 # Creating the schema for Jobs table in the database
@@ -93,7 +123,6 @@ class Job(db.Model):
         return {
             'id': self.id,
             'job': self.name,
-            'average_rate': self.average_rate
         }
 
 
@@ -184,15 +213,15 @@ def create_user():
 def create_transaction():
     data = request.get_json()
     job_id = data['job_id']
-    provider = data['provider']
-    recipient = data['recipient']
+    provider = data['provider_id']
+    recipient = data['recipient_id']
     rating_provider = data['rating_provider']
     rating_recipient = data['rating_recipient']
 
     # Create a new User object
     transaction = Transaction(job_id=job_id,
-                              provider=provider,
-                              recipient=recipient,
+                              provider_id=provider,
+                              recipient_id=recipient,
                               rating_provider=rating_provider,
                               rating_recipient=rating_recipient)
 
@@ -205,10 +234,8 @@ def create_transaction():
 def create_job():
     data = request.get_json()
     name = data['name']
-    avg_rate = data['average_rate']
 
-    job = Job(name=name,
-              average_rate=avg_rate)
+    job = Job(name=name)
 
     db.session.add(job)
     db.session.commit()
