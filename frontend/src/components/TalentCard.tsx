@@ -24,7 +24,8 @@ interface TalentCardProps {
  * @returns a new InputBox as functional HTML Element
  */
 export default function TalentCard(props: TalentCardProps) {
-
+  
+  const lastNameChar: string = props.user.lastName.slice(0,1)
   return (
     <Card className="talent-card">
       {(() => {
@@ -38,7 +39,14 @@ export default function TalentCard(props: TalentCardProps) {
     
       <Card.Img variant="top" className="talent-card-img" src={props.user.profilePicPath} />
       <Card.Body className="talent-card-body">
-        <Card.Title className="text-left talent-card-title" >{props.user.name}</Card.Title>
+       
+
+        {(() => {
+          switch(lastNameChar) {
+            case "": return  <Card.Title className="text-left talent-card-title" >{props.user.firstName}</Card.Title> ;
+            default: return  <Card.Title className="text-left talent-card-title" >{props.user.firstName} {lastNameChar}.</Card.Title>
+          }
+        })()}
        
         <Row className="px-3">
           <Col> <Button className="card-tag">{props.user.categories[0]}</Button> </Col>

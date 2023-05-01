@@ -1,6 +1,9 @@
 
 export interface User{
-  name: string;
+  
+  firstName: string;
+  lastName: string;
+  isOrganization: boolean;
   profilePicPath: string;
   categories: string[];
   subcategories: string[];
@@ -12,7 +15,7 @@ export interface User{
   mediaPath: string;
   reviews: Review[];
   isOrganizer: boolean;
-  opportunities: Opportunity[];
+  
 }
 
 export interface Review{

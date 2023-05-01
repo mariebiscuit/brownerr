@@ -6,6 +6,7 @@ import TalentCard from "./components/TalentCard"
 import { Opportunity, User } from "./Utilities";
 import OpportunityCard from "./components/OpportunityCard";
 import OrganizerCard from "./components/OrganizerCard";
+import ProfilePage from "./components/ProfilePage";
 
 interface AppProps {
 
@@ -17,12 +18,13 @@ interface AppProps {
  */
 function App(props: AppProps) {
 
-  let user1: User = { name: "Gus J.",
+  let user1: User = { firstName: "Gus",
+                      lastName: "Janek",
                       isOrganization: false,
                      profilePicPath: "../user_img.jpeg",
                      categories: ["Music"],
                      subcategories: ["DJ", "Performance"],
-                      bio: "",
+                      bio: `Brown 2024, Offer DJ service at parties`,
                       rate: 12,
                       rating: 4,
                       availability: "open",
@@ -30,7 +32,7 @@ function App(props: AppProps) {
                       mediaPath: "",
                       reviews: [],
                       isOrganizer: false,
-                      opportunities: []
+                      
 
   }
 
@@ -51,11 +53,12 @@ function App(props: AppProps) {
       <div className="repl">
       <Header/>
       
-      <TalentCard user = {user1}/>
+      {/* <TalentCard user = {user1}/>
 
       <OpportunityCard job = {job1}/>
 
-      <OrganizerCard user = {user1}/>
+      <OrganizerCard user = {user1}/>  */}
+      <ProfilePage user = {user1}/>
       </div>
     </div>
   );

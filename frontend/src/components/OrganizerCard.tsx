@@ -24,7 +24,7 @@ interface OrganizerProps {
  * @returns a new InputBox as functional HTML Element
  */
 export default function OrganizerCard(props: OrganizerProps) {
-
+  const lastNameChar: string = props.user.lastName.slice(0,1)
   return (
     <Card className="organizer-card">
      
@@ -45,7 +45,12 @@ export default function OrganizerCard(props: OrganizerProps) {
           </Col >
             
           <Col sm="7">
-            <Card.Title className="text-left talent-card-title" >{props.user.name}</Card.Title>
+              {(() => {
+              switch(lastNameChar) {
+                case "": return  <Card.Title className="text-left talent-card-title" >{props.user.firstName}</Card.Title> ;
+                default: return  <Card.Title className="text-left talent-card-title" >{props.user.firstName} {lastNameChar}.</Card.Title>
+              }
+              })()}
             <Row className="px-3">
               <Col> <Button className="card-tag">{props.user.categories[0]}</Button> </Col>
               <Col> <Button className="card-tag">{props.user.subcategories[0]}</Button> </Col>
