@@ -1,1 +1,2 @@
-curl -H "Content-Type: application/json" -X POST -d '{"job_id": "2", "provider_id":"1", "recipient_id": "2", "rating_provider": "4.3", "rating_recipient": "4.7"}'  http://localhost:2000/transaction/create/
+curl -H "Content-Type: application/json" -X POST -d '{"job_id": "1", "provider_id":"2", "recipient_id": "1", "rating_provider": "3.7", "rating_recipient": "4.7"}'  http://localhost:2000/transaction/create/
+curl -H "Content-Type: application/json" -X POST -d '{"job_id": "1", "provider_id":"2", "recipient_id": "1", "rating_provider": "3.9", "rating_recipient": "4.9"}'  http://localhost:2000/transaction/create/
