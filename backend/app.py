@@ -109,14 +109,12 @@ def update_user_ratings(target, connection, transaction):
                                                                           num_ratings_recipient=recipient.num_ratings_recipient))
 
 
-
 # Creating the schema for Jobs table in the database
 class Job(db.Model):
     __tablename__ = 'job'
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(100), nullable=False, unique=True)
-    average_rate = db.Column(db.Float)
 
     # Serializing the response
     def to_json(self):
