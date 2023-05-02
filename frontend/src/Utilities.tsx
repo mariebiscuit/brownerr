@@ -22,7 +22,8 @@ export interface Review{
   rating: number;
   content: string;
   title: string;
-  profilePicPath: string;
+  user: User;
+  type: string;
 
 }
 

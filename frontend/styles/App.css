@@ -1,7 +1,6 @@
 #root {
-  max-width: 1280px;
   margin: 0 auto;
-  text-align: center;
+  text-align: left;
 }
 
 
@@ -167,6 +166,15 @@
     text-align: center;
   }
   
+  .availability-profile{
+    margin-bottom: 30px;
+    display: flex;
+    border-radius: 9px;
+    font-weight: 900;
+    font-size: 12px;
+    margin-top: -5px !important;
+    pointer-events:none;
+  }
 }
 
 .talent-card-img{
@@ -196,6 +204,7 @@
   border-radius: 9px;
   font-weight: 900;
   pointer-events:none;
+  opacity: 0.9;
 }
 
 .organizer-type{
@@ -211,21 +220,26 @@
 }
 
 .green{
-  background-color: #00bc61c6;
-  border-color: #00bc61c6;
+  background-color: #00bc61;
+  border-color: #00bc61;
 
 }
 
 .orange{
-  background-color: #ff7b00c6;
-  border-color: #ff7b00c6;
+  background-color: #ff7b00;
+  border-color: #ff7b00;
 }
 
 .red{
-  background-color: #db0000c6;
-  border-color: #db0000c6;
+  background-color: #db0000;
+  border-color: #db0000;
 }
 
+
+.beige{
+  background-color: #FFD5AE ;
+  border-color: #FFD5AE ;
+}
 .avail-icons{
   margin-right: 1rem;
 }
@@ -250,4 +264,66 @@
 
 .ultra-thin{
   font-weight: 200;
+}
+
+
+.availability-profile{
+  margin-top: 40px;
+  display: flex;
+  border-radius: 9px;
+  font-weight: 900;
+  font-size: 12px;
+  pointer-events:none;
+}
+
+.profile{
+  background-image: linear-gradient(180deg, #A44F00 0%, #FDA64F 82.45%, #F77700 100%) !important;
+  color: white;
+  width: 100%;
+}
+
+.stars-bg{
+  background-color: #FFD5AE !important;
+  border-radius: 12px;
+  padding-left: 12px;
+  padding-top:5px;
+  padding-right: 12px;
+  max-width: fit-content;
+}
+
+.contactButton{
+  font-size: 20px;
+  font-weight: 900;
+  border-radius: 20px;
+  width: 100%;
+  
+}
+
+
+.contactButton:hover{
+  font-size: 20px;
+  font-weight: 900;
+  border-radius: 20px;
+  width: 100%;
+  color:#00bc61;
+  background-color: #c7ffe4;
+  
+}
+
+.nav-btn{
+  border-radius: 10% 10% 0 0;
+  height: 100%;
+  font-weight: 700;
+  margin-right: 20px;
+
+}
+
+.content-div{
+  background-color: #FFEFDE !important;
+  color:black !important;
+  width: 100%;
+}
+
+.content-text{
+  text-align: justify;
 }
