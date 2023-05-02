@@ -164,7 +164,7 @@ def get_user(id_user):
     return jsonify(user.to_json())
 
 
-# Searching for users by their service
+# Searching for users by their service (only works if we provide id)
 @app.route("/user/service/<service>/", methods=["GET"])
 def get_users_service(service):
     users = User.query.filter_by(service=service).all()
@@ -199,6 +199,7 @@ def get_all_services():
 """
 
 
+# All users should have access to this endpoint (however they can only access it once unless deleted - unique email)
 @app.route('/user/create/', methods=["GET", "POST"])
 def create_user():
     data = request.get_json()
@@ -223,6 +224,7 @@ def create_user():
     return {'message': 'User added successfully.'}
 
 
+# This should be automatically triggered (provider & recipient simultaneously trigger it)
 @app.route('/transaction/create/', methods=["GET", "POST"])
 def create_transaction():
     data = request.get_json()
@@ -248,6 +250,7 @@ def create_transaction():
     return {'message': 'Transaction added successfully.'}
 
 
+# Only admin should have access to this endpoint
 @app.route('/service/create/', methods=["GET", "POST"])
 def create_service():
     data = request.get_json()
@@ -260,6 +263,7 @@ def create_service():
     return {'message': 'service added successfully'}
 
 
+# Any user should have access to this endpoint
 @app.route('/job/create/', methods=["GET", "POST"])
 def create_job():
     data = request.get_json()
@@ -275,6 +279,7 @@ def create_job():
 """
 
 
+# Only the admin should have access to this (mainly for testing purposes)
 @app.route("/user/delete/all/", methods=["DELETE"])
 def delete_users():
     users = User.query.all()
@@ -284,6 +289,7 @@ def delete_users():
     return {'message': 'All users deleted successfully.'}
 
 
+# All users should have access to this endpoint; however should only be able to delete their own id
 @app.route("/user/delete/<int:id>/", methods=["DELETE"])
 def delete_user(id):
     user = User.query.get(id)
@@ -294,6 +300,7 @@ def delete_user(id):
     return {'message': 'User deleted successfully.'}
 
 
+# Only the admin should have access to this (mainly for testing purposes)
 @app.route("/transaction/delete/all", methods=["DELETE"])
 def delete_transactions():
     transactions = Transaction.query.all()
@@ -303,6 +310,7 @@ def delete_transactions():
     return {'message': 'All transactions deleted successfully.'}
 
 
+# Only the admin should have access to this (mainly for testing purposes)
 @app.route("/service/delete/all/", methods=["DELETE"])
 def delete_services():
     services = Service.query.all()
@@ -312,6 +320,7 @@ def delete_services():
     return {'message': 'All services deleted successfully.'}
 
 
+# Only the admin should have access to this (mainly for testing purposes)
 @app.route("/job/delete/all/", methods=["DELETE"])
 def delete_jobs():
     jobs = Job.query.all()
@@ -323,9 +332,11 @@ def delete_jobs():
 
 """
 -------- Update Functionality --------
+
 """
 
 
+# All users should have access to this endpoint
 @app.route("/user/update/<int:id>/", methods=["PUT"])
 def update_user_info(id):
     user = User.query.get(id)
