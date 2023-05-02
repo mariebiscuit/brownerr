@@ -23,7 +23,7 @@ class User(db.Model):
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(100), nullable=False)
-    service = db.Column(db.Integer, db.ForeignKey('job.id'))
+    service = db.Column(db.Integer, db.ForeignKey('service.id'))
     bio = db.Column(db.Text)
     email = db.Column(db.String(80), unique=True, nullable=False)
     rating_provider = db.Column(db.Float, default=0.0)
@@ -66,7 +66,7 @@ class Transaction(db.Model):
     __tablename__ = 'transaction'
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    job_id = db.Column(db.Integer, db.ForeignKey('job.id'))
+    service_id = db.Column(db.Integer, db.ForeignKey('service.id'))
     provider_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     recipient_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     rating_provider = db.Column(db.Float, default=0.0)
@@ -84,7 +84,7 @@ class Transaction(db.Model):
     def to_json(self):
         return {
             'id': self.id,
-            'job_id': self.job_id,
+            'service_id': self.service_id,
             'provider_id': self.provider_id,
             'recipient_id': self.recipient_id,
             'rating_provider': self.rating_provider,
@@ -117,9 +117,9 @@ def update_user_ratings(target, connection, transaction):
                                                                           num_ratings_recipient=recipient.num_ratings_recipient))
 
 
-# Creating the schema for Jobs table in the database
-class Job(db.Model):
-    __tablename__ = 'job'
+# Creating the schema for service type table in the database
+class Service(db.Model):
+    __tablename__ = 'service'
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(100), nullable=False, unique=True)
@@ -128,8 +128,16 @@ class Job(db.Model):
     def to_json(self):
         return {
             'id': self.id,
-            'job': self.name,
+            'service': self.name,
         }
+
+
+# Creating the schema for services in the database
+class Job(db.Model):
+    __tablename__ = 'job'
+
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    job = db.Column(db.Integer, db.ForeignKey('service.id'))
 
 
 # Creating the database with above defined table(s)
@@ -156,10 +164,10 @@ def get_user(id_user):
     return jsonify(user.to_json())
 
 
-# Searching for users by their job
-@app.route("/user/job/<job>/", methods=["GET"])
-def get_users_job(job):
-    users = User.query.filter_by(service=job).all()
+# Searching for users by their service
+@app.route("/user/service/<service>/", methods=["GET"])
+def get_users_service(service):
+    users = User.query.filter_by(service=service).all()
     users_json = [user.to_json() for user in users]
     return jsonify(users_json)
 
@@ -179,11 +187,11 @@ def get_all_transactions():
     return jsonify([transaction.to_json() for transaction in transactions])
 
 
-# Seeing all jobs in the database
-@app.route("/job/list/", methods=["GET"])
-def get_all_jobs():
-    jobs = Job.query.all()
-    return jsonify([job.to_json() for job in jobs])
+# Seeing all services in the database
+@app.route("/service/list/", methods=["GET"])
+def get_all_services():
+    services = Service.query.all()
+    return jsonify([service.to_json() for service in services])
 
 
 """
@@ -218,7 +226,7 @@ def create_user():
 @app.route('/transaction/create/', methods=["GET", "POST"])
 def create_transaction():
     data = request.get_json()
-    job_id = data['job_id']
+    service_id = data['service_id']
     provider = data['provider_id']
     recipient = data['recipient_id']
     rating_provider = data['rating_provider']
@@ -227,7 +235,7 @@ def create_transaction():
     review_recipient = data['review_recipient']
 
     # Create a new User object
-    transaction = Transaction(job_id=job_id,
+    transaction = Transaction(service_id=service_id,
                               provider_id=provider,
                               recipient_id=recipient,
                               rating_provider=rating_provider,
@@ -240,16 +248,26 @@ def create_transaction():
     return {'message': 'Transaction added successfully.'}
 
 
-@app.route('/job/create/', methods=["GET", "POST"])
-def create_job():
+@app.route('/service/create/', methods=["GET", "POST"])
+def create_service():
     data = request.get_json()
     name = data['name']
 
-    job = Job(name=name)
+    service = Service(name=name)
 
+    db.session.add(service)
+    db.session.commit()
+    return {'message': 'service added successfully'}
+
+
+@app.route('/job/create/', methods=["GET", "POST"])
+def create_job():
+    data = request.get_json()
+    job = data['job']
+    job = Job(job=job)
     db.session.add(job)
     db.session.commit()
-    return {'message': 'Job added successfully'}
+    return {'message': 'job added successfully'}
 
 
 """
@@ -283,6 +301,15 @@ def delete_transactions():
         db.session.delete(transaction)
     db.session.commit()
     return {'message': 'All transactions deleted successfully.'}
+
+
+@app.route("/service/delete/all/", methods=["DELETE"])
+def delete_services():
+    services = Service.query.all()
+    for service in services:
+        db.session.delete(service)
+    db.session.commit()
+    return {'message': 'All services deleted successfully.'}
 
 
 @app.route("/job/delete/all/", methods=["DELETE"])
