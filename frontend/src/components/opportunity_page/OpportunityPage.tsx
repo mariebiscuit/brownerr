@@ -8,10 +8,11 @@ import {GiRoundStar} from "react-icons/gi"
 import {AiOutlineSmile, AiOutlineFrown, AiOutlineMeh} from "react-icons/ai"
 import { Container } from "react-bootstrap";
 import {FiShare2} from "react-icons/fi"
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import OrganizerSection from "./OpportunitySection";
 import {IoLocationSharp, IoCalendarClear} from "react-icons/io5"
 import OpportunitySection from "./OpportunitySection";
+import { useParams } from "react-router-dom";
 
 
 /**
@@ -21,7 +22,8 @@ import OpportunitySection from "./OpportunitySection";
  * currentState of the program  and its setter 
  */
 interface OpportunityProps {
-  job: Opportunity;
+  jobList: Opportunity[];
+
 }
 
 /**
@@ -30,71 +32,96 @@ interface OpportunityProps {
  * @returns a new InputBox as functional HTML Element
  */
 export default function OpportunityPage(props: OpportunityProps) {
+  const {id} = useParams();
+  var jobID = -1;
+  try{
+    jobID = Number(id);
+  }
+  catch{
+    console.log("could not find user")
+  }
+  
+  const [job, setJob] = useState<Opportunity>();
+  useEffect(() => {
+     setJob(props.jobList[jobID-1])
+  }, [id]);
+
   const [contactActive, setContactActive] = useState(false);
   const handleClick = (variable: boolean, setter: (newVar: boolean) => void) => {
     setter(!variable)
   }
 
-
-  return (
-    <body>
+  if(job === undefined){
+    return (<body>
       <div className="profile">
-        <Container>
-          <Row className="align-items-center py-5">
-            <Col sm="6">
-            <p className="mb-2">{props.job.type} - {props.job.category} - {props.job.subcategory}</p>
-            <h1 className="text-left opportunity-page-title mb-2" >{props.job.name}</h1>
-            <p className="mb-5">Posted by <span><Card.Img className="avatar" src={props.job.poster.profilePicPath} /></span> <u>{props.job.poster.firstName} {props.job.poster.lastName}</u> </p>
-            
-            <p className="mb-2">
-              <span><IoLocationSharp size={30}></IoLocationSharp></span> {props.job.location}
-            </p>
-
-            <p className="mb-2">
-              <span><IoCalendarClear size={30}></IoCalendarClear></span> {props.job.startDate.year}/{props.job.startDate.month}/{props.job.startDate.date} - {props.job.endDate.year}/{props.job.endDate.month}/{props.job.endDate.date}
-            </p>
-              
-        
-            </Col>
-            <Col sm="2">
-            </Col>
-            <Col sm="4" >
-              <div>
-                <div>
-                  <Row className="align-items-center">
-                    <Col>
-                      <Button className="contactButton green" onClick={() => handleClick(contactActive, setContactActive)}
-                      style={{ backgroundColor: contactActive ? "#c7ffe4" : "#00bc61", borderColor: contactActive ? "#c7ffe4" : "#00bc61", color: contactActive ? "#00bc61" : "white" }}> Get in Touch</Button>
-                    </Col>
-                    <Col>
-                      <Button className="beige"> <FiShare2 size={"20px"} color="black" strokeWidth={"2.5px"}></FiShare2>  </Button>
-                    </Col>
-                  </Row>
-                  
-                </div>
-              </div>
-              
-           
-            </Col>
-          </Row>
-
-          <div className="d-flex">
-          <Button 
-
-          className = "nav-btn"
-          style={{ backgroundColor: "#FFEFDE", borderColor:"#FFEFDE", color: "black" }}
-          >Details</Button>
-        
-        </div>
-        </Container>
-
-        <div className="content-div">
-         <OpportunitySection job={props.job}></OpportunitySection>
-        </div>
-        
-        
+        <h1>No Profile Found</h1>
       </div>
-    </body>
-  );
+    </body>);
+  }
+  
+  else{
+    return (
+      <body>
+        <div className="profile">
+          <Container>
+            <Row className="align-items-center py-5">
+              <Col sm="6">
+              <p className="mb-2">{job.type} - {job.category} - {job.subcategory}</p>
+              <h1 className="text-left opportunity-page-title mb-2" >{job.name}</h1>
+              <p className="mb-5">Posted by <span><Card.Img className="avatar" src={job.poster.profilePicPath} /></span> <u>{job.poster.firstName} {job.poster.lastName}</u> </p>
+              
+              <p className="mb-2">
+                <span><IoLocationSharp size={30}></IoLocationSharp></span> {job.location}
+              </p>
+  
+              <p className="mb-2">
+                <span><IoCalendarClear size={30}></IoCalendarClear></span> {job.startDate.year}/{job.startDate.month}/{job.startDate.date} - {job.endDate.year}/{job.endDate.month}/{job.endDate.date}
+              </p>
+                
+          
+              </Col>
+              <Col sm="2">
+              </Col>
+              <Col sm="4" >
+                <div>
+                  <div>
+                    <Row className="align-items-center">
+                      <Col>
+                        <Button className="contactButton green" onClick={() => handleClick(contactActive, setContactActive)}
+                        style={{ backgroundColor: contactActive ? "#c7ffe4" : "#00bc61", borderColor: contactActive ? "#c7ffe4" : "#00bc61", color: contactActive ? "#00bc61" : "white" }}> Get in Touch</Button>
+                      </Col>
+                      <Col>
+                        <Button className="beige"> <FiShare2 size={"20px"} color="black" strokeWidth={"2.5px"}></FiShare2>  </Button>
+                      </Col>
+                    </Row>
+                    
+                  </div>
+                </div>
+                
+             
+              </Col>
+            </Row>
+  
+            <div className="d-flex">
+            <Button 
+  
+            className = "nav-btn"
+            style={{ backgroundColor: "#FFEFDE", borderColor:"#FFEFDE", color: "black" }}
+            >Details</Button>
+          
+          </div>
+          </Container>
+  
+          <div className="content-div">
+           <OpportunitySection job={job}></OpportunitySection>
+          </div>
+          
+          
+        </div>
+      </body>
+    );
+  
+  }
 
+  
 }

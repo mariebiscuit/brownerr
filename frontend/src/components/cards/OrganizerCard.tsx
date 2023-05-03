@@ -6,6 +6,7 @@ import Col from 'react-bootstrap/Col';
 import { Rating } from 'react-simple-star-rating'
 import {GiRoundStar} from "react-icons/gi"
 import {MdGroups3, MdPerson} from "react-icons/md"
+import { Link } from "react-router-dom";
 
 
 /**
@@ -24,12 +25,13 @@ interface OrganizerProps {
  * @returns a new InputBox as functional HTML Element
  */
 export default function OrganizerCard(props: OrganizerProps) {
-  const lastNameChar: string = props.user.lastName.slice(0,1)
+  const lastNameChar: string = props.user.lastName.slice(0,1);
+  const idString : string = props.user.id.toString();
   return (
     <Card className="organizer-card">
      
     
-     
+      <Link to={"/organizer/" + idString}>
       <Card.Body className="talent-card-body">
       
         <Row className="row-organizer-card">
@@ -74,6 +76,7 @@ export default function OrganizerCard(props: OrganizerProps) {
 
       
       </Card.Body>
+      </Link> 
     </Card>
   );
 

@@ -9,6 +9,7 @@ import OrganizerCard from "./components/cards/OrganizerCard";
 import ProfilePage from "./components/profile_page/ProfilePage";
 import OpportunityPage from "./components/opportunity_page/OpportunityPage";
 import MainPage from "./components/main_page/MainPage";
+import { Route, Routes } from "react-router-dom";
 
 interface AppProps {
 
@@ -19,6 +20,7 @@ interface AppProps {
  * @returns the div that contains headers, history box, and input box
  */
 function App(props: AppProps) {
+  
 
   let user1: User = { firstName: "Gus",
                       lastName: "Janek",
@@ -34,7 +36,7 @@ function App(props: AppProps) {
                       mediaPath: "",
                       reviews: [],
                       isOrganizer: false,
-                      
+                      id: 1
 
   }
 
@@ -52,13 +54,32 @@ function App(props: AppProps) {
                            overview: "Sorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate libero et velit interdum, ac aliquet odio mattis. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Curabitur tempus urna at turpis condimentum lobortis. Ut commodo efficitur neque. Ut diam quam, semper iaculis condimentum ac, vestibulum eu nisl.",
                            responsibility: ["Sorem ipsum dolor sit amet, consectetur adipiscing elit.", "Nunc vulputate libero et velit interdum, ac aliquet odio mattis.", "per conubia nostra, per inceptos himenaeos. Curabitur tempus " ],
                            qualification: ["Sorem ipsum dolor sit amet, consectetur adipiscing elit.", "Nunc vulputate libero et velit interdum, ac aliquet odio mattis.", "per conubia nostra, per inceptos himenaeos. Curabitur tempus " ],
-                           applicants: [user1, user1, user1, user1, user1, user1, user1, user1, user1, user1]
+                           applicants: [user1, user1, user1, user1, user1, user1, user1, user1, user1, user1],
+                           id: 1
                            
   
   }
-
+  
+  const [currentUser, setCurrentUser] = useState<User | undefined> (undefined);
+  const [profiles, setProfiles] = useState<User[]> ([user1]);
+  const [opportunities, setOpportunities] = useState<Opportunity[]> ([job1]);
+ 
   return (
-    <div className="content-div">
+    <>
+      <Routes>
+        <Route path="/" element={<MainPage user={user1}></MainPage>}/>
+        <Route path="/talent">
+          <Route path=":id" element={<ProfilePage talentView={true} talentList={profiles}></ProfilePage>}/>
+        </Route>
+        <Route path="/organizer">
+          <Route path=":id" element={<ProfilePage talentView={false} talentList={profiles}></ProfilePage>}/>
+        </Route>
+
+        <Route path="/opportunity">
+          <Route path=":id" element={<OpportunityPage jobList={opportunities}></OpportunityPage>}/>
+        </Route>
+      </Routes>
+      <div className="content-div">
       <div className="repl">
       
       
@@ -71,12 +92,19 @@ function App(props: AppProps) {
       <OpportunityPage job = {job1}></OpportunityPage>
       */}
 
-      <MainPage user={user1}></MainPage>
+      <OrganizerCard user = {user1}/> 
+      
+      <OpportunityCard job = {job1}/>
+      
+
+      
 
       
       
       </div>
     </div>
+    </>
+    
   );
 }
 

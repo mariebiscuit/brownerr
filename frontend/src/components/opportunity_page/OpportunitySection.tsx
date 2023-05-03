@@ -42,7 +42,8 @@ export default function OpportunitySection(props: JobProps) {
                               overviews: "Sorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate libero et velit interdum, ac aliquet odio mattis. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Curabitur tempus urna at turpis condimentum lobortis. Ut commodo efficitur neque. Ut diam quam, semper iaculis condimentum ac, vestibulum eu nisl.",
                               mediaPath: "",
                               reviews: [],
-                              isOrganizer: false,
+                              isOrganizer: false, 
+                              id:0
   
   };
   const dummyReview : Review = {rating: 3.5, content: "Sorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate libero et velit interdum, ac aliquet odio mattis. Class aptent taciti sociosqu ad litora torquent.",

@@ -1,5 +1,5 @@
 #root {
-  margin: 0 auto;
+  margin: 0;
   text-align: left;
 }
 
@@ -406,4 +406,18 @@
   font-weight: 500;
  
   
+}
+
+a {
+  text-decoration: none;
+}
+
+a:link, a:visited {
+  color: rgb(85, 85, 85);
+  text-decoration: none;
+}
+
+a:hover {
+  color: rgb(0, 0, 0);
+  text-decoration: none;
 }
