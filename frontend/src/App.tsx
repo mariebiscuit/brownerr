@@ -8,6 +8,7 @@ import OpportunityCard from "./components/cards/OpportunityCard";
 import OrganizerCard from "./components/cards/OrganizerCard";
 import ProfilePage from "./components/profile_page/ProfilePage";
 import OpportunityPage from "./components/opportunity_page/OpportunityPage";
+import MainPage from "./components/main_page/MainPage";
 
 interface AppProps {
 
@@ -67,9 +68,12 @@ function App(props: AppProps) {
 
       <OrganizerCard user = {user1}/>  
       <ProfilePage user = {user1} talentView = {true}/>
-      <OpportunityPage job = {job1}></OpportunityPage>*/}
-
       <OpportunityPage job = {job1}></OpportunityPage>
+      */}
+
+      <MainPage user={user1}></MainPage>
+
+      
       
       </div>
     </div>

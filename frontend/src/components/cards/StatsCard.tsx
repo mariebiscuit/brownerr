@@ -28,7 +28,7 @@ export default function StatsCard(props: StatsProps) {
     for(let i = 0; i < length; i++){
      
         
-        avartars.push(<Card.Img  className="avatar-stats" style={{marginLeft:-20}} src={props.job.applicants[i].profilePicPath} />)
+        avartars.push(<Card.Img  className="avatar-stats" style={{marginLeft:-30}} src={props.job.applicants[i].profilePicPath} />)
     }
     content = <div><div className="stats-div mb-4"> {avartars} </div> <p>{length} people have reached out</p></div>
   }
@@ -36,7 +36,7 @@ export default function StatsCard(props: StatsProps) {
     const avartars = []
     for(let i = 0; i < 9; i++){
        
-        avartars.push(<Card.Img  className="avatar-stats" src={props.job.applicants[i].profilePicPath} style={{marginLeft:-20}}/>)
+        avartars.push(<Card.Img  className="avatar-stats" src={props.job.applicants[i].profilePicPath} style={{marginLeft:-30}}/>)
     }
     content = <div><div className="stats-div mb-4"> {avartars} </div> <p>{length} people have reached out</p></div>
   }
