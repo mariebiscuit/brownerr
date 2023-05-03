@@ -41,6 +41,7 @@ export interface Opportunity{
   overview: string;
   qualification: string[];
   responsibility: string[];
+  applicants: User[];
 
 }
 

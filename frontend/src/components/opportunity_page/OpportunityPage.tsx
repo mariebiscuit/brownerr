@@ -1,4 +1,4 @@
-import { Opportunity, User } from "../Utilities";
+import { Opportunity, User } from "../../Utilities";
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
 import Row from 'react-bootstrap/Row';
@@ -9,9 +9,9 @@ import {AiOutlineSmile, AiOutlineFrown, AiOutlineMeh} from "react-icons/ai"
 import { Container } from "react-bootstrap";
 import {FiShare2} from "react-icons/fi"
 import { useState } from "react";
-import OrganizerSection from "./OrganizerSection";
+import OrganizerSection from "./OpportunitySection";
 import {IoLocationSharp, IoCalendarClear} from "react-icons/io5"
-import OpportunitySection from "./OrganizerSection";
+import OpportunitySection from "./OpportunitySection";
 
 
 /**

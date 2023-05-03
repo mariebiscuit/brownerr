@@ -7,7 +7,7 @@ import { Opportunity, User } from "./Utilities";
 import OpportunityCard from "./components/cards/OpportunityCard";
 import OrganizerCard from "./components/cards/OrganizerCard";
 import ProfilePage from "./components/profile_page/ProfilePage";
-import OpportunityPage from "./components/OpportunityPage";
+import OpportunityPage from "./components/opportunity_page/OpportunityPage";
 
 interface AppProps {
 
@@ -37,6 +37,8 @@ function App(props: AppProps) {
 
   }
 
+ 
+
   let job1: Opportunity = {name: "DJ Partner Wanted for Cool Remix Project :)",
                            type: "Collab",
                            category: "Music",
@@ -48,7 +50,8 @@ function App(props: AppProps) {
                            endDate: {year: 2023, month: 5, date: 1},
                            overview: "Sorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate libero et velit interdum, ac aliquet odio mattis. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Curabitur tempus urna at turpis condimentum lobortis. Ut commodo efficitur neque. Ut diam quam, semper iaculis condimentum ac, vestibulum eu nisl.",
                            responsibility: ["Sorem ipsum dolor sit amet, consectetur adipiscing elit.", "Nunc vulputate libero et velit interdum, ac aliquet odio mattis.", "per conubia nostra, per inceptos himenaeos. Curabitur tempus " ],
-                           qualification: ["Sorem ipsum dolor sit amet, consectetur adipiscing elit.", "Nunc vulputate libero et velit interdum, ac aliquet odio mattis.", "per conubia nostra, per inceptos himenaeos. Curabitur tempus " ] 
+                           qualification: ["Sorem ipsum dolor sit amet, consectetur adipiscing elit.", "Nunc vulputate libero et velit interdum, ac aliquet odio mattis.", "per conubia nostra, per inceptos himenaeos. Curabitur tempus " ],
+                           applicants: [user1, user1, user1, user1, user1, user1, user1, user1, user1, user1]
                            
   
   }
@@ -63,8 +66,11 @@ function App(props: AppProps) {
       <OpportunityCard job = {job1}/>
 
       <OrganizerCard user = {user1}/>  
-      <ProfilePage user = {user1} talentView = {true}/>*/}
+      <ProfilePage user = {user1} talentView = {true}/>
+      <OpportunityPage job = {job1}></OpportunityPage>*/}
+
       <OpportunityPage job = {job1}></OpportunityPage>
+      
       </div>
     </div>
   );
