@@ -1,4 +1,4 @@
-import { User } from "../Utilities";
+import { User } from "../../Utilities";
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
 import Row from 'react-bootstrap/Row';

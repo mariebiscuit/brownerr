@@ -38,6 +38,10 @@ export interface Opportunity{
   location: string;
   startDate: MyDate;
   endDate: MyDate;
+  overview: string;
+  qualification: string[];
+  responsibility: string[];
+
 }
 
 export interface MyDate{

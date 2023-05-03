@@ -2,11 +2,12 @@ import { useState } from "react";
 import "../styles/App.css";
 import Header from "./components/Header";
 
-import TalentCard from "./components/TalentCard"
+import TalentCard from "./components/cards/TalentCard"
 import { Opportunity, User } from "./Utilities";
-import OpportunityCard from "./components/OpportunityCard";
-import OrganizerCard from "./components/OrganizerCard";
-import ProfilePage from "./components/ProfilePage";
+import OpportunityCard from "./components/cards/OpportunityCard";
+import OrganizerCard from "./components/cards/OrganizerCard";
+import ProfilePage from "./components/profile_page/ProfilePage";
+import OpportunityPage from "./components/OpportunityPage";
 
 interface AppProps {
 
@@ -44,7 +45,11 @@ function App(props: AppProps) {
                            location: "TBD",
                            poster: user1,
                            startDate: {year: 2023, month: 4, date: 22},
-                           endDate: {year: 2023, month: 5, date: 1}
+                           endDate: {year: 2023, month: 5, date: 1},
+                           overview: "Sorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate libero et velit interdum, ac aliquet odio mattis. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Curabitur tempus urna at turpis condimentum lobortis. Ut commodo efficitur neque. Ut diam quam, semper iaculis condimentum ac, vestibulum eu nisl.",
+                           responsibility: ["Sorem ipsum dolor sit amet, consectetur adipiscing elit.", "Nunc vulputate libero et velit interdum, ac aliquet odio mattis.", "per conubia nostra, per inceptos himenaeos. Curabitur tempus " ],
+                           qualification: ["Sorem ipsum dolor sit amet, consectetur adipiscing elit.", "Nunc vulputate libero et velit interdum, ac aliquet odio mattis.", "per conubia nostra, per inceptos himenaeos. Curabitur tempus " ] 
+                           
   
   }
 
@@ -57,8 +62,9 @@ function App(props: AppProps) {
 
       <OpportunityCard job = {job1}/>
 
-      <OrganizerCard user = {user1}/>  */}
-      <ProfilePage user = {user1} talentView = {true}/>
+      <OrganizerCard user = {user1}/>  
+      <ProfilePage user = {user1} talentView = {true}/>*/}
+      <OpportunityPage job = {job1}></OpportunityPage>
       </div>
     </div>
   );

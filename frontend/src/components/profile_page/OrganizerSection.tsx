@@ -1,4 +1,4 @@
-import { User } from "../Utilities";
+import { User } from "../../Utilities";
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
 import Row from 'react-bootstrap/Row';
@@ -15,7 +15,7 @@ import { Container } from "react-bootstrap";
  * a list a states and its setter to be updated after each submit
  * currentState of the program  and its setter 
  */
-interface TalentProps {
+interface OrganizerProps {
   user: User;
 }
 
@@ -24,7 +24,7 @@ interface TalentProps {
  * @param props InputBoxProps mentioned above
  * @returns a new InputBox as functional HTML Element
  */
-export default function TalentSection(props: TalentProps) {
+export default function OrganizerSection(props: OrganizerProps) {
   
   const lastNameChar: string = props.user.lastName.slice(0,1)
   return (
@@ -33,24 +33,16 @@ export default function TalentSection(props: TalentProps) {
         <Row>
           <Col className="px-5" sm="6">
             <div className="mb-4">
-              <h2>Overview</h2>
-              <p className="content-text">{props.user.overviews}</p>
+              
+              <h2>add jobs posted by the user here</h2>
             </div>
 
-            <div className="mb-4">
-              <h2>Works/Portfoliio</h2>
-              <p>add carousel here</p>
-            </div>
-
-            <div className="mb-4">
-              <h2>Availability</h2>
-              <p>add calendar here</p>
-            </div>
+      
           </Col >
           <Col className="px-5" sm="6">
             <div className="mb-4">
                 <h2>Reviews</h2>
-                <p>add reviews of talent type here</p>
+                <p>add reviews of organizer type here</p>
               </div>
           </Col>
         </Row>

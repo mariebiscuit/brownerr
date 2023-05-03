@@ -7,7 +7,6 @@ import { Rating } from 'react-simple-star-rating'
 import {GiRoundStar} from "react-icons/gi"
 import {AiOutlineSmile, AiOutlineFrown, AiOutlineMeh} from "react-icons/ai"
 import { Container } from "react-bootstrap";
-import { Opportunity } from "../Utilities";
 
 
 /**
@@ -16,8 +15,8 @@ import { Opportunity } from "../Utilities";
  * a list a states and its setter to be updated after each submit
  * currentState of the program  and its setter 
  */
-interface JobProps {
-  job: Opportunity;
+interface TalentProps {
+  user: User;
 }
 
 /**
@@ -25,46 +24,33 @@ interface JobProps {
  * @param props InputBoxProps mentioned above
  * @returns a new InputBox as functional HTML Element
  */
-export default function OpportunitySection(props: JobProps) {
-  const responsibilities = props.job.responsibility;
-  const listItemsRes = responsibilities.map((res) =>
-  <li className="mb-2">{res}</li>
-  );
-
-  const qualifications = props.job.qualification;
-  const listItemsQua = qualifications.map((qua) =>
-  <li className="mb-2">{qua}</li>
-  );
+export default function TalentSection(props: TalentProps) {
+  
+  const lastNameChar: string = props.user.lastName.slice(0,1)
   return (
-    <div>
+    <div className="section">
       <Container>
         <Row>
           <Col className="px-5" sm="6">
             <div className="mb-4">
-              
               <h2>Overview</h2>
-              <p>{props.job.overview}</p>
+              <p className="content-text">{props.user.overviews}</p>
             </div>
 
             <div className="mb-4">
-              
-              <h2>Responsibilities</h2>
-              <ul>{listItemsRes}</ul>
+              <h2>Works/Portfoliio</h2>
+              <p>add carousel here</p>
             </div>
 
             <div className="mb-4">
-              
-              <h2>Qualifications</h2>
-              <ul>{listItemsQua}</ul>
+              <h2>Availability</h2>
+              <p>add calendar here</p>
             </div>
-
-
-      
           </Col >
           <Col className="px-5" sm="6">
             <div className="mb-4">
                 <h2>Reviews</h2>
-                <p>add reviews of organizer type here</p>
+                <p>add reviews of talent type here</p>
               </div>
           </Col>
         </Row>
