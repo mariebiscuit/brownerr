@@ -27,6 +27,8 @@ interface OrganizerProps {
 export default function OrganizerSection(props: OrganizerProps) {
   
   const lastNameChar: string = props.user.lastName.slice(0,1)
+
+  
   return (
     <div>
       <Container>

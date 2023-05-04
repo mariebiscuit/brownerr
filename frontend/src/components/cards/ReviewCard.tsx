@@ -1,13 +1,9 @@
 import { Review, User } from "../../Utilities";
-import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-import { Rating } from 'react-simple-star-rating'
 import {GiRoundStar} from "react-icons/gi"
-import {MdGroups3, MdPerson} from "react-icons/md"
-import { Container } from "react-bootstrap";
-import { colors } from "@mui/material";
+
 
 
 /**

@@ -1,11 +1,6 @@
 import { Opportunity, User } from "../../Utilities";
-import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
-import { Rating } from 'react-simple-star-rating'
-import {IoLocationSharp, IoCalendarClear} from "react-icons/io5"
-import {AiOutlineSmile, AiOutlineFrown, AiOutlineMeh} from "react-icons/ai"
+import {IoLocationSharp, IoCalendarClear} from "react-icons/io5";
 import { Link } from "react-router-dom";
 
 

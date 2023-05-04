@@ -1,14 +1,4 @@
 import { Opportunity, User } from "../../Utilities";
-import Button from 'react-bootstrap/Button';
-import Card from 'react-bootstrap/Card';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
-import { Rating } from 'react-simple-star-rating'
-import {GiRoundStar} from "react-icons/gi"
-import {AiOutlineSmile, AiOutlineFrown, AiOutlineMeh} from "react-icons/ai"
-import { Container } from "react-bootstrap";
-import TalentCard from "../cards/TalentCard";
-import OrganizerCard from "../cards/OrganizerCard";
 import OpportunityCard from "../cards/OpportunityCard";
 
 
