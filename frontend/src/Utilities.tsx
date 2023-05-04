@@ -1,6 +1,6 @@
 
 export interface User{
-  
+  id: number;
   firstName: string;
   lastName: string;
   isOrganization: boolean;
@@ -29,6 +29,7 @@ export interface Review{
 
 
 export interface Opportunity{
+  id: number;
   name: string;
   type: string;
   category: string;
@@ -38,9 +39,15 @@ export interface Opportunity{
   location: string;
   startDate: MyDate;
   endDate: MyDate;
+  overview: string;
+  qualification: string[];
+  responsibility: string[];
+  applicants: User[];
+
 }
 
 export interface MyDate{
+  
   year: number;
   month: number;
   date: number;

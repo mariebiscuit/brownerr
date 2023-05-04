@@ -1,11 +1,7 @@
-import { Opportunity, User } from "../Utilities";
-import Button from 'react-bootstrap/Button';
+import { Opportunity, User } from "../../Utilities";
 import Card from 'react-bootstrap/Card';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
-import { Rating } from 'react-simple-star-rating'
-import {IoLocationSharp, IoCalendarClear} from "react-icons/io5"
-import {AiOutlineSmile, AiOutlineFrown, AiOutlineMeh} from "react-icons/ai"
+import {IoLocationSharp, IoCalendarClear} from "react-icons/io5";
+import { Link } from "react-router-dom";
 
 
 /**
@@ -24,9 +20,10 @@ interface OpportunityCardProps {
  * @returns a new InputBox as functional HTML Element
  */
 export default function OpportunityCard(props: OpportunityCardProps) {
-
+  const idString : string = props.job.id.toString();
   return (
     <Card className="opportunity-card">
+      <Link to={"/opportunity/" + idString}>
       <Card.Body className="opportunity-card-body">
         <Card.Text style={{color: "#8A8A8A"}}>{props.job.type} - {props.job.category} - {props.job.subcategory}</Card.Text>
         <Card.Title className="text-left opportunity-card-title" >{props.job.name}</Card.Title>
@@ -50,6 +47,7 @@ export default function OpportunityCard(props: OpportunityCardProps) {
         
       
       </Card.Body>
+      </Link>
     </Card>
   );
 
