@@ -458,7 +458,7 @@ a:hover {
 
 .wrapper {
   display:grid;
-  grid-template-columns: repeat(auto-fit, minmax(16rem, 20rem));
+  grid-template-columns: repeat(auto-fit, minmax(25rem, 35rem));
   gap:3rem;
   justify-content: left;
 

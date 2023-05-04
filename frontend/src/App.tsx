@@ -62,8 +62,8 @@ function App(props: AppProps) {
   }
   
   const [currentUser, setCurrentUser] = useState<User> (user1);
-  const [profiles, setProfiles] = useState<User[]> ([user1]);
-  const [opportunities, setOpportunities] = useState<Opportunity[]> ([job1]);
+  const [profiles, setProfiles] = useState<User[]> ([user1, user1, user1, user1, user1, user1, user1, user1, user1, user1]);
+  const [opportunities, setOpportunities] = useState<Opportunity[]> ([job1, job1, job1, job1, job1, job1, job1, job1]);
  
   return (
     <body>
