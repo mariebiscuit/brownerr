@@ -61,8 +61,7 @@ export default function ProfilePage(props: ProfileProps) {
   
   else{
     return (
-    
-      <body>
+
         <div className="profile">
           <Container>
             <Row className="align-items-center py-5">
@@ -144,7 +143,7 @@ export default function ProfilePage(props: ProfileProps) {
           
           
         </div>
-      </body>
+      
     );
   }
 

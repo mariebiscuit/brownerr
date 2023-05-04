@@ -61,7 +61,7 @@ export default function OpportunityPage(props: OpportunityProps) {
   
   else{
     return (
-      <body>
+ 
         <div className="profile">
           <Container>
             <Row className="align-items-center py-5">
@@ -118,7 +118,7 @@ export default function OpportunityPage(props: OpportunityProps) {
           
           
         </div>
-      </body>
+
     );
   
   }

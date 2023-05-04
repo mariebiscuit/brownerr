@@ -292,8 +292,11 @@
   pointer-events:none;
 }
 
-.profile{
+body{
   background-image: linear-gradient(180deg, #A44F00 0%, #FDA64F 82.45%, #F77700 100%) !important;
+}
+.profile{
+  background-color: transparent;
   color: white;
   width: 100%;
 }
@@ -420,4 +423,43 @@ a:link, a:visited {
 a:hover {
   color: rgb(0, 0, 0);
   text-decoration: none;
+}
+
+.logo{
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+  color: white;
+
+}
+
+.logo-text{
+
+  font-size: 3rem;
+  
+}
+
+.dm-serif{
+  font-family: 'DM Serif Display', serif;
+}
+
+.roboto-italic{
+  font-style: italic;
+  font-weight: 300;
+}
+
+.account-info{
+  display: flex;
+  align-self: center ;
+  margin-left: auto;
+}
+
+
+ 
+
+.wrapper {
+  display:grid;
+  grid-template-columns: repeat(auto-fit, minmax(16rem, 20rem));
+  gap:3rem;
+  justify-content: left;
+
 }

@@ -9,7 +9,8 @@ import OrganizerCard from "./components/cards/OrganizerCard";
 import ProfilePage from "./components/profile_page/ProfilePage";
 import OpportunityPage from "./components/opportunity_page/OpportunityPage";
 import MainPage from "./components/main_page/MainPage";
-import { Route, Routes } from "react-router-dom";
+import { Link, Route, Routes } from "react-router-dom";
+import { Container, Navbar } from "react-bootstrap";
 
 interface AppProps {
 
@@ -60,14 +61,28 @@ function App(props: AppProps) {
   
   }
   
-  const [currentUser, setCurrentUser] = useState<User | undefined> (undefined);
+  const [currentUser, setCurrentUser] = useState<User> (user1);
   const [profiles, setProfiles] = useState<User[]> ([user1]);
   const [opportunities, setOpportunities] = useState<Opportunity[]> ([job1]);
  
   return (
-    <>
+    <body>
+      <Navbar style={{backgroundColor:"transparent"}} expand="lg">
+        <Container>
+          <Navbar.Brand className="logo"><Link to={""}><span style={{color: "white"}} className="logo-text"> <span className="dm-serif">Browne</span><span className="roboto-italic">RR</span></span></Link> </Navbar.Brand>
+         
+            <div className="account-info"> 
+
+              <span style={{color:"white"}}>Welcome, <strong>{currentUser.firstName}</strong>    <img  className="avatar-stats mx-3" src={currentUser.profilePicPath} /></span>
+              
+            </div>
+            
+       
+        </Container>
+      </Navbar>
+
       <Routes>
-        <Route path="/" element={<MainPage user={user1}></MainPage>}/>
+        <Route path="/" element={<MainPage user={user1} talentList={profiles} organizerList={profiles} opportunityList={opportunities}></MainPage>}/>
         <Route path="/talent">
           <Route path=":id" element={<ProfilePage talentView={true} talentList={profiles}></ProfilePage>}/>
         </Route>
@@ -79,8 +94,12 @@ function App(props: AppProps) {
           <Route path=":id" element={<OpportunityPage jobList={opportunities}></OpportunityPage>}/>
         </Route>
       </Routes>
-      <div className="content-div">
-      <div className="repl">
+
+      
+      
+        
+
+    
       
       
       {/* <TalentCard user = {user1}/>
@@ -92,18 +111,9 @@ function App(props: AppProps) {
       <OpportunityPage job = {job1}></OpportunityPage>
       */}
 
-      <OrganizerCard user = {user1}/> 
       
-      <OpportunityCard job = {job1}/>
-      
-
-      
-
-      
-      
-      </div>
-    </div>
-    </>
+    </body>
+  
     
   );
 }
