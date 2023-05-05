@@ -201,7 +201,7 @@ def get_all_services():
 
 # Seeing all jobs in the database
 @app.route("/job/list/", methods=["GET"])
-def get_all_services():
+def get_all_jobs():
     jobs = Job.query.all()
     return jsonify([job.to_json() for job in jobs])
 
