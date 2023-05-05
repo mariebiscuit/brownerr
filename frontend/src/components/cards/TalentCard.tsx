@@ -25,54 +25,49 @@ interface TalentCardProps {
  * @returns a new InputBox as functional HTML Element
  */
 export default function TalentCard(props: TalentCardProps) {
+
   
-  const lastNameChar: string = props.user.lastName.slice(0,1)
   const idString : string = props.user.id.toString();
   return (
     
       <Card className="talent-card">
         <Link to={"/talent/" + idString}> 
-        {(() => {
+        {/* {(() => {
             switch(props.user.availability) {
               case "open": return <Button className="availability green"><AiOutlineSmile size={20} className="avail-icons"></AiOutlineSmile> Open to Work</Button> ;
               case "moderate": return <Button className="availability orange"><AiOutlineMeh size={20} className="avail-icons"></AiOutlineMeh> Slightly Busy</Button> ;
               case "busy": return <Button className="availability red"><AiOutlineFrown size={20} className="avail-icons"></AiOutlineFrown> Unavailable</Button> ;
               default: return <Button className="availability red"><AiOutlineFrown size={20} className="avail-icons"></AiOutlineFrown> Unavailable</Button> 
             }
-          })()}
+          })()} */}
       
-        <Card.Img variant="top" className="talent-card-img" src={props.user.profilePicPath} />
+        <Card.Img variant="top" className="talent-card-img" src={"../user_img.jpeg"} />
         <Card.Body className="talent-card-body">
         
 
-          {(() => {
+          {/* {(() => {
             switch(lastNameChar) {
               case "": return  <Card.Title className="text-left talent-card-title" >{props.user.firstName}</Card.Title> ;
               default: return  <Card.Title className="text-left talent-card-title" >{props.user.firstName} {lastNameChar}.</Card.Title>
             }
-          })()}
+          })()} */}
+          <Card.Title className="text-left talent-card-title" >{props.user.name}</Card.Title>
         
-          <Row className="px-3">
+          {/* <Row className="px-3">
             <Col> <Button className="card-tag">{props.user.categories[0]}</Button> </Col>
             <Col> <Button className="card-tag">{props.user.subcategories[0]}</Button> </Col>
             <Col> <Button className="card-tag">{props.user.subcategories[1]}</Button></Col>
-          </Row>
+          </Row> */}
         
           <Row className="second-row-talent-card">
-            <Col sm="5"> 
-              <div className="talent-num-div" >
-                <p className="text-left talent-num-title">Rate Per Hour:</p>
-                <p className="talent-card-title" style={{fontSize: "20px"}}>${props.user.rate}</p>
-              </div> 
-            </Col >
-              
-            <Col sm="7">
+           
+            
               <div className="talent-num-div" >
                 <p className="text-left talent-num-title" >Star Rating:</p>
-                <Rating initialValue={props.user.rating} allowHover={false} fillColor= {"#FF7A00"} disableFillHover={true} fillIcon={<GiRoundStar size={32}/>} emptyIcon={<GiRoundStar size={32}/>} className="talent-card-stars"/>
+                <Rating initialValue={props.user.rating_provider} allowHover={false} fillColor= {"#FF7A00"} disableFillHover={true} fillIcon={<GiRoundStar size={32}/>} emptyIcon={<GiRoundStar size={32}/>} className="talent-card-stars"/>
     
               </div>
-            </Col>
+          
 
           </Row>
 

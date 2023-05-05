@@ -68,19 +68,19 @@ export default function ProfilePage(props: ProfileProps) {
               <Col sm="6">
                 <Row className="align-items-center">
                   <Col sm="6">
-                    <Card.Img className="avatar-big" src={user.profilePicPath} />
+                    <Card.Img className="avatar-big" src={"../user_img.jpeg"} />  {/** To be changed */}
                   </Col>
                   <Col sm="6" >
-                    <h1><span>{user.firstName} </span> <span className="ultra-thin">{user.lastName}</span></h1>
+                    <h1><span>{user.name} </span> <span className="ultra-thin"></span></h1>
                     <p>{user.bio}</p>
-                    {(() => {
+                    {/* {(() => {
                       switch(user.availability) {
                         case "open": return <Button className="availability-profile green"><AiOutlineSmile size={20} className="avail-icons"></AiOutlineSmile> Open to Work</Button> ;
                         case "moderate": return <Button className="availability-profile orange"><AiOutlineMeh size={20} className="avail-icons"></AiOutlineMeh> Slightly Busy</Button> ;
                         case "busy": return <Button className="availability-profile red"><AiOutlineFrown size={20} className="avail-icons"></AiOutlineFrown> Unavailable</Button> ;
                         default: return <Button className="availability-profile red"><AiOutlineFrown size={20} className="avail-icons"></AiOutlineFrown> Unavailable</Button> 
                       }
-                    })()}
+                    })()} */}
                   </Col>
                 </Row>
                 
@@ -91,13 +91,13 @@ export default function ProfilePage(props: ProfileProps) {
               <Col sm="4" >
                 <div>
                   <div className="stars-bg">
-                  <Rating initialValue={user.rating} allowHover={false} fillColor= {"#FF7A00"} disableFillHover={true} fillIcon={<GiRoundStar size={32}/>} emptyIcon={<GiRoundStar size={32}/>} className="talent-card-stars"/>
+                  <Rating initialValue={user.rating_provider} allowHover={false} fillColor= {"#FF7A00"} disableFillHover={true} fillIcon={<GiRoundStar size={32}/>} emptyIcon={<GiRoundStar size={32}/>} className="talent-card-stars"/>
      
                   </div>
                   <div>
-                    <h2 style={{fontSize: "20px"}}>
+                    {/* <h2 style={{fontSize: "20px"}}>
                       ${user.rate}/Hour
-                    </h2>
+                    </h2> */}
                   </div>
                   <div>
                     <Row className="align-items-center">

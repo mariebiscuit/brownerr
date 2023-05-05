@@ -47,7 +47,7 @@ export default function OpportunitySection(props: JobProps) {
   
   };
   const dummyReview : Review = {rating: 3.5, content: "Sorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate libero et velit interdum, ac aliquet odio mattis. Class aptent taciti sociosqu ad litora torquent.",
-  title: "great organizer", user: dummyUser, type: "org"
+  title: "great organizer", user: dummyUser, type: "org", receipient: dummyUser
 
   };
   const responsibilities = props.job.responsibility;
