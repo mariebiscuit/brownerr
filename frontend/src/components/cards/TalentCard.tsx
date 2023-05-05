@@ -59,17 +59,17 @@ export default function TalentCard(props: TalentCardProps) {
             <Col> <Button className="card-tag">{props.user.subcategories[1]}</Button></Col>
           </Row> */}
         
-          <Row className="second-row-talent-card">
+          
            
             
-              <div className="talent-num-div" >
-                <p className="text-left talent-num-title" >Star Rating:</p>
-                <Rating initialValue={props.user.rating_provider} allowHover={false} fillColor= {"#FF7A00"} disableFillHover={true} fillIcon={<GiRoundStar size={32}/>} emptyIcon={<GiRoundStar size={32}/>} className="talent-card-stars"/>
-    
-              </div>
-          
+          <div className="talent-num-div" >
+            <p className="text-left talent-num-title" >Star Rating:</p>
+            <Rating initialValue={props.user.rating_provider} allowHover={false} fillColor= {"#FF7A00"} disableFillHover={true} fillIcon={<GiRoundStar size={32}/>} emptyIcon={<GiRoundStar size={32}/>} className="talent-card-stars"/>
 
-          </Row>
+          </div>
+      
+
+        
 
 
         

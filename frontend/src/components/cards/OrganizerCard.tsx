@@ -25,7 +25,6 @@ interface OrganizerProps {
  * @returns a new InputBox as functional HTML Element
  */
 export default function OrganizerCard(props: OrganizerProps) {
-  const lastNameChar: string = props.user.lastName.slice(0,1);
   const idString : string = props.user.id.toString();
   return (
     <Card className="organizer-card">
@@ -37,23 +36,24 @@ export default function OrganizerCard(props: OrganizerProps) {
         <Row className="row-organizer-card">
           <Col sm="5"> 
             
-            <Card.Img variant="top" className="organizer-card-img" src={props.user.profilePicPath} />
-            {(() => {
+            <Card.Img variant="top" className="organizer-card-img" src={"../user_img.jpeg"} />
+            {/* {(() => {
             switch(props.user.isOrganization) {
               case true: return <Button className="organizer-type green"><MdGroups3 size={20} className="avail-icons"></MdGroups3> Organization</Button> ;
               default: return <Button className="organizer-type orange"><MdPerson size={20} className="avail-icons"></MdPerson> Individual</Button> 
             }
-            })()}
+            })()} */}
           </Col >
             
           <Col sm="7">
-              {(() => {
+              {/* {(() => {
               switch(lastNameChar) {
                 case "": return  <Card.Title className="text-left talent-card-title" >{props.user.firstName}</Card.Title> ;
                 default: return  <Card.Title className="text-left talent-card-title" >{props.user.firstName} {lastNameChar}.</Card.Title>
               }
-              })()}
-            <Row className="px-3">
+              })()} */}
+              <Card.Title className="text-left talent-card-title" >{props.user.name}</Card.Title>
+            {/* <Row className="px-3">
               <Col> <Button className="card-tag">{props.user.categories[0]}</Button> </Col>
               <Col> <Button className="card-tag">{props.user.subcategories[0]}</Button> </Col>
               
@@ -62,11 +62,11 @@ export default function OrganizerCard(props: OrganizerProps) {
             <Row className="px-3">
               <Col> <Button className="card-tag">{props.user.subcategories[1]}</Button></Col>
               <Col></Col>
-            </Row>
+            </Row> */}
 
             <div className="talent-num-div mt-5" >
               <p className="text-left talent-num-title" >Star Rating:</p>
-              <Rating initialValue={props.user.rating} allowHover={false} fillColor= {"#FF7A00"} disableFillHover={true} fillIcon={<GiRoundStar size={32}/>} emptyIcon={<GiRoundStar size={32}/>} className="talent-card-stars"/>
+              <Rating initialValue={props.user.rating_recipient} allowHover={false} fillColor= {"#FF7A00"} disableFillHover={true} fillIcon={<GiRoundStar size={32}/>} emptyIcon={<GiRoundStar size={32}/>} className="talent-card-stars"/>
    
             </div>
           </Col>
