@@ -80,9 +80,9 @@ function App(props: AppProps) {
         `http://localhost:2000/user/list/`
       ).then(response => response.json());
       
-      const users : User[] = JSON.parse(response)
+      const users : User[] = response
       setProfiles(users)
-      console.log(response)
+      console.log(JSON.parse(response))
       
     }
     getData()
