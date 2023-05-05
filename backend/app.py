@@ -12,6 +12,7 @@ app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'brownerr.db')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
+
 db = SQLAlchemy(app)
 
 app.app_context().push()
@@ -152,7 +153,9 @@ db.create_all()
 @app.route("/user/list/", methods=["GET"])
 def get_all_users():
     users = User.query.all()
-    return jsonify([user.to_json() for user in users])
+    resp =  jsonify([user.to_json() for user in users])
+    resp.headers['Access-Control-Allow-Origin'] = '*'
+    return resp
 
 
 # Searching for users by unique id

@@ -77,11 +77,11 @@ function App(props: AppProps) {
   useEffect(() => {
     async function getData() {
       const response = await fetch(
-        `http://localhost:2000/user/list/`, { mode: 'no-cors' }
-      );
+        `http://localhost:2000/user/list/`
+      ).then(response => response.json());
       
-      //const users : User[] = JSON.parse(response)
-      //setProfiles(users)
+      const users : User[] = JSON.parse(response)
+      setProfiles(users)
       console.log(response)
       
     }
