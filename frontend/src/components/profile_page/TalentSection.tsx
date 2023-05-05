@@ -26,7 +26,7 @@ interface TalentProps {
  */
 export default function TalentSection(props: TalentProps) {
   
-  const lastNameChar: string = props.user.lastName.slice(0,1)
+  // const lastNameChar: string = props.user.lastName.slice(0,1)
   return (
     <div >
       <Container>
@@ -34,7 +34,8 @@ export default function TalentSection(props: TalentProps) {
           <Col className="px-5" sm="6">
             <div className="mb-4">
               <h2>Overview</h2>
-              <p className="content-text">{props.user.overviews}</p>
+              {/* <p className="content-text">{props.user.overviews}</p> */}
+              <p className="content-text">insert overviews here</p>
             </div>
 
             <div className="mb-4">

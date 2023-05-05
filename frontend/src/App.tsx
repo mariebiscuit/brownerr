@@ -1,11 +1,7 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "../styles/App.css";
-import Header from "./components/Header";
-
-import TalentCard from "./components/cards/TalentCard"
 import { Opportunity, User } from "./Utilities";
-import OpportunityCard from "./components/cards/OpportunityCard";
-import OrganizerCard from "./components/cards/OrganizerCard";
+
 import ProfilePage from "./components/profile_page/ProfilePage";
 import OpportunityPage from "./components/opportunity_page/OpportunityPage";
 import MainPage from "./components/main_page/MainPage";
@@ -23,23 +19,35 @@ interface AppProps {
 function App(props: AppProps) {
   
 
-  let user1: User = { firstName: "Gus",
-                      lastName: "Janek",
-                      isOrganization: false,
-                     profilePicPath: "../user_img.jpeg",
-                     categories: ["Music"],
-                     subcategories: ["DJ", "Performance"],
-                      bio: `Brown 2024, Offer DJ service at parties`,
-                      rate: 12,
-                      rating: 4,
-                      availability: "open",
-                      overviews: "Sorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate libero et velit interdum, ac aliquet odio mattis. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Curabitur tempus urna at turpis condimentum lobortis. Ut commodo efficitur neque. Ut diam quam, semper iaculis condimentum ac, vestibulum eu nisl.",
-                      mediaPath: "",
-                      reviews: [],
-                      isOrganizer: false,
-                      id: 1
+  // let user1: User = { firstName: "Gus",
+  //                     lastName: "Janek",
+  //                     isOrganization: false,
+  //                    profilePicPath: "../user_img.jpeg",
+  //                    categories: ["Music"],
+  //                    subcategories: ["DJ", "Performance"],
+  //                     bio: `Brown 2024, Offer DJ service at parties`,
+  //                     rate: 12,
+  //                     rating: 4,
+  //                     availability: "open",
+  //                     overviews: "Sorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate libero et velit interdum, ac aliquet odio mattis. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Curabitur tempus urna at turpis condimentum lobortis. Ut commodo efficitur neque. Ut diam quam, semper iaculis condimentum ac, vestibulum eu nisl.",
+  //                     mediaPath: "",
+  //                     reviews: [],
+  //                     isOrganizer: false,
+  //                     id: 1
 
-  }
+  // }
+
+  let user1: User = {    available_provider: 1,
+    bio: "I am a professional landscaper",
+    created_at: "Tue, 02 May 2023 15:03:58 GMT",
+    email: "bob.johnson2@example.com",
+    id: 3,
+    name: "Bob Johnson2",
+    rating_provider: 0.0,
+    rating_recipient: 0.0,
+    service: 3
+
+}
 
  
 
@@ -64,6 +72,21 @@ function App(props: AppProps) {
   const [currentUser, setCurrentUser] = useState<User> (user1);
   const [profiles, setProfiles] = useState<User[]> ([user1, user1, user1, user1, user1, user1, user1, user1, user1, user1]);
   const [opportunities, setOpportunities] = useState<Opportunity[]> ([job1, job1, job1, job1, job1, job1, job1, job1]);
+
+
+  useEffect(() => {
+    async function getData() {
+      const response = await fetch(
+        `http://localhost:2000/user/list/`
+      ).then(response => response.json());
+      
+      const users : User[] = response
+      setProfiles(users)
+      console.log(JSON.parse(response))
+      
+    }
+    getData()
+  }, [])
  
   return (
     <body>
@@ -73,7 +96,7 @@ function App(props: AppProps) {
          
             <div className="account-info"> 
 
-              <span style={{color:"white"}}>Welcome, <strong>{currentUser.firstName}</strong>    <img  className="avatar-stats mx-3" src={currentUser.profilePicPath} /></span>
+              <span style={{color:"white"}}>Welcome, <strong>{currentUser.name}</strong>    <img  className="avatar-stats mx-3" src={"../user_img.jpeg"} /></span>
               
             </div>
             
