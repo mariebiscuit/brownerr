@@ -75,7 +75,7 @@ function App(props: AppProps) {
 
 
   useEffect(() => {
-    async function getData() {
+    async function getDataUser() {
       const response = await fetch(
         `http://localhost:2000/user/list/`
       ).then(response => response.json());
@@ -85,8 +85,23 @@ function App(props: AppProps) {
       console.log(JSON.parse(response))
       
     }
-    getData()
+    getDataUser()
   }, [])
+
+
+  // useEffect(() => {
+  //   async function getDataOpportunity() {
+  //     const response = await fetch(
+  //       `http://localhost:2000/user/list/`
+  //     ).then(response => response.json());
+      
+  //     const users : User[] = response
+  //     setProfiles(users)
+  //     console.log(JSON.parse(response))
+      
+  //   }
+  //   getDataOpportunity()
+  // }, [])
  
   return (
     <body>
