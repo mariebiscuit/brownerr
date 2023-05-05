@@ -22,15 +22,15 @@ class User(db.Model):
     __tablename__ = 'user'
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    name = db.Column(db.String(100), nullable=False)
-    service = db.Column(db.Integer, db.ForeignKey('service.id'))
+    name = db.Column(db.String(100), nullable=False)  # split into first and last time
+    service = db.Column(db.Integer, db.ForeignKey('service.id'))  # String
     bio = db.Column(db.Text)
     email = db.Column(db.String(80), unique=True, nullable=False)
     rating_provider = db.Column(db.Float, default=0.0)
     rating_recipient = db.Column(db.Float, default=0.0)
     num_ratings_provider = db.Column(db.Integer, default=0)
     num_ratings_recipient = db.Column(db.Integer, default=0)
-    available_provider = db.Column(db.Integer, default=1)
+    available_provider = db.Column(db.Integer, default=1)  # change to three categories
     created_at = db.Column(db.DateTime(timezone=True), server_default=func.now())
 
     __table_args__ = (
@@ -143,6 +143,8 @@ class Job(db.Model):
 # Creating the database with above defined table(s)
 db.create_all()
 
+# IMPORTANT: ADD REVIEWS FOR EACH USER (ENDPOINT)
+
 """
 -------- Read Functionality --------
 """
@@ -192,6 +194,13 @@ def get_all_transactions():
 def get_all_services():
     services = Service.query.all()
     return jsonify([service.to_json() for service in services])
+
+
+# Seeing all jobs in the database
+@app.route("/job/list/", methods=["GET"])
+def get_all_services():
+    jobs = Job.query.all()
+    return jsonify([job.to_json() for job in jobs])
 
 
 """
@@ -332,7 +341,6 @@ def delete_jobs():
 
 """
 -------- Update Functionality --------
-
 """
 
 
