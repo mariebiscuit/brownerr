@@ -6,6 +6,8 @@ from sqlalchemy import func, CheckConstraint, event
 from flask import Flask, jsonify, request
 from flask_sqlalchemy import SQLAlchemy
 
+from auth_middleware import token_required
+
 basedir = os.path.abspath(os.path.dirname(__file__))
 
 app = Flask(__name__)
@@ -33,6 +35,7 @@ class User(db.Model):
     num_ratings_recipient = db.Column(db.Integer, default=0)
     available_provider = db.Column(db.Integer, default=1)  # change to three categories
     created_at = db.Column(db.DateTime(timezone=True), server_default=func.now())
+    role = db.Column(db.String(100), nullable=False)
 
     __table_args__ = (
         CheckConstraint('rating_provider >= 0.0 AND rating_recipient <= 5.0', name='rating_provider_range'),
@@ -55,7 +58,8 @@ class User(db.Model):
             'rating_provider': self.rating_provider,
             'rating_recipient': self.rating_recipient,
             'available_provider': self.available_provider,
-            'created_at': self.created_at
+            'created_at': self.created_at,
+            'role': self.role
         }
 
     # Associating the records to user's first name
@@ -150,7 +154,6 @@ db.create_all()
 -------- Read Functionality --------
 """
 
-
 # Seeing all users in the database
 @app.route("/user/list/", methods=["GET"])
 def get_all_users():
@@ -210,7 +213,6 @@ def get_all_jobs():
 -------- Create Functionality --------
 """
 
-
 # All users should have access to this endpoint (however they can only access it once unless deleted - unique email)
 @app.route('/user/create/', methods=["GET", "POST"])
 def create_user():
@@ -264,15 +266,17 @@ def create_transaction():
 
 # Only admin should have access to this endpoint
 @app.route('/service/create/', methods=["GET", "POST"])
-def create_service():
-    data = request.get_json()
-    name = data['name']
+@token_required
+def create_service(current_user):
+    if current_user.role == 'admin':
+        data = request.get_json()
+        name = data['name']
 
-    service = Service(name=name)
+        service = Service(name=name)
 
-    db.session.add(service)
-    db.session.commit()
-    return {'message': 'service added successfully'}
+        db.session.add(service)
+        db.session.commit()
+        return {'message': 'service added successfully'}
 
 
 # Any user should have access to this endpoint
@@ -290,74 +294,83 @@ def create_job():
 -------- Delete Functionality --------
 """
 
-
 # Only the admin should have access to this (mainly for testing purposes)
 @app.route("/user/delete/all/", methods=["DELETE"])
-def delete_users():
-    users = User.query.all()
-    for user in users:
-        db.session.delete(user)
-    db.session.commit()
-    return {'message': 'All users deleted successfully.'}
+@token_required
+def delete_users(current_user):
+    if current_user.role == 'admin':
+        users = User.query.all()
+        for user in users:
+            db.session.delete(user)
+        db.session.commit()
+        return {'message': 'All users deleted successfully.'}
 
 
 # All users should have access to this endpoint; however should only be able to delete their own id
 @app.route("/user/delete/<int:id>/", methods=["DELETE"])
-def delete_user(id):
-    user = User.query.get(id)
-    if user is None:
-        abort()
-    db.session.delete(user)
-    db.session.commit()
-    return {'message': 'User deleted successfully.'}
+@token_required
+def delete_user(current_user, id):
+    if current_user.id == id or current_user.role == 'admin':
+        user = User.query.get(id)
+        db.session.delete(user)
+        db.session.commit()
+        return {'message': 'User deleted successfully.'}
+    else:
+        abort(401)
 
 
 # Only the admin should have access to this (mainly for testing purposes)
 @app.route("/transaction/delete/all", methods=["DELETE"])
-def delete_transactions():
-    transactions = Transaction.query.all()
-    for transaction in transactions:
-        db.session.delete(transaction)
-    db.session.commit()
-    return {'message': 'All transactions deleted successfully.'}
+@token_required
+def delete_transactions(current_user):
+    if current_user.role == 'admin':
+        transactions = Transaction.query.all()
+        for transaction in transactions:
+            db.session.delete(transaction)
+        db.session.commit()
+        return {'message': 'All transactions deleted successfully.'}
 
 
 # Only the admin should have access to this (mainly for testing purposes)
 @app.route("/service/delete/all/", methods=["DELETE"])
-def delete_services():
-    services = Service.query.all()
-    for service in services:
-        db.session.delete(service)
-    db.session.commit()
-    return {'message': 'All services deleted successfully.'}
+@token_required
+def delete_services(current_user):
+    if current_user.role == 'admin':
+        services = Service.query.all()
+        for service in services:
+            db.session.delete(service)
+        db.session.commit()
+        return {'message': 'All services deleted successfully.'}
 
 
 # Only the admin should have access to this (mainly for testing purposes)
 @app.route("/job/delete/all/", methods=["DELETE"])
-def delete_jobs():
-    jobs = Job.query.all()
-    for job in jobs:
-        db.session.delete(job)
-    db.session.commit()
-    return {'message': 'All jobs deleted successfully.'}
+def delete_jobs(current_user):
+    if current_user.role == 'admin':
+        jobs = Job.query.all()
+        for job in jobs:
+            db.session.delete(job)
+        db.session.commit()
+        return {'message': 'All jobs deleted successfully.'}
 
 
 """
 -------- Update Functionality --------
 """
 
-
 # All users should have access to this endpoint
 @app.route("/user/update/<int:id>/", methods=["PUT"])
-def update_user_info(id):
-    user = User.query.get(id)
-    if user is None:
-        abort()
-    user.service = request.json.get('service', user.service)
-    user.bio = request.json.get('bio', user.bio)
-    user.available_provider = request.json.get('available_provider', user.available_provider)
-    db.session.commit()
-    return {'message': 'Bio and availability successfully updated.'}
+@token_required
+def update_user_info(current_user, id):
+    if current_user.id == id or current_user.role == 'admin':
+        user = User.query.get(id)
+        user.service = request.json.get('service', user.service)
+        user.bio = request.json.get('bio', user.bio)
+        user.available_provider = request.json.get('available_provider', user.available_provider)
+        db.session.commit()
+        return {'message': 'Bio and availability successfully updated.'}
+    else:
+        abort(401)
 
 
 if __name__ == "__main__":

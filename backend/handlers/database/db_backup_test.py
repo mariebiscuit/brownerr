@@ -14,6 +14,7 @@ class TestBackup(unittest.TestCase):
         brownerr.close()
         brownerr_backup.close()
 
+    # TODO: Check why this fails?
     def test_backup_transactions(self):
         brownerr = sqlite3.connect('../../brownerr.db')
         brownerr_backup = sqlite3.connect('brownerr_backup.db')
