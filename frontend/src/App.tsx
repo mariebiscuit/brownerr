@@ -7,6 +7,8 @@ import OpportunityPage from "./components/opportunity_page/OpportunityPage";
 import MainPage from "./components/main_page/MainPage";
 import { Link, Route, Routes } from "react-router-dom";
 import { Container, Navbar } from "react-bootstrap";
+import { GoogleLogin } from '@react-oauth/google';
+
 
 interface AppProps {
 
@@ -37,7 +39,7 @@ function App(props: AppProps) {
 
   // }
 
-  let user1: User = {    available_provider: 1,
+  let user1: User = {available_provider: 1,
     bio: "I am a professional landscaper",
     created_at: "Tue, 02 May 2023 15:03:58 GMT",
     email: "bob.johnson2@example.com",
@@ -45,11 +47,11 @@ function App(props: AppProps) {
     name: "Bob Johnson2",
     rating_provider: 0.0,
     rating_recipient: 0.0,
-    service: 3
+    service: 3,
+    picture: '../user_img.jpeg'
 
 }
 
- 
 
   let job1: Opportunity = {name: "DJ Partner Wanted for Cool Remix Project :)",
                            type: "Collab",
@@ -69,23 +71,29 @@ function App(props: AppProps) {
   
   }
   
-  const [currentUser, setCurrentUser] = useState<User> (user1);
-  const [profiles, setProfiles] = useState<User[]> ([user1, user1, user1, user1, user1, user1, user1, user1, user1, user1]);
+  const [currentUser, setCurrentUser] = useState<User>();
+  const [profiles, setProfiles] = useState<User[]> ([]);
+  const [idToIndex, setIdToIndex] = useState<Map<number, number>>(new Map());
   const [opportunities, setOpportunities] = useState<Opportunity[]> ([job1, job1, job1, job1, job1, job1, job1, job1]);
 
 
+  // Fetching all existing users in db
   useEffect(() => {
-    async function getDataUser() {
+     async function getDataUser() {
       const response = await fetch(
         `http://localhost:2000/user/list/`
       ).then(response => response.json());
       
       const users : User[] = response
       setProfiles(users)
-      console.log(JSON.parse(response))
-      
     }
-    getDataUser()
+
+    getDataUser().then(() => {    
+      profiles.forEach((user, i) => {
+      setIdToIndex(idToIndex.set(user.id, i))
+    }) 
+    console.log(idToIndex)
+  })
   }, [])
 
 
@@ -109,23 +117,40 @@ function App(props: AppProps) {
         <Container>
           <Navbar.Brand className="logo"><Link to={""}><span style={{color: "white"}} className="logo-text"> <span className="dm-serif">Browne</span><span className="roboto-italic">RR</span></span></Link> </Navbar.Brand>
          
-            <div className="account-info"> 
+          {//If user has not logged in
+          currentUser == undefined &&   
+            <div className = 'account-info'>  
+              <GoogleLogin
+              ux_mode='popup'
+              text='signin'
+              onSuccess={credentialResponse => {
+                fetch(`http://localhost:2000/user/signin/` + credentialResponse.credential).then(
+                  response => response.json().then(user => setCurrentUser(user))
+                  )}}
+              onError={() => {
+                console.log('Login Failed');
+              }}
+              /> </div>
+          }
 
-              <span style={{color:"white"}}>Welcome, <strong>{currentUser.name}</strong>    <img  className="avatar-stats mx-3" src={"../user_img.jpeg"} /></span>
-              
+          {// If user has logged in
+          currentUser != undefined &&
+            <div className="account-info"> 
+              <span style={{color:"white"}}>Welcome, <strong>{currentUser.name}</strong> 
+              <img className="avatar-stats mx-3" src= {currentUser.picture}/></span>
             </div>
-            
+          }
        
+
         </Container>
       </Navbar>
-
       <Routes>
         <Route path="/" element={<MainPage user={user1} talentList={profiles} organizerList={profiles} opportunityList={opportunities}></MainPage>}/>
         <Route path="/talent">
-          <Route path=":id" element={<ProfilePage talentView={true} talentList={profiles}></ProfilePage>}/>
+          <Route path=":id" element={<ProfilePage talentView={true} talentList={profiles} idToIndex={idToIndex}></ProfilePage>}/>
         </Route>
         <Route path="/organizer">
-          <Route path=":id" element={<ProfilePage talentView={false} talentList={profiles}></ProfilePage>}/>
+          <Route path=":id" element={<ProfilePage talentView={false} talentList={profiles} idToIndex={idToIndex}></ProfilePage>}/>
         </Route>
 
         <Route path="/opportunity">

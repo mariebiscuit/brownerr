@@ -9,7 +9,8 @@ curl --location --request POST 'http://localhost:2000/user/create/' \
     "service": 2,
     "bio": "I am a professional electrician",
     "email": "john.doe2@example.com",
-    "available_provider": 1
+    "available_provider": 1,
+    "role": "admin"
 }'
 
 curl --location --request POST 'http://localhost:2000/user/create/' \
@@ -19,7 +20,8 @@ curl --location --request POST 'http://localhost:2000/user/create/' \
     "service": 1,
     "bio": "I am a certified plumber",
     "email": "jane.smith2@example.com",
-    "available_provider": 1
+    "available_provider": 1,
+    "role": "user"
 }'
 
 curl --location --request POST 'http://localhost:2000/user/create/' \
@@ -29,5 +31,6 @@ curl --location --request POST 'http://localhost:2000/user/create/' \
     "service": 3,
     "bio": "I am a professional landscaper",
     "email": "bob.johnson2@example.com",
+    "role": "user",
     "available_provider": 1
 }'

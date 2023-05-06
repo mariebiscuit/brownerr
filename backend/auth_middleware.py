@@ -1,5 +1,4 @@
 from functools import wraps
-import jwt
 from flask import request, abort
 
 from google.oauth2 import id_token

@@ -23,6 +23,7 @@ import { useParams } from "react-router-dom";
 interface ProfileProps {
   talentList: User[];
   talentView: boolean;
+  idToIndex: Map<number, number>;
 }
 
 /**
@@ -32,18 +33,20 @@ interface ProfileProps {
  */
 export default function ProfilePage(props: ProfileProps) {
   const {id} = useParams();
-  var useID = -1;
+  var idx = -1;
   try{
-    useID = Number(id);
-  }
-  catch{
-    console.log("could not find user")
+    const initIdx = props.idToIndex.get(Number(id))
+    if (initIdx != undefined) {
+      idx = initIdx;
+    }
+  } catch{
+    console.log("Could not find user")
   }
   
   const [user, setUser] = useState<User>();
   useEffect(() => {
-     setUser(props.talentList[useID-1])
-  }, [id]);
+    setUser(props.talentList[idx])
+}, [idx]);
 
   const [contactActive, setContactActive] = useState(false);
   const [talentActive, setTalentActive] = useState(props.talentView);
@@ -83,7 +86,6 @@ export default function ProfilePage(props: ProfileProps) {
                     })()} */}
                   </Col>
                 </Row>
-                
           
               </Col>
               <Col sm="2">

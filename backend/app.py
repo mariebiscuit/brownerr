@@ -1,16 +1,20 @@
 import os.path
 from os import abort
+from functools import wraps
+from google.oauth2 import id_token
+from google.auth.transport import requests
+from google.auth import jwt
 
 from sqlalchemy import func, CheckConstraint, event
 
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, abort
+from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
-
-from auth_middleware import token_required
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
 app = Flask(__name__)
+CORS(app)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'brownerr.db')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
@@ -24,10 +28,11 @@ app.app_context().push()
 class User(db.Model):
     __tablename__ = 'user'
 
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    id = db.Column(db.Text, primary_key=True)
+    picture = name = db.Column(db.Text, nullable=False) 
     name = db.Column(db.String(100), nullable=False)  # split into first and last time
-    service = db.Column(db.Integer, db.ForeignKey('service.id'))  # String
-    bio = db.Column(db.Text)
+    service = db.Column(db.Integer, db.ForeignKey('service.id'), nullable=True)  # String
+    bio = db.Column(db.Text, nullable=True)
     email = db.Column(db.String(80), unique=True, nullable=False)
     rating_provider = db.Column(db.Float, default=0.0)
     rating_recipient = db.Column(db.Float, default=0.0)
@@ -52,6 +57,7 @@ class User(db.Model):
         return {
             'id': self.id,
             'name': self.name,
+            'picture': self.picture,
             'service': self.service,
             'bio': self.bio,
             'email': self.email,
@@ -150,6 +156,42 @@ db.create_all()
 
 # IMPORTANT: ADD REVIEWS FOR EACH USER (ENDPOINT)
 
+def token_required(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        token = None
+        if "credential" in request.headers:
+            token = request.headers["credential"].split(" ")[1] # maybe in headers?
+        if not token:
+            return {
+                "message": "Authentication Token is missing!",
+                "data": None,
+                "error": "Unauthorized"
+            }, 401
+        try:
+            idinfo = id_token.verify_oauth2_token(token, requests.Request(), Auth.CLIENT_ID)  # Token verified
+            userid = idinfo['sub'] # Google ID
+            current_user = User.query.get(userid)
+
+            if current_user is None:
+                return {
+                "message": "Invalid Authentication token!",
+                "data": None,
+                "error": "Unauthorized"
+                }, 401
+            if not current_user["active"]:
+                abort(403)
+        except Exception as e:
+            return {
+                "message": "Something went wrong",
+                "data": None,
+                "error": str(e)
+                }, 500
+
+        return f(current_user, *args, **kwargs)
+
+    return decorated
+
 """
 -------- Read Functionality --------
 """
@@ -213,6 +255,30 @@ def get_all_jobs():
 -------- Create Functionality --------
 """
 
+@app.route("/user/signin/<credential>", methods=["GET"])
+def signin_user(credential):
+    try:
+        data = jwt.decode(credential, verify=False)
+
+        user = User.query.get(data['sub'])
+
+        if user == None:
+            new_user = User(id = data['sub'],
+                        name=data['name'],
+                        picture = data['picture'],
+                        email=data['email'],
+                        role='user')
+            db.session.add(new_user)
+            db.session.commit()
+            user = User.query.get(data['sub'])
+        
+        return jsonify({'status': 200} | user.to_json())
+    
+    except:
+        return jsonify({'status': 400, 'message': 'Invalid credential'})
+
+
+
 # All users should have access to this endpoint (however they can only access it once unless deleted - unique email)
 @app.route('/user/create/', methods=["GET", "POST"])
 def create_user():
@@ -221,6 +287,7 @@ def create_user():
     service = data['service']
     bio = data['bio']
     email = data['email']
+    role = data['role']
     # rating_provider = data['rating_provider']
     # rating_recipient = data['rating_recipient']
     available_provider = data['available_provider']
@@ -232,7 +299,8 @@ def create_user():
                 email=email,
                 # rating_provider=rating_provider,
                 # rating_recipient=rating_recipient,
-                available_provider=available_provider)
+                available_provider=available_provider,
+                role=role)
     db.session.add(user)
     db.session.commit()
     return {'message': 'User added successfully.'}

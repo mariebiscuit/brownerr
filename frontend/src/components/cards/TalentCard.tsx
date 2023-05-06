@@ -41,7 +41,7 @@ export default function TalentCard(props: TalentCardProps) {
             }
           })()} */}
       
-        <Card.Img variant="top" className="talent-card-img" src={"../user_img.jpeg"} />
+        <Card.Img variant="top" className="talent-card-img" src={props.user.picture} />
         <Card.Body className="talent-card-body">
         
 

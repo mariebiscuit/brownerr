@@ -22,11 +22,12 @@ export interface User{
   bio: string,
   created_at: string,
   email: string,
-    id: number,
-    name: string,
-    rating_provider: number,
-    rating_recipient: number,
-    service: number
+  id: number,
+  name: string,
+  picture: string,
+  rating_provider: number,
+  rating_recipient: number,
+  service: number
 }
 
 
