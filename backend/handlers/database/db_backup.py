@@ -12,7 +12,6 @@ with io.open('backupdatabase_dump.sql', 'w') as p:
 print(' Backup performed successfully!')
 print(' Data Saved as backupdatabase_dump.sql')
 
-
 # Create a new database
 new_conn = sqlite3.connect('brownerr_backup.db')
 

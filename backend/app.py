@@ -18,7 +18,6 @@ CORS(app)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'brownerr.db')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-
 db = SQLAlchemy(app)
 
 app.app_context().push()
@@ -29,7 +28,7 @@ class User(db.Model):
     __tablename__ = 'user'
 
     id = db.Column(db.Text, primary_key=True)
-    picture = name = db.Column(db.Text, nullable=False) 
+    picture = name = db.Column(db.Text, nullable=False)
     name = db.Column(db.String(100), nullable=False)  # split into first and last time
     service = db.Column(db.Integer, db.ForeignKey('service.id'), nullable=True)  # String
     bio = db.Column(db.Text, nullable=True)
@@ -83,9 +82,7 @@ class Transaction(db.Model):
     rating_provider = db.Column(db.Float, default=0.0)
     rating_recipient = db.Column(db.Float, default=0.0)
     review_provider = db.Column(db.Text)
-    review_provider_summary = db.Column(db.Text)
     review_recipient = db.Column(db.Text)
-    review_recipient_summary = db.Column(db.Text)
     transaction_timestamp = db.Column(db.DateTime(timezone=True), server_default=func.now())
 
     provider = db.relationship('User', backref='provider_transactions', foreign_keys=[provider_id], lazy='joined')
@@ -101,9 +98,7 @@ class Transaction(db.Model):
             'rating_provider': self.rating_provider,
             'rating_recipient': self.rating_recipient,
             'review_provider': self.review_provider,
-            'review_provider_summary': self.review_provider_summary,
             'review_recipient': self.review_recipient,
-            'review_recipient_summary': self.review_recipient_summary,
             'transaction_timestamp': self.transaction_timestamp,
         }
 
@@ -154,6 +149,7 @@ class Job(db.Model):
 # Creating the database with above defined table(s)
 db.create_all()
 
+
 # IMPORTANT: ADD REVIEWS FOR EACH USER (ENDPOINT)
 
 def token_required(f):
@@ -183,24 +179,26 @@ def token_required(f):
                 abort(403)
         except Exception as e:
             return {
-                "message": "Something went wrong",
-                "data": None,
-                "error": str(e)
-                }, 500
+                       "message": "Something went wrong",
+                       "data": None,
+                       "error": str(e)
+                   }, 500
 
         return f(current_user, *args, **kwargs)
 
     return decorated
 
+
 """
 -------- Read Functionality --------
 """
+
 
 # Seeing all users in the database
 @app.route("/user/list/", methods=["GET"])
 def get_all_users():
     users = User.query.all()
-    resp =  jsonify([user.to_json() for user in users])
+    resp = jsonify([user.to_json() for user in users])
     resp.headers['Access-Control-Allow-Origin'] = '*'
     return resp
 
@@ -252,7 +250,7 @@ def get_all_jobs():
 
 
 # Seeing all reviews for a specific provider
-@app.route("/user/<provider_id>/reviews", methods=["GET"])
+@app.route("/user/provider/<provider_id>/reviews/", methods=["GET"])
 def get_provider_reviews(provider_id):
     provider = User.query.filter_by(id=provider_id).all()
     transactions = Transaction.query.filter_by(provider_id=provider)
@@ -261,12 +259,20 @@ def get_provider_reviews(provider_id):
 
 
 # Seeing all reviews for a specific recipient
-@app.route("/user/<recipient_id>/reviews", methods=["GET"])
+@app.route("/user/recipient/<recipient_id>/reviews/", methods=["GET"])
 def get_recipient_reviews(recipient_id):
     recipient = User.query.filter_by(id=recipient_id).all()
     transactions = Transaction.query.filter_by(recipient_id=recipient)
     recipient_reviews = [transaction.review_recipient for transaction in transactions]
     return recipient_reviews
+
+
+# Seeing all jobs a specific user posted
+@app.route("/user/<user_id>/jobs")
+def get_user_jobs(user_id):
+    user = User.query.filter_by(id=user_id).all()
+    jobs = Job.query.filter_by()
+    return jobs
 
 
 """
@@ -282,44 +288,43 @@ def signin_user(credential):
         user = User.query.get(data['sub'])
 
         if user == None:
-            new_user = User(id = data['sub'],
-                        name=data['name'],
-                        picture = data['picture'],
-                        email=data['email'],
-                        role='user')
+            new_user = User(id=data['sub'],
+                            name=data['name'],
+                            picture=data['picture'],
+                            email=data['email'],
+                            role='user')
             db.session.add(new_user)
             db.session.commit()
             user = User.query.get(data['sub'])
-        
+
         return jsonify({'status': 200} | user.to_json())
-    
+
     except:
         return jsonify({'status': 400, 'message': 'Invalid credential'})
-
 
 
 # All users should have access to this endpoint (however they can only access it once unless deleted - unique email)
 @app.route('/user/create/', methods=["GET", "POST"])
 def create_user():
     data = request.get_json()
+    id = data['id']
     name = data['name']
     service = data['service']
     bio = data['bio']
     email = data['email']
     role = data['role']
-    # rating_provider = data['rating_provider']
-    # rating_recipient = data['rating_recipient']
+    picture = data['picture']
     available_provider = data['available_provider']
 
     # Create a new User object
-    user = User(name=name,
+    user = User(id=id,
+                name=name,
                 service=service,
                 bio=bio,
                 email=email,
-                # rating_provider=rating_provider,
-                # rating_recipient=rating_recipient,
                 available_provider=available_provider,
-                role=role)
+                role=role,
+                picture=picture)
     db.session.add(user)
     db.session.commit()
     return {'message': 'User added successfully.'}
@@ -381,6 +386,7 @@ def create_job():
 -------- Delete Functionality --------
 """
 
+
 # Only the admin should have access to this (mainly for testing purposes)
 @app.route("/user/delete/all/", methods=["DELETE"])
 @token_required
@@ -407,15 +413,13 @@ def delete_user(current_user, id):
 
 
 # Only the admin should have access to this (mainly for testing purposes)
-@app.route("/transaction/delete/all", methods=["DELETE"])
-@token_required
-def delete_transactions(current_user):
-    if current_user.role == 'admin':
-        transactions = Transaction.query.all()
-        for transaction in transactions:
-            db.session.delete(transaction)
-        db.session.commit()
-        return {'message': 'All transactions deleted successfully.'}
+@app.route("/transaction/delete/all/", methods=["DELETE"])
+def delete_transactions():
+    transactions = Transaction.query.all()
+    for transaction in transactions:
+        db.session.delete(transaction)
+    db.session.commit()
+    return {'message': 'All transactions deleted successfully.'}
 
 
 # Only the admin should have access to this (mainly for testing purposes)
@@ -444,6 +448,7 @@ def delete_jobs(current_user):
 """
 -------- Update Functionality --------
 """
+
 
 # All users should have access to this endpoint
 @app.route("/user/update/<int:id>/", methods=["PUT"])
