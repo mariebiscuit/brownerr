@@ -22,7 +22,7 @@ export interface User{
   bio: string,
   created_at: string,
   email: string,
-  id: number,
+  id: string,
   name: string,
   picture: string,
   rating_provider: number,
@@ -30,6 +30,12 @@ export interface User{
   service: number
 }
 
+export interface EditableUser{
+  bio: string,
+  name: string,
+  picture: string,
+  service: number
+}
 
 export interface Review{
   rating: number;

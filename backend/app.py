@@ -4,9 +4,7 @@ from functools import wraps
 from google.oauth2 import id_token
 from google.auth.transport import requests
 from google.auth import jwt
-
 from sqlalchemy import func, CheckConstraint, event
-
 from flask import Flask, jsonify, request, abort
 from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
@@ -144,6 +142,7 @@ class Job(db.Model):
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     job = db.Column(db.Integer, db.ForeignKey('service.id'))
+    
 
 
 # Creating the database with above defined table(s)

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import "../styles/App.css";
 import { Opportunity, User } from "./Utilities";
 
+import EditPage from "./components/edit_page/EditPage";
 import ProfilePage from "./components/profile_page/ProfilePage";
 import OpportunityPage from "./components/opportunity_page/OpportunityPage";
 import MainPage from "./components/main_page/MainPage";
@@ -43,7 +44,7 @@ function App(props: AppProps) {
     bio: "I am a professional landscaper",
     created_at: "Tue, 02 May 2023 15:03:58 GMT",
     email: "bob.johnson2@example.com",
-    id: 3,
+    id: '3',
     name: "Bob Johnson2",
     rating_provider: 0.0,
     rating_recipient: 0.0,
@@ -72,8 +73,9 @@ function App(props: AppProps) {
   }
   
   const [currentUser, setCurrentUser] = useState<User>();
+  const [currentCredential, setCurrentCredential] = useState<string>();
   const [profiles, setProfiles] = useState<User[]> ([]);
-  const [idToIndex, setIdToIndex] = useState<Map<number, number>>(new Map());
+  const [idToIndex, setIdToIndex] = useState<Map<string, number>>(new Map());
   const [opportunities, setOpportunities] = useState<Opportunity[]> ([job1, job1, job1, job1, job1, job1, job1, job1]);
 
 
@@ -90,8 +92,8 @@ function App(props: AppProps) {
 
     getDataUser().then(() => {    
       profiles.forEach((user, i) => {
-      setIdToIndex(idToIndex.set(user.id, i))
-    }) 
+      setIdToIndex(new Map(idToIndex.set(user.id, i)))
+    })
     console.log(idToIndex)
   })
   }, [])
@@ -116,36 +118,36 @@ function App(props: AppProps) {
       <Navbar style={{backgroundColor:"transparent"}} expand="lg">
         <Container>
           <Navbar.Brand className="logo"><Link to={""}><span style={{color: "white"}} className="logo-text"> <span className="dm-serif">Browne</span><span className="roboto-italic">RR</span></span></Link> </Navbar.Brand>
-         
-          {//If user has not logged in
-          currentUser == undefined &&   
+        
+         {// Cases based on if user is logged in
+         (currentUser == undefined)? (
             <div className = 'account-info'>  
-              <GoogleLogin
-              ux_mode='popup'
-              text='signin'
-              onSuccess={credentialResponse => {
-                fetch(`http://localhost:2000/user/signin/` + credentialResponse.credential).then(
-                  response => response.json().then(user => setCurrentUser(user))
-                  )}}
-              onError={() => {
-                console.log('Login Failed');
-              }}
-              /> </div>
-          }
-
-          {// If user has logged in
-          currentUser != undefined &&
+              <GoogleLogin ux_mode='popup' text='signin' 
+                onSuccess={credentialResponse => {
+                  setCurrentCredential(credentialResponse.credential);
+                  fetch(`http://localhost:2000/user/signin/` + credentialResponse.credential).then(
+                    response => response.json().then(
+                      user => setCurrentUser(user))
+                    )
+                  }
+                }
+                onError={() => {
+                  console.log('Login Failed');
+                }}/> </div>
+            ):(
             <div className="account-info"> 
-              <span style={{color:"white"}}>Welcome, <strong>{currentUser.name}</strong> 
-              <img className="avatar-stats mx-3" src= {currentUser.picture}/></span>
-            </div>
-          }
+                <span style={{color:"white"}}>Welcome, <strong>{currentUser.name}</strong> 
+                <img className="avatar-stats mx-3" src= {currentUser.picture}/></span>
+                <Link to={"/edit"}> <button>  Edit </button> </Link>  
+                {//TODO: Change to edit page
+                }
+              </div>)}
        
-
         </Container>
       </Navbar>
       <Routes>
         <Route path="/" element={<MainPage user={user1} talentList={profiles} organizerList={profiles} opportunityList={opportunities}></MainPage>}/>
+        <Route path="/edit" element={<EditPage user={currentUser} talentView={true} currentCredential={currentCredential}></EditPage>}/>
         <Route path="/talent">
           <Route path=":id" element={<ProfilePage talentView={true} talentList={profiles} idToIndex={idToIndex}></ProfilePage>}/>
         </Route>
@@ -160,9 +162,6 @@ function App(props: AppProps) {
 
       
       
-        
-
-    
       
       
       {/* <TalentCard user = {user1}/>

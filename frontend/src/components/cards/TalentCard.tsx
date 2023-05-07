@@ -68,10 +68,6 @@ export default function TalentCard(props: TalentCardProps) {
 
           </div>
       
-
-        
-
-
         
         </Card.Body>
         </Link>
