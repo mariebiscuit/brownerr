@@ -43,7 +43,7 @@ function App(props: AppProps) {
     bio: "I am a professional landscaper",
     created_at: "Tue, 02 May 2023 15:03:58 GMT",
     email: "bob.johnson2@example.com",
-    id: 3,
+    id: '3',
     name: "Bob Johnson2",
     rating_provider: 0.0,
     rating_recipient: 0.0,

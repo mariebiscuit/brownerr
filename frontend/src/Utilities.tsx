@@ -22,7 +22,7 @@ export interface User{
   bio: string,
   created_at: string,
   email: string,
-  id: number,
+  id: string,
   name: string,
   picture: string,
   rating_provider: number,
