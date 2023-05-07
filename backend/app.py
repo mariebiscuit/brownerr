@@ -4,9 +4,7 @@ from functools import wraps
 from google.oauth2 import id_token
 from google.auth.transport import requests
 from google.auth import jwt
-
 from sqlalchemy import func, CheckConstraint, event
-
 from flask import Flask, jsonify, request, abort
 from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy

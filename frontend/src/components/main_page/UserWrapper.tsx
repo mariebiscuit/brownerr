@@ -33,19 +33,19 @@ export default function UserWrapper(props: WrapperProps) {
     {(  () => {
       switch(props.mode) {
         case "talent":  return <div className="wrapper">
-                                  {props.data.map((item) => ( // TODO: map bakeryData to BakeryItem components
-                                    <TalentCard user={item}/> // replace with BakeryItem component
+                                  {props.data.map((item) => ( 
+                                    <TalentCard user={item}/>
                                   ))}
                                 </div>
                               
         case "organizer": return <div className="wrapper">
-                                    {props.data.map((item) => ( // TODO: map bakeryData to BakeryItem components
-                                      <OrganizerCard user={item}/> // replace with BakeryItem component
+                                    {props.data.map((item) => (
+                                      <OrganizerCard user={item}/> 
                                     ))}
                                 </div>;
         default: return <div className="wrapper">
-                          {props.data.map((item) => ( // TODO: map bakeryData to BakeryItem components
-                            <TalentCard user={item}/> // replace with BakeryItem component
+                          {props.data.map((item) => (
+                            <TalentCard user={item}/> 
                           ))}
                       </div>;
       }

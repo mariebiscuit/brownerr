@@ -36,10 +36,7 @@ interface MainProps {
 export default function MainPage(props: MainProps) {
   const [view, setView] = useState("talent");
 
-
-
   return (
- 
       <div className="profile">
         <Container>
           <div className="d-flex">
