@@ -144,7 +144,6 @@ class Job(db.Model):
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     job = db.Column(db.Integer, db.ForeignKey('service.id'))
-    
 
 
 # Creating the database with above defined table(s)
@@ -241,6 +240,15 @@ def get_all_transactions():
 def get_all_services():
     services = Service.query.all()
     return jsonify([service.to_json() for service in services])
+
+
+# Seeing a specific service in the database
+@app.route("/service/<id>/", methods=["GET"])
+def get_service(id):
+    service = Service.query.get(id)
+    if service is None:
+        abort()
+    return jsonify(service.to_json())
 
 
 # Seeing all jobs in the database
