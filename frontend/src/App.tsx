@@ -90,8 +90,8 @@ function App(props: AppProps) {
 
     getDataUser().then(() => {    
       profiles.forEach((user, i) => {
-      setIdToIndex(idToIndex.set(user.id, i))
-    }) 
+      setIdToIndex(new Map(idToIndex.set(user.id, i)))
+    })
     console.log(idToIndex)
   })
   }, [])

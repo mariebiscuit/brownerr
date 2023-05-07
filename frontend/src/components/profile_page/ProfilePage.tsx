@@ -23,7 +23,7 @@ import { useParams } from "react-router-dom";
 interface ProfileProps {
   talentList: User[];
   talentView: boolean;
-  idToIndex: Map<number, number>;
+  idToIndex: Map<string, number>;
 }
 
 /**
@@ -35,9 +35,11 @@ export default function ProfilePage(props: ProfileProps) {
   const {id} = useParams();
   var idx = -1;
   try{
-    const initIdx = props.idToIndex.get(Number(id))
-    if (initIdx != undefined) {
-      idx = initIdx;
+    if (id != undefined){
+      const initIdx = props.idToIndex.get(id)
+      if (initIdx != undefined) {
+        idx = initIdx;
+      }
     }
   } catch{
     console.log("Could not find user")
