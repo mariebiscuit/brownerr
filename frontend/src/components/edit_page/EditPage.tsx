@@ -9,8 +9,8 @@ import {AiOutlineSmile, AiOutlineFrown, AiOutlineMeh} from "react-icons/ai"
 import { Container } from "react-bootstrap";
 import {FiShare2} from "react-icons/fi"
 import { useEffect, useState } from "react";
-import TalentSection from "./TalentSection";
-import OrganizerSection from "./OrganizerSection";
+import EditTalentSection from "./EditTalentSection";
+import EditOrganizerSection from "./EditOrganizerSection";
 import { useParams } from "react-router-dom";
 
 
@@ -20,10 +20,10 @@ import { useParams } from "react-router-dom";
  * a list a states and its setter to be updated after each submit
  * currentState of the program  and its setter 
  */
-interface ProfileProps {
-  talentList: User[];
+interface EditPageProps {
+  user: User | undefined;
   talentView: boolean;
-  idToIndex: Map<string, number>;
+  currentCredential: String | undefined;
 }
 
 /**
@@ -31,24 +31,24 @@ interface ProfileProps {
  * @param props InputBoxProps mentioned above
  * @returns a new InputBox as functional HTML Element
  */
-export default function ProfilePage(props: ProfileProps) {
-  const {id} = useParams();
-  var idx = -1;
-  try{
-    if (id != undefined){
-      const initIdx = props.idToIndex.get(id)
-      if (initIdx != undefined) {
-        idx = initIdx;
-      }
-    }
-  } catch{
-    console.log("Could not find user")
-  }
+export default function EditPage(props: EditPageProps) {
+//   const {id} = useParams();
+//   var idx = -1;
+//   try{
+//     if (id != undefined){
+//       const initIdx = props.idToIndex.get(id)
+//       if (initIdx != undefined) {
+//         idx = initIdx;
+//       }
+//     }
+//   } catch{
+//     console.log("Could not find user")
+//   }
   
-  const [user, setUser] = useState<User>();
-  useEffect(() => {
-    setUser(props.talentList[idx])
-}, [idx]);
+//   const [user, setUser] = useState<User>();
+//   useEffect(() => {
+//     setUser(props.talentList[idx])
+// }, [idx]);
 
   const [contactActive, setContactActive] = useState(false);
   const [talentActive, setTalentActive] = useState(props.talentView);
@@ -56,15 +56,13 @@ export default function ProfilePage(props: ProfileProps) {
     setter(!variable)
   }
 
-  if(user === undefined){
+  if(props.user === undefined){
     return (<body>
       <div className="profile">
-        <h1>No Profile Found</h1>
+        <h1>Please log in to edit your profile.</h1>
       </div>
     </body>);
-  }
-  
-  else{
+  } else{
     return (
 
         <div className="profile">
@@ -73,11 +71,11 @@ export default function ProfilePage(props: ProfileProps) {
               <Col sm="6">
                 <Row className="align-items-center">
                   <Col sm="6">
-                    <Card.Img className="avatar-big" src={user.picture} />  {/** To be changed */}
+                    <Card.Img className="avatar-big" src={props.user.picture} />  {/** To be changed */}
                   </Col>
                   <Col sm="6" >
-                    <h1><span>{user.name} </span> <span className="ultra-thin"></span></h1>
-                    <p>{user.bio}</p>
+                    <h1><span>{props.user.name} </span> <span className="ultra-thin"></span></h1>
+                    <p>{props.user.bio}</p>
                     {/* {(() => {
                       switch(user.availability) {
                         case "open": return <Button className="availability-profile green"><AiOutlineSmile size={20} className="avail-icons"></AiOutlineSmile> Open to Work</Button> ;
@@ -95,7 +93,7 @@ export default function ProfilePage(props: ProfileProps) {
               <Col sm="4" >
                 <div>
                   <div className="stars-bg">
-                  <Rating initialValue={user.rating_provider} allowHover={false} fillColor= {"#FF7A00"} disableFillHover={true} fillIcon={<GiRoundStar size={32}/>} emptyIcon={<GiRoundStar size={32}/>} className="talent-card-stars"/>
+                  <Rating initialValue={props.user.rating_provider} allowHover={false} fillColor= {"#FF7A00"} disableFillHover={true} fillIcon={<GiRoundStar size={32}/>} emptyIcon={<GiRoundStar size={32}/>} className="talent-card-stars"/>
      
                   </div>
                   <div>
@@ -138,9 +136,9 @@ export default function ProfilePage(props: ProfileProps) {
           <div className="content-div">
             {
               talentActive ? (
-                <TalentSection user={user}></TalentSection>
+                <EditTalentSection user={props.user}></EditTalentSection>
               ):(
-                <OrganizerSection user={user}></OrganizerSection>
+                <EditOrganizerSection user={props.user}></EditOrganizerSection>
               )
             }
           </div>
