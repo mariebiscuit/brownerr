@@ -5,6 +5,7 @@ import { Opportunity, User } from "./Utilities";
 import ProfilePage from "./components/profile_page/ProfilePage";
 import OpportunityPage from "./components/opportunity_page/OpportunityPage";
 import MainPage from "./components/main_page/MainPage";
+import EditPage from "./components/edit_page/EditPage";
 import { Link, Route, Routes } from "react-router-dom";
 import { Container, Navbar } from "react-bootstrap";
 import { GoogleLogin } from '@react-oauth/google';
@@ -88,6 +89,7 @@ function App(props: AppProps) {
 
   }
   
+  const [currentCredential, setCurrentCredential] = useState<string>();
   const [currentUser, setCurrentUser] = useState<User>();
   const [profiles, setProfiles] = useState<User[]> ([]);
   const [idToIndex, setIdToIndex] = useState<Map<string, number>>(new Map());
@@ -142,6 +144,7 @@ function App(props: AppProps) {
               ux_mode='popup'
               text='signin'
               onSuccess={credentialResponse => {
+                setCurrentCredential(credentialResponse.credential)
                 fetch(`http://localhost:2000/user/signin/` + credentialResponse.credential).then(
                   response => response.json().then(user => setCurrentUser(user))
                   )}}
@@ -156,6 +159,7 @@ function App(props: AppProps) {
             <div className="account-info"> 
               <span style={{color:"white"}}>Welcome, <strong>{currentUser.name}</strong> 
               <img className="avatar-stats mx-3" src= {currentUser.picture}/></span>
+              <Link to={"/edit"}> <button> Edit </button> </Link>
             </div>
           }
        
@@ -164,13 +168,13 @@ function App(props: AppProps) {
       </Navbar>
       <Routes>
         <Route path="/" element={<MainPage user={user1} talentList={profiles} organizerList={profiles} opportunityList={opportunities}></MainPage>}/>
+        <Route path="/edit" element={<EditPage user={currentUser} talentView={true} currentCredential={currentCredential}></EditPage>}/>
         <Route path="/talent">
           <Route path=":id" element={<ProfilePage talentView={true} talentList={profiles} idToIndex={idToIndex}></ProfilePage>}/>
         </Route>
         <Route path="/organizer">
           <Route path=":id" element={<ProfilePage talentView={false} talentList={profiles} idToIndex={idToIndex}></ProfilePage>}/>
         </Route>
-
         <Route path="/opportunity">
           <Route path=":id" element={<OpportunityPage jobList={opportunities}></OpportunityPage>}/>
         </Route>

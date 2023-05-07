@@ -508,7 +508,7 @@ def delete_jobs(current_user):
 
 # All users should have access to this endpoint
 @app.route("/user/update/<int:id>/", methods=["POST"])
-@token_required
+# @token_required
 def update_user_info(current_user, id):
     print("hi")
     if current_user.id == id or current_user.role == 'admin':
@@ -522,7 +522,7 @@ def update_user_info(current_user, id):
         resp = jsonify({'code': 404 , 'message': 'You must be logged in to edit your own profile.'})
 
     resp.headers['Access-Control-Allow-Origin'] = '*'
-    print(resp)
+    resp.headers['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE'
     return resp
 
 
