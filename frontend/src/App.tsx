@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import "../styles/App.css";
 import { Opportunity, User } from "./Utilities";
 
-import EditPage from "./components/edit_page/EditPage";
 import ProfilePage from "./components/profile_page/ProfilePage";
 import OpportunityPage from "./components/opportunity_page/OpportunityPage";
 import MainPage from "./components/main_page/MainPage";
@@ -54,26 +53,42 @@ function App(props: AppProps) {
 }
 
 
-  let job1: Opportunity = {name: "DJ Partner Wanted for Cool Remix Project :)",
-                           type: "Collab",
-                           category: "Music",
-                           subcategory: "DJ",
-                           content: "",
-                           location: "TBD",
-                           poster: user1,
-                           startDate: {year: 2023, month: 4, date: 22},
-                           endDate: {year: 2023, month: 5, date: 1},
-                           overview: "Sorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate libero et velit interdum, ac aliquet odio mattis. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Curabitur tempus urna at turpis condimentum lobortis. Ut commodo efficitur neque. Ut diam quam, semper iaculis condimentum ac, vestibulum eu nisl.",
-                           responsibility: ["Sorem ipsum dolor sit amet, consectetur adipiscing elit.", "Nunc vulputate libero et velit interdum, ac aliquet odio mattis.", "per conubia nostra, per inceptos himenaeos. Curabitur tempus " ],
-                           qualification: ["Sorem ipsum dolor sit amet, consectetur adipiscing elit.", "Nunc vulputate libero et velit interdum, ac aliquet odio mattis.", "per conubia nostra, per inceptos himenaeos. Curabitur tempus " ],
-                           applicants: [user1, user1, user1, user1, user1, user1, user1, user1, user1, user1],
-                           id: 1
+  // let job1: Opportunity = {name: "DJ Partner Wanted for Cool Remix Project :)",
+  //                          type: "Collab",
+  //                          category: "Music",
+  //                          subcategory: "DJ",
+  //                          content: "",
+  //                          location: "TBD",
+  //                          poster: user1,
+  //                          startDate: {year: 2023, month: 4, date: 22},
+  //                          endDate: {year: 2023, month: 5, date: 1},
+  //                          overview: "Sorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate libero et velit interdum, ac aliquet odio mattis. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Curabitur tempus urna at turpis condimentum lobortis. Ut commodo efficitur neque. Ut diam quam, semper iaculis condimentum ac, vestibulum eu nisl.",
+  //                          responsibility: ["Sorem ipsum dolor sit amet, consectetur adipiscing elit.", "Nunc vulputate libero et velit interdum, ac aliquet odio mattis.", "per conubia nostra, per inceptos himenaeos. Curabitur tempus " ],
+  //                          qualification: ["Sorem ipsum dolor sit amet, consectetur adipiscing elit.", "Nunc vulputate libero et velit interdum, ac aliquet odio mattis.", "per conubia nostra, per inceptos himenaeos. Curabitur tempus " ],
+  //                          applicants: [user1, user1, user1, user1, user1, user1, user1, user1, user1, user1],
+  //                          id: 1
                            
   
+  // }
+
+  let job1: Opportunity = {id: 1, name: "DJ Partner Wanted for Cool Remix Project :)",
+  job: 1,
+  location: "TBD",
+  poster: 1,
+  start_day: 11,
+  start_month: 5,
+  start_year: 2023,
+  end_day: 11,
+  end_month: 5,
+  end_year: 2023,
+
+  overview: "Sorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate libero et velit interdum, ac aliquet odio mattis. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Curabitur tempus urna at turpis condimentum lobortis. Ut commodo efficitur neque. Ut diam quam, semper iaculis condimentum ac, vestibulum eu nisl.",
+
+  
+
   }
   
   const [currentUser, setCurrentUser] = useState<User>();
-  const [currentCredential, setCurrentCredential] = useState<string>();
   const [profiles, setProfiles] = useState<User[]> ([]);
   const [idToIndex, setIdToIndex] = useState<Map<string, number>>(new Map());
   const [opportunities, setOpportunities] = useState<Opportunity[]> ([job1, job1, job1, job1, job1, job1, job1, job1]);
@@ -100,55 +115,55 @@ function App(props: AppProps) {
   })}, [profiles])
 
 
-  // useEffect(() => {
-  //   async function getDataOpportunity() {
-  //     const response = await fetch(
-  //       `http://localhost:2000/user/list/`
-  //     ).then(response => response.json());
+  useEffect(() => {
+    async function getDataOpportunity() {
+      const response = await fetch(
+        `http://localhost:2000/job/list/`
+      ).then(response => response.json());
       
-  //     const users : User[] = response
-  //     setProfiles(users)
-  //     console.log(JSON.parse(response))
+      const jobs : Opportunity[] = response
+      setOpportunities(jobs)
+      console.log(JSON.parse(response))
       
-  //   }
-  //   getDataOpportunity()
-  // }, [])
+    }
+    getDataOpportunity()
+  }, [])
  
   return (
     <body>
       <Navbar style={{backgroundColor:"transparent"}} expand="lg">
         <Container>
           <Navbar.Brand className="logo"><Link to={""}><span style={{color: "white"}} className="logo-text"> <span className="dm-serif">Browne</span><span className="roboto-italic">RR</span></span></Link> </Navbar.Brand>
-        
-         {// Cases based on if user is logged in
-         (currentUser == undefined)? (
+         
+          {//If user has not logged in
+          currentUser == undefined &&   
             <div className = 'account-info'>  
-              <GoogleLogin ux_mode='popup' text='signin' 
-                onSuccess={credentialResponse => {
-                  setCurrentCredential(credentialResponse.credential);
-                  fetch(`http://localhost:2000/user/signin/` + credentialResponse.credential).then(
-                    response => response.json().then(
-                      user => setCurrentUser(user))
-                    )
-                  }
-                }
-                onError={() => {
-                  console.log('Login Failed');
-                }}/> </div>
-            ):(
+              <GoogleLogin
+              ux_mode='popup'
+              text='signin'
+              onSuccess={credentialResponse => {
+                fetch(`http://localhost:2000/user/signin/` + credentialResponse.credential).then(
+                  response => response.json().then(user => setCurrentUser(user))
+                  )}}
+              onError={() => {
+                console.log('Login Failed');
+              }}
+              /> </div>
+          }
+
+          {// If user has logged in
+          currentUser != undefined &&
             <div className="account-info"> 
-                <span style={{color:"white"}}>Welcome, <strong>{currentUser.name}</strong> 
-                <img className="avatar-stats mx-3" src= {currentUser.picture}/></span>
-                <Link to={"/edit"}> <button>  Edit </button> </Link>  
-                {//TODO: Change to edit page
-                }
-              </div>)}
+              <span style={{color:"white"}}>Welcome, <strong>{currentUser.name}</strong> 
+              <img className="avatar-stats mx-3" src= {currentUser.picture}/></span>
+            </div>
+          }
        
+
         </Container>
       </Navbar>
       <Routes>
         <Route path="/" element={<MainPage user={user1} talentList={profiles} organizerList={profiles} opportunityList={opportunities}></MainPage>}/>
-        <Route path="/edit" element={<EditPage user={currentUser} talentView={true} currentCredential={currentCredential}></EditPage>}/>
         <Route path="/talent">
           <Route path=":id" element={<ProfilePage talentView={true} talentList={profiles} idToIndex={idToIndex}></ProfilePage>}/>
         </Route>
@@ -163,6 +178,9 @@ function App(props: AppProps) {
 
       
       
+        
+
+    
       
       
       {/* <TalentCard user = {user1}/>

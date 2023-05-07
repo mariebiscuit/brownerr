@@ -22,7 +22,7 @@ interface ReviewProps {
  * @returns a new InputBox as functional HTML Element
  */
 export default function ReviewCard(props: ReviewProps) {
-  const lastNameChar: string = props.review.user.lastName.slice(0,1)
+
   return (
     <Card className="align-items-center review-card">
     
@@ -32,7 +32,7 @@ export default function ReviewCard(props: ReviewProps) {
           <Row className="align-items-center">
             <Col sm="3"> 
               
-              <Card.Img variant="top" className="review-card-img" src={props.review.user.profilePicPath} />
+              <Card.Img variant="top" className="review-card-img" src={props.review.user.picture} />
             
             </Col>
               

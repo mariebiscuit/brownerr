@@ -32,6 +32,10 @@ interface OpportunityProps {
  * @returns a new InputBox as functional HTML Element
  */
 export default function OpportunityPage(props: OpportunityProps) {
+  const [poster, setPoster] = useState<User>();
+  const [service_type, setType] = useState<string>();
+   
+ 
   const {id} = useParams();
   var jobID = -1;
   try{
@@ -46,6 +50,25 @@ export default function OpportunityPage(props: OpportunityProps) {
      setJob(props.jobList[jobID-1])
   }, [id]);
 
+
+ 
+  async function getDataUser(id:number ) {
+     const response = await fetch(
+       `http://localhost:2000/user/${id}/`
+     ).then(response => response.json());
+     
+     const user : User = response
+     setPoster(user)
+    }
+
+  async function getServiceType(id:number) {
+      const response = await fetch(
+        `http://localhost:2000/service/${id}/`
+      ).then(response => response.json());
+      
+      const service : string = response.service
+      setType(service)
+     }
   const [contactActive, setContactActive] = useState(false);
   const handleClick = (variable: boolean, setter: (newVar: boolean) => void) => {
     setter(!variable)
@@ -60,66 +83,79 @@ export default function OpportunityPage(props: OpportunityProps) {
   }
   
   else{
-    return (
- 
-        <div className="profile">
-          <Container>
-            <Row className="align-items-center py-5">
-              <Col sm="6">
-              <p className="mb-2">{job.type} - {job.category} - {job.subcategory}</p>
-              <h1 className="text-left opportunity-page-title mb-2" >{job.name}</h1>
-              <p className="mb-5">Posted by <span><Card.Img className="avatar" src={job.poster.profilePicPath} /></span> <u>{job.poster.firstName} {job.poster.lastName}</u> </p>
-              
-              <p className="mb-2">
-                <span><IoLocationSharp size={30}></IoLocationSharp></span> {job.location}
-              </p>
-  
-              <p className="mb-2">
-                <span><IoCalendarClear size={30}></IoCalendarClear></span> {job.startDate.year}/{job.startDate.month}/{job.startDate.date} - {job.endDate.year}/{job.endDate.month}/{job.endDate.date}
-              </p>
+      // Fetching all existing users in db
+      getDataUser(job.id)
+      getServiceType(job.job)
+      if(poster === undefined){
+        return (<body>
+          <div className="profile">
+            <h1>No Profile Found</h1>
+          </div>
+        </body>);
+      }
+      else{
+        return (
+        
+          <div className="profile">
+            <Container>
+              <Row className="align-items-center py-5">
+                <Col sm="6">
+                <p className="mb-2">{service_type}</p>
+                <h1 className="text-left opportunity-page-title mb-2" >{job.name}</h1>
+                <p className="mb-5">Posted by <span><Card.Img className="avatar" src={poster.picture} /></span> <u>{poster.name}</u> </p>
                 
-          
-              </Col>
-              <Col sm="2">
-              </Col>
-              <Col sm="4" >
-                <div>
+                <p className="mb-2">
+                  <span><IoLocationSharp size={30}></IoLocationSharp></span> {job.location}
+                </p>
+    
+                <p className="mb-2">
+                  <span><IoCalendarClear size={30}></IoCalendarClear></span> {job.start_year}/{job.start_month}/{job.start_day} - {job.end_year}/{job.end_month}/{job.end_day}
+                </p>
+                  
+            
+                </Col>
+                <Col sm="2">
+                </Col>
+                <Col sm="4" >
                   <div>
-                    <Row className="align-items-center">
-                      <Col>
-                        <Button className="contactButton green" onClick={() => handleClick(contactActive, setContactActive)}
-                        style={{ backgroundColor: contactActive ? "#c7ffe4" : "#00bc61", borderColor: contactActive ? "#c7ffe4" : "#00bc61", color: contactActive ? "#00bc61" : "white" }}> Get in Touch</Button>
-                      </Col>
-                      <Col>
-                        <Button className="beige"> <FiShare2 size={"20px"} color="black" strokeWidth={"2.5px"}></FiShare2>  </Button>
-                      </Col>
-                    </Row>
-                    
+                    <div>
+                      <Row className="align-items-center">
+                        <Col>
+                          <Button className="contactButton green" onClick={() => handleClick(contactActive, setContactActive)}
+                          style={{ backgroundColor: contactActive ? "#c7ffe4" : "#00bc61", borderColor: contactActive ? "#c7ffe4" : "#00bc61", color: contactActive ? "#00bc61" : "white" }}> Get in Touch</Button>
+                        </Col>
+                        <Col>
+                          <Button className="beige"> <FiShare2 size={"20px"} color="black" strokeWidth={"2.5px"}></FiShare2>  </Button>
+                        </Col>
+                      </Row>
+                      
+                    </div>
                   </div>
-                </div>
-                
-             
-              </Col>
-            </Row>
-  
-            <div className="d-flex">
-            <Button 
-  
-            className = "nav-btn"
-            style={{ backgroundColor: "#FFEFDE", borderColor:"#FFEFDE", color: "black" }}
-            >Details</Button>
-          
+                  
+               
+                </Col>
+              </Row>
+    
+              <div className="d-flex">
+              <Button 
+    
+              className = "nav-btn"
+              style={{ backgroundColor: "#FFEFDE", borderColor:"#FFEFDE", color: "black" }}
+              >Details</Button>
+            
+            </div>
+            </Container>
+    
+            <div className="content-div">
+             <OpportunitySection job={job} poster = {poster}></OpportunitySection>
+            </div>
+            
+            
           </div>
-          </Container>
   
-          <div className="content-div">
-           <OpportunitySection job={job}></OpportunitySection>
-          </div>
-          
-          
-        </div>
-
-    );
+      );
+      }
+      
   
   }
 

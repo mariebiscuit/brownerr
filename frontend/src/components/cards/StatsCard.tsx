@@ -18,28 +18,28 @@ interface StatsProps {
  * @returns a new InputBox as functional HTML Element
  */
 export default function StatsCard(props: StatsProps) {
-  const length = props.job.applicants.length;
+  const length = 0;
   let content;
   if (length === 0){
     content = <div> <p>No one has expressed interest</p></div>
   }
-  else if (length < 9){
-    const avartars = []
-    for(let i = 0; i < length; i++){
+  // else if (length < 9){
+  //   const avartars = []
+  //   for(let i = 0; i < length; i++){
      
         
-        avartars.push(<Card.Img  className="avatar-stats" style={{marginLeft:-30}} src={props.job.applicants[i].profilePicPath} />)
-    }
-    content = <div><div className="stats-div mb-4"> {avartars} </div> <p>{length} people have reached out</p></div>
-  }
-  else{
-    const avartars = []
-    for(let i = 0; i < 9; i++){
+  //       avartars.push(<Card.Img  className="avatar-stats" style={{marginLeft:-30}} src={props.job.applicants[i].profilePicPath} />)
+  //   }
+  //   content = <div><div className="stats-div mb-4"> {avartars} </div> <p>{length} people have reached out</p></div>
+  // }
+  // else{
+  //   const avartars = []
+  //   for(let i = 0; i < 9; i++){
        
-        avartars.push(<Card.Img  className="avatar-stats" src={props.job.applicants[i].profilePicPath} style={{marginLeft:-30}}/>)
-    }
-    content = <div><div className="stats-div mb-4"> {avartars} </div> <p>{length} people have reached out</p></div>
-  }
+  //       avartars.push(<Card.Img  className="avatar-stats" src={props.job.applicants[i].profilePicPath} style={{marginLeft:-30}}/>)
+  //   }
+  //   content = <div><div className="stats-div mb-4"> {avartars} </div> <p>{length} people have reached out</p></div>
+  // }
   return (
     <Card className="stats-card">
     

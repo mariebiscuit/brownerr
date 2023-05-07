@@ -52,25 +52,16 @@ export interface Review{
 
 export interface Opportunity{
   id: number;
+  job: number;
   name: string;
-  type: string; //maybe not
-  category: string;
-  subcategory: string; //just this
-  content: string;
-  poster: User;
+  poster: number;
   location: string;
-  startDate: MyDate;
-  endDate: MyDate;
+  start_day: number;
+  start_month: number;
+  start_year: number;
+  end_day: number;
+  end_month: number;
+  end_year: number;
   overview: string;
-  qualification: string[];
-  responsibility: string[];  
-  applicants: User[];
-
-}
-
-export interface MyDate{
   
-  year: number;
-  month: number;
-  date: number;
 }

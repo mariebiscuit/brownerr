@@ -20,6 +20,7 @@ import StatsCard from "../cards/StatsCard";
  */
 interface JobProps {
   job: Opportunity;
+  poster:User;
 
 }
 
@@ -29,36 +30,36 @@ interface JobProps {
  * @returns a new InputBox as functional HTML Element
  */
 export default function OpportunitySection(props: JobProps) {
-  const dummyUser : User = { firstName: "Gus",
-                              lastName: "Janefa",
-                              isOrganization: false,
-                              profilePicPath: "../user2.jpeg",
-                              categories: ["Music"],
-                              subcategories: ["DJ", "Performance"],
-                              bio: `Brown 2024, Offer DJ service at parties`,
-                              rate: 12,
-                              rating: 4,
-                              availability: "open",
-                              overviews: "Sorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate libero et velit interdum, ac aliquet odio mattis. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Curabitur tempus urna at turpis condimentum lobortis. Ut commodo efficitur neque. Ut diam quam, semper iaculis condimentum ac, vestibulum eu nisl.",
-                              mediaPath: "",
-                              reviews: [],
-                              isOrganizer: false, 
-                              id:0
+  // const dummyUser : User = { firstName: "Gus",
+  //                             lastName: "Janefa",
+  //                             isOrganization: false,
+  //                             profilePicPath: "../user2.jpeg",
+  //                             categories: ["Music"],
+  //                             subcategories: ["DJ", "Performance"],
+  //                             bio: `Brown 2024, Offer DJ service at parties`,
+  //                             rate: 12,
+  //                             rating: 4,
+  //                             availability: "open",
+  //                             overviews: "Sorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate libero et velit interdum, ac aliquet odio mattis. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Curabitur tempus urna at turpis condimentum lobortis. Ut commodo efficitur neque. Ut diam quam, semper iaculis condimentum ac, vestibulum eu nisl.",
+  //                             mediaPath: "",
+  //                             reviews: [],
+  //                             isOrganizer: false, 
+  //                             id:0
   
-  };
-  const dummyReview : Review = {rating: 3.5, content: "Sorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate libero et velit interdum, ac aliquet odio mattis. Class aptent taciti sociosqu ad litora torquent.",
-  title: "great organizer", user: dummyUser, type: "org", receipient: dummyUser
+  // };
+  // const dummyReview : Review = {rating: 3.5, content: "Sorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate libero et velit interdum, ac aliquet odio mattis. Class aptent taciti sociosqu ad litora torquent.",
+  // title: "great organizer", user: dummyUser, type: "org", receipient: dummyUser
 
-  };
-  const responsibilities = props.job.responsibility;
-  const listItemsRes = responsibilities.map((res) =>
-  <li className="mb-2">{res}</li>
-  );
+  // };
+  // const responsibilities = props.job.responsibility;
+  // const listItemsRes = responsibilities.map((res) =>
+  // <li className="mb-2">{res}</li>
+  // );
 
-  const qualifications = props.job.qualification;
-  const listItemsQua = qualifications.map((qua) =>
-  <li className="mb-2">{qua}</li>
-  );
+  // const qualifications = props.job.qualification;
+  // const listItemsQua = qualifications.map((qua) =>
+  // <li className="mb-2">{qua}</li>
+  // );
   return (
     <div>
       <Container>
@@ -70,7 +71,7 @@ export default function OpportunitySection(props: JobProps) {
               <p>{props.job.overview}</p>
             </div>
 
-            <div className="mb-4">
+            {/* <div className="mb-4">
               
               <h2>Responsibilities</h2>
               <ul>{listItemsRes}</ul>
@@ -80,7 +81,7 @@ export default function OpportunitySection(props: JobProps) {
               
               <h2>Qualifications</h2>
               <ul>{listItemsQua}</ul>
-            </div>
+            </div>  */}
 
 
       
@@ -94,19 +95,19 @@ export default function OpportunitySection(props: JobProps) {
               <div className="mb-4">
                 <h2>Organizer Rating</h2>
                 <div className="stars-bg">
-                <Rating initialValue={props.job.poster.rating} allowHover={false} fillColor= {"#FF7A00"} disableFillHover={true} fillIcon={<GiRoundStar size={32}/>} emptyIcon={<GiRoundStar size={32}/>} className="talent-card-stars"/>
+                <Rating initialValue={props.poster.rating_recipient} allowHover={false} fillColor= {"#FF7A00"} disableFillHover={true} fillIcon={<GiRoundStar size={32}/>} emptyIcon={<GiRoundStar size={32}/>} className="talent-card-stars"/>
    
                 </div>
               </div>
             <div className="mb-4">
                 <h2>Reviews</h2> {/** Have to be fetched from the api */}
                 
-                <ReviewCard review={dummyReview}></ReviewCard>
+                {/* <ReviewCard review={dummyReview}></ReviewCard> */}
               </div>
           </Col>
         </Row>
       </Container>
     </div>
   );
-
 }
+

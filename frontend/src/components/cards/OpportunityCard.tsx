@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Opportunity, User } from "../../Utilities";
 import Card from 'react-bootstrap/Card';
 import {IoLocationSharp, IoCalendarClear} from "react-icons/io5";
@@ -20,14 +21,44 @@ interface OpportunityCardProps {
  * @returns a new InputBox as functional HTML Element
  */
 export default function OpportunityCard(props: OpportunityCardProps) {
+  const [poster, setPoster] = useState<User>();
+  const [service_type, setType] = useState<string>();
   const idString : string = props.job.id.toString();
+  async function getDataUser(id:number ) {
+    const response = await fetch(
+      `http://localhost:2000/user/${id}/`
+    ).then(response => response.json());
+    
+    const user : User = response
+    setPoster(user)
+   }
+
+  async function getServiceType(id:number) {
+      const response = await fetch(
+        `http://localhost:2000/service/${id}/`
+      ).then(response => response.json());
+      
+      const service : string = response.service
+      setType(service)
+      }
+
+  getServiceType(props.job.job)
+  getDataUser(props.job.poster)
   return (
     <Card className="opportunity-card">
       <Link to={"/opportunity/" + idString}>
       <Card.Body className="opportunity-card-body">
-        <Card.Text style={{color: "#8A8A8A"}}>{props.job.type} - {props.job.category} - {props.job.subcategory}</Card.Text>
+        <Card.Text style={{color: "#8A8A8A"}}>{props.job.job}</Card.Text>
         <Card.Title className="text-left opportunity-card-title" >{props.job.name}</Card.Title>
-        <Card.Text>Posted by <span><Card.Img className="avatar" src={props.job.poster.profilePicPath} /></span> <u>{props.job.poster.firstName} {props.job.poster.lastName}</u> </Card.Text>
+        {(() => {
+            if(poster === undefined){
+              return <Card.Text>Posted by an unknown user </Card.Text>
+            }
+            else{
+              return  <Card.Text>Posted by <span><Card.Img className="avatar" src={poster.picture} /></span> <u>{poster.name} </u> </Card.Text>
+            }
+            })()} 
+       
         <hr
         style={{
             color: "#A8A8A8",
@@ -40,7 +71,7 @@ export default function OpportunityCard(props: OpportunityCardProps) {
         </Card.Text>
 
         <Card.Text>
-          <span><IoCalendarClear size={36}></IoCalendarClear></span> {props.job.startDate.year}/{props.job.startDate.month}/{props.job.startDate.date} - {props.job.endDate.year}/{props.job.endDate.month}/{props.job.endDate.date}
+          <span><IoCalendarClear size={36}></IoCalendarClear></span> {props.job.start_day}/{props.job.start_month}/{props.job.start_year} - {props.job.end_day}/{props.job.end_month}/{props.job.end_day}
         </Card.Text>
     
     

@@ -4,7 +4,9 @@ from functools import wraps
 from google.oauth2 import id_token
 from google.auth.transport import requests
 from google.auth import jwt
+
 from sqlalchemy import func, CheckConstraint, event
+
 from flask import Flask, jsonify, request, abort
 from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
@@ -145,6 +147,41 @@ class Job(db.Model):
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     job = db.Column(db.Integer, db.ForeignKey('service.id'))
+    name = db.Column(db.Text)
+    poster = db.Column(db.Integer, db.ForeignKey('user.id'))
+    location = db.Column(db.Text)
+    start_day = db.Column(db.Integer)
+    start_month = db.Column(db.Integer)
+    start_year= db.Column(db.Integer)
+
+    end_day = db.Column(db.Integer)
+    end_month = db.Column(db.Integer)
+    end_year= db.Column(db.Integer)
+    overview = db.Column(db.Text)
+
+    __table_args__ = (
+        CheckConstraint('start_day >= 0 AND start_day <= 31', name='start_day_range'),
+        CheckConstraint('start_month >= 0 AND start_month <= 12', name='start_month_range'),
+        CheckConstraint('end_day >= 0 AND end_day <= 31', name='start_day_range'),
+        CheckConstraint('end_month >= 0 AND end_month <= 12', name='start_month_range')
+        
+    )
+    
+
+    def to_json(self):
+        return {
+            'id': self.id,
+            'job': self.job,
+            'name': self.name,
+            'poster': self.poster,
+            'location': self.location,
+            'start-day': self.start_day,
+            'start-month': self.start_month,
+            'start-year': self.start_year,
+            'end-day': self.end_day,
+            'end-month': self.end_month,
+            'end-year': self.end_year
+        }
 
 
 # Creating the database with above defined table(s)
@@ -384,7 +421,20 @@ def create_service():
 def create_job():
     data = request.get_json()
     job = data['job']
-    job = Job(job=job)
+    name = data['name']
+    poster = data['poster']
+    location = data['location']
+    start_day = data['start_day']
+    start_month = data['start_month']
+    start_year = data['start_year']
+    end_day = data['end_day']
+    end_month = data['end_month']
+    end_year = data['end_year']
+    overview = data['overview']
+
+    job = Job(job=job, name=name, poster=poster, location=location, start_day=start_day, start_month=start_month, start_year=start_year, end_day=end_day, end_month=end_month, end_year=end_year, overview=overview )
+    
+
     db.session.add(job)
     db.session.commit()
     return {'message': 'job added successfully'}
