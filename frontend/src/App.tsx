@@ -73,7 +73,7 @@ function App(props: AppProps) {
   
   const [currentUser, setCurrentUser] = useState<User>();
   const [profiles, setProfiles] = useState<User[]> ([]);
-  const [idToIndex, setIdToIndex] = useState<Map<number, number>>(new Map());
+  const [idToIndex, setIdToIndex] = useState<Map<string, number>>(new Map());
   const [opportunities, setOpportunities] = useState<Opportunity[]> ([job1, job1, job1, job1, job1, job1, job1, job1]);
 
 
