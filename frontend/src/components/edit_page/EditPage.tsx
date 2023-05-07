@@ -23,7 +23,7 @@ import { useParams } from "react-router-dom";
 interface EditPageProps {
   user: User | undefined;
   talentView: boolean;
-  currentCredential: String | undefined;
+  currentCredential: string | undefined;
 }
 
 /**
@@ -56,7 +56,7 @@ export default function EditPage(props: EditPageProps) {
     setter(!variable)
   }
 
-  if(props.user === undefined){
+  if(props.user === undefined || props.currentCredential === undefined){
     return (<body>
       <div className="profile">
         <h1>Please log in to edit your profile.</h1>
@@ -136,7 +136,7 @@ export default function EditPage(props: EditPageProps) {
           <div className="content-div">
             {
               talentActive ? (
-                <EditTalentSection user={props.user}></EditTalentSection>
+                <EditTalentSection user={props.user} currentCredential={props.currentCredential}></EditTalentSection>
               ):(
                 <EditOrganizerSection user={props.user}></EditOrganizerSection>
               )

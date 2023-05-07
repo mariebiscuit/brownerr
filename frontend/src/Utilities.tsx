@@ -17,6 +17,8 @@
 //   isOrganizer: boolean;
 // }
 
+export const URLPREFIX = "http://localhost:2000/"
+
 export interface User{
   available_provider: number,
   bio: string,

@@ -9,6 +9,7 @@ import {AiOutlineSmile, AiOutlineFrown, AiOutlineMeh} from "react-icons/ai"
 import { Container } from "react-bootstrap";
 import UserWrapper from "../main_page/UserWrapper";
 import { useEffect, useState } from "react";
+import { URLPREFIX } from "../../Utilities";
 
 
 /**
@@ -19,18 +20,9 @@ import { useEffect, useState } from "react";
  */
 interface TalentProps {
   user: User;
+  currentCredential: string;
 }
 
-const [data, setData] = useState<Map<string, string>>(new Map())
-
-const handleChange = (e: React.FormEvent<HTMLInputElement>) => {
-    setData({ ...data, [e.target.name]: e.target.value });
-  };
-
-const handleSubmit = (e: React.FormEvent<HTMLInputElement>) => {
-    e.preventDefault()
-    // take data to submit
-  };
 
 /**
  * Defines functionality and renders the inputbox
@@ -39,35 +31,63 @@ const handleSubmit = (e: React.FormEvent<HTMLInputElement>) => {
  */
 export default function EditTalentSection(props: TalentProps) {
 
-    useEffect(() => {
-        setData(new Map([['bio', props.user.bio], ['name', props.user.name], ['picture', props.user.picture]]))
-    }, [])
+  const [data, setData] = useState<Map<string, string>>(new Map([['bio', props.user.bio], ['name', props.user.name], ['picture', props.user.picture]]))
+
+  function handleChange(key: string, value: string){
+    setData(new Map(data.set(key, value)));
+  };
+
+  function handleSubmit(){
+    const requestOptions = {
+      method: 'PUT',
+      headers: {'credentials': props.currentCredential},
+      body: {'bio': data.get('bio')}
+    }
+    fetch(URLPREFIX + "user/update/" + props.user.id, requestOptions).then(
+      response => console.log(response)
+    )
+      // take data to submit
+    };
 
   // const lastNameChar: string = props.user.lastName.slice(0,1)
   return (
     <div >
       <Container>
+      <form onSubmit = {(e) => {
+              e.preventDefault();
+              (data.get('bio') != null) ? (handleSubmit()) :({})}}>
         <Row>
           <Col className="px-5" sm="6">
-            <form onSubmit = {handleSubmit}>
             <div className="mb-4">
               <h2>Overview</h2>
-              <input type="text" name="overview" value={data.get('bio')} onChange = {handleChange}/>
+              <div className="overview" contentEditable="true" onInput={
+                e => (e.currentTarget.textContent != null) ? 
+                handleChange('bio', e.currentTarget.textContent):({})} >
+                {props.user.bio}
+            </div>
+
+              {/* <textarea
+                name="bio" 
+                value={data.get('bio')} 
+                onChange = {(e) => handleChange(e.target.name, e.target.value)}/> */}
             </div>
             <button type="submit">
                 Submit
             </button>
 
-            <div className="mb-4">
+            {/* <div className="mb-4">
               <h2>Works/Portfoliio</h2>
+              <input type="text" 
+                name="portfolio" 
+                value={data.get('bio')} 
+                onChange = {(e) => handleChange(e.target.name, e.target.value)}/>
               <p>add carousel here</p>
-            </div>
+            </div> */}
 
-            <div className="mb-4">
+            {/* <div className="mb-4">
               <h2>Availability</h2>
               <p>add calendar here</p>
-            </div>
-            </form>
+            </div> */}
           </Col >
           <Col className="px-5" sm="6">
             <div className="mb-4">
@@ -76,6 +96,7 @@ export default function EditTalentSection(props: TalentProps) {
             </div>
         </Col>
         </Row>
+        </form>
       </Container>
     </div>
   );

@@ -90,13 +90,14 @@ function App(props: AppProps) {
       setProfiles(users)
     }
 
-    getDataUser().then(() => {    
-      profiles.forEach((user, i) => {
-      setIdToIndex(new Map(idToIndex.set(user.id, i)))
-    })
-    console.log(idToIndex)
-  })
+    getDataUser()
   }, [])
+
+  // Update GoogleID-profile index mapping
+  useEffect(() => {  
+    profiles.forEach((user, i) => {
+    setIdToIndex(new Map(idToIndex.set(user.id, i)))
+  })}, [profiles])
 
 
   // useEffect(() => {

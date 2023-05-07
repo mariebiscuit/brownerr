@@ -8,6 +8,7 @@ from sqlalchemy import func, CheckConstraint, event
 from flask import Flask, jsonify, request, abort
 from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
+from config import Auth
 
 # Inspiration for the database and CRUD operations: https://www.thepythoncode.com/article/building-crud-app-with-flask-and-sqlalchemy
 
@@ -461,11 +462,13 @@ def delete_jobs(current_user):
 def update_user_info(current_user, id):
     if current_user.id == id or current_user.role == 'admin':
         user = User.query.get(id)
-        user.service = request.json.get('service', user.service)
+        # user.service = request.json.get('service', user.service)
         user.bio = request.json.get('bio', user.bio)
-        user.available_provider = request.json.get('available_provider', user.available_provider)
+        # user.available_provider = request.json.get('available_provider', user.available_provider)
         db.session.commit()
-        return {'message': 'Bio and availability successfully updated.'}
+        resp = jsonify({'code': 200 , 'message': 'Bio and availability successfully updated.'})
+        resp.headers['Access-Control-Allow-Origin'] = '*'
+        return resp
     else:
         abort(401)
 
