@@ -161,24 +161,24 @@ def token_required(f):
     def decorated(*args, **kwargs):
         token = None
         if "credential" in request.headers:
-            token = request.headers["credential"].split(" ")[1] # maybe in headers?
+            token = request.headers["credential"].split(" ")[1]  # maybe in headers?
         if not token:
             return {
-                "message": "Authentication Token is missing!",
-                "data": None,
-                "error": "Unauthorized"
-            }, 401
+                       "message": "Authentication Token is missing!",
+                       "data": None,
+                       "error": "Unauthorized"
+                   }, 401
         try:
             idinfo = id_token.verify_oauth2_token(token, requests.Request(), Auth.CLIENT_ID)  # Token verified
-            userid = idinfo['sub'] # Google ID
+            userid = idinfo['sub']  # Google ID
             current_user = User.query.get(userid)
 
             if current_user is None:
                 return {
-                "message": "Invalid Authentication token!",
-                "data": None,
-                "error": "Unauthorized"
-                }, 401
+                           "message": "Invalid Authentication token!",
+                           "data": None,
+                           "error": "Unauthorized"
+                       }, 401
             if not current_user["active"]:
                 abort(403)
         except Exception as e:
@@ -251,9 +251,28 @@ def get_all_jobs():
     return jsonify([job.to_json() for job in jobs])
 
 
+# Seeing all reviews for a specific provider
+@app.route("/user/<provider_id>/reviews", methods=["GET"])
+def get_provider_reviews(provider_id):
+    provider = User.query.filter_by(id=provider_id).all()
+    transactions = Transaction.query.filter_by(provider_id=provider)
+    provider_reviews = [transaction.review_provider for transaction in transactions]
+    return provider_reviews
+
+
+# Seeing all reviews for a specific recipient
+@app.route("/user/<recipient_id>/reviews", methods=["GET"])
+def get_recipient_reviews(recipient_id):
+    recipient = User.query.filter_by(id=recipient_id).all()
+    transactions = Transaction.query.filter_by(recipient_id=recipient)
+    recipient_reviews = [transaction.review_recipient for transaction in transactions]
+    return recipient_reviews
+
+
 """
 -------- Create Functionality --------
 """
+
 
 @app.route("/user/signin/<credential>", methods=["GET"])
 def signin_user(credential):
