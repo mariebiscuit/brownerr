@@ -507,9 +507,10 @@ def delete_jobs(current_user):
 
 
 # All users should have access to this endpoint
-@app.route("/user/update/<int:id>/", methods=["PUT"])
+@app.route("/user/update/<int:id>/", methods=["POST"])
 @token_required
 def update_user_info(current_user, id):
+    print("hi")
     if current_user.id == id or current_user.role == 'admin':
         user = User.query.get(id)
         # user.service = request.json.get('service', user.service)
@@ -517,10 +518,12 @@ def update_user_info(current_user, id):
         # user.available_provider = request.json.get('available_provider', user.available_provider)
         db.session.commit()
         resp = jsonify({'code': 200 , 'message': 'Bio and availability successfully updated.'})
-        resp.headers['Access-Control-Allow-Origin'] = '*'
-        return resp
     else:
-        abort(401)
+        resp = jsonify({'code': 404 , 'message': 'You must be logged in to edit your own profile.'})
+
+    resp.headers['Access-Control-Allow-Origin'] = '*'
+    print(resp)
+    return resp
 
 
 if __name__ == "__main__":

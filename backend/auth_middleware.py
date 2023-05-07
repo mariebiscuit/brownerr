@@ -22,6 +22,7 @@ def token_required(f):
                 "data": None,
                 "error": "Unauthorized"
             }, 401
+        print(token)
         try:
             idinfo = id_token.verify_oauth2_token(token, requests.Request(), Auth.CLIENT_ID)  # Token verified
             userid = idinfo['sub'] # Google ID

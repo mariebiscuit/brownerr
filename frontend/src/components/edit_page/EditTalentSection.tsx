@@ -38,14 +38,18 @@ export default function EditTalentSection(props: TalentProps) {
   };
 
   function handleSubmit(){
-    const requestOptions = {
-      method: 'PUT',
-      headers: {'credentials': props.currentCredential},
-      body: {'bio': data.get('bio')}
+      const bio = data.get('bio')
+      if (bio !== undefined){
+      const requestOptions = {
+        method: 'POST',
+        headers: {'credentials': props.currentCredential,
+                  'Access-Control-Allow-Origin': '*'},
+        body: JSON.stringify({'bio': bio})
+      }
+      fetch(URLPREFIX + "user/update/" + props.user.id, requestOptions).then(
+        response => console.log(response)
+      )
     }
-    fetch(URLPREFIX + "user/update/" + props.user.id, requestOptions).then(
-      response => console.log(response)
-    )
       // take data to submit
     };
 
@@ -55,7 +59,7 @@ export default function EditTalentSection(props: TalentProps) {
       <Container>
       <form onSubmit = {(e) => {
               e.preventDefault();
-              (data.get('bio') != null) ? (handleSubmit()) :({})}}>
+              handleSubmit()}}>
         <Row>
           <Col className="px-5" sm="6">
             <div className="mb-4">
