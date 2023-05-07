@@ -357,17 +357,15 @@ def create_transaction():
 
 # Only admin should have access to this endpoint
 @app.route('/service/create/', methods=["GET", "POST"])
-@token_required
-def create_service(current_user):
-    if current_user.role == 'admin':
-        data = request.get_json()
-        name = data['name']
+def create_service():
+    data = request.get_json()
+    name = data['name']
 
-        service = Service(name=name)
+    service = Service(name=name)
 
-        db.session.add(service)
-        db.session.commit()
-        return {'message': 'service added successfully'}
+    db.session.add(service)
+    db.session.commit()
+    return {'message': 'service added successfully'}
 
 
 # Any user should have access to this endpoint
@@ -388,14 +386,12 @@ def create_job():
 
 # Only the admin should have access to this (mainly for testing purposes)
 @app.route("/user/delete/all/", methods=["DELETE"])
-@token_required
-def delete_users(current_user):
-    if current_user.role == 'admin':
-        users = User.query.all()
-        for user in users:
-            db.session.delete(user)
-        db.session.commit()
-        return {'message': 'All users deleted successfully.'}
+def delete_users():
+    users = User.query.all()
+    for user in users:
+        db.session.delete(user)
+    db.session.commit()
+    return {'message': 'All users deleted successfully.'}
 
 
 # All users should have access to this endpoint; however should only be able to delete their own id
