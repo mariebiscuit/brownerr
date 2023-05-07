@@ -1,6 +1,8 @@
 import sqlite3
 import io
 
+# Inspiration: https://www.geeksforgeeks.org/how-to-create-a-backup-of-a-sqlite-database-using-python/
+
 conn = sqlite3.connect('../../brownerr.db')
 
 # Open() function

@@ -9,6 +9,8 @@ from flask import Flask, jsonify, request, abort
 from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
 
+# Inspiration for the database and CRUD operations: https://www.thepythoncode.com/article/building-crud-app-with-flask-and-sqlalchemy
+
 basedir = os.path.abspath(os.path.dirname(__file__))
 
 app = Flask(__name__)
