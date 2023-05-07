@@ -24,9 +24,7 @@ interface OrganizerProps {
  * @param props InputBoxProps mentioned above
  * @returns a new InputBox as functional HTML Element
  */
-export default function OrganizerSection(props: OrganizerProps) {
-  
-
+export default function EditOrganizerSection(props: OrganizerProps) {
   
   return (
     <div>

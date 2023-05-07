@@ -30,6 +30,12 @@ export interface User{
   service: number
 }
 
+export interface EditableUser{
+  bio: string,
+  name: string,
+  picture: string,
+  service: number
+}
 
 export interface Review{
   rating: number;
