@@ -116,6 +116,34 @@ function App(props: AppProps) {
   //                          id: 1
   // }
 
+<<<<<<< HEAD
+=======
+  let job1: Opportunity = {id: 1, name: "DJ Partner Wanted for Cool Remix Project :)",
+  job: 1,
+  location: "TBD",
+  poster: 1,
+  start_day: 11,
+  start_month: 5,
+  start_year: 2023,
+  end_day: 11,
+  end_month: 5,
+  end_year: 2023,
+
+  overview: "Sorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate libero et velit interdum, ac aliquet odio mattis. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Curabitur tempus urna at turpis condimentum lobortis. Ut commodo efficitur neque. Ut diam quam, semper iaculis condimentum ac, vestibulum eu nisl.",
+
+  
+
+  }
+  
+  const [currentCredential, setCurrentCredential] = useState<string>();
+  const [serviceTypes, setServiceTypes] = useState<string[]>();
+  const [currentUser, setCurrentUser] = useState<User>();
+  const [profiles, setProfiles] = useState<User[]> ([]);
+  const [idToIndex, setIdToIndex] = useState<Map<string, number>>(new Map());
+  const [opportunities, setOpportunities] = useState<Opportunity[]> ([job1, job1, job1, job1, job1, job1, job1, job1]);
+
+
+>>>>>>> refs/remotes/origin/main
   // Fetching all existing users in db
   useEffect(() => {
     getDataUser()
@@ -144,6 +172,20 @@ function App(props: AppProps) {
 >>>>>>> refs/remotes/origin/main
     getDataOpportunity()
   }, [])
+
+  useEffect(() => {
+    async function getServiceType() {
+      const response = await fetch(
+        `http://localhost:2000/service/list/`
+      ).then(response => response.json());
+      
+      const service : string[] = response.service
+      setServiceTypes(service)
+     }
+    getServiceType()
+  }, [])
+
+
  
   return (
     <body>

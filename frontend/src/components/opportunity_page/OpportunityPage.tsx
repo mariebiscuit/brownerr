@@ -42,19 +42,21 @@ export default function OpportunityPage(props: OpportunityProps) {
     jobID = Number(id);
   }
   catch{
-    console.log("could not find user")
+    console.log("could not find job")
   }
   
   const [job, setJob] = useState<Opportunity>();
+
   useEffect(() => {
      setJob(props.jobList[jobID-1])
+     console.log(job?.poster)
   }, [id]);
 
 
  
   async function getDataUser(id:number ) {
      const response = await fetch(
-       `http://localhost:2000/user/${id}/`
+       `http://localhost:2000/user/id/${id}/`
      ).then(response => response.json());
      
      const user : User = response
@@ -74,6 +76,14 @@ export default function OpportunityPage(props: OpportunityProps) {
     setter(!variable)
   }
 
+  useEffect(() => {
+    if(job != undefined){
+      getDataUser(job.poster)
+      getServiceType(job.job)
+    }
+    
+    }, [job]) 
+
   if(job === undefined){
     return (<body>
       <div className="profile">
@@ -83,9 +93,11 @@ export default function OpportunityPage(props: OpportunityProps) {
   }
   
   else{
+
+      
+  
       // Fetching all existing users in db
-      getDataUser(job.id)
-      getServiceType(job.job)
+      
       if(poster === undefined){
         return (<body>
           <div className="profile">
@@ -102,7 +114,14 @@ export default function OpportunityPage(props: OpportunityProps) {
                 <Col sm="6">
                 <p className="mb-2">{service_type}</p>
                 <h1 className="text-left opportunity-page-title mb-2" >{job.name}</h1>
-                <p className="mb-5">Posted by <span><Card.Img className="avatar" src={poster.picture} /></span> <u>{poster.name}</u> </p>
+                {(() => {
+                  if(poster === undefined){
+                    return <Card.Text>Posted by an unknown user </Card.Text>
+                  }
+                  else{
+                    return  <Card.Text>Posted by <span><Card.Img className="avatar" src={poster.picture} /></span> <u>{poster.name} </u> </Card.Text>
+                  }
+                  })()} 
                 
                 <p className="mb-2">
                   <span><IoLocationSharp size={30}></IoLocationSharp></span> {job.location}
