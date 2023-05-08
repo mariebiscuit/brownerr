@@ -11,9 +11,55 @@ import { Container, Navbar } from "react-bootstrap";
 import { GoogleLogin } from '@react-oauth/google';
 
 
-interface AppProps {
+interface AppProps {}
 
+
+let job1: Opportunity = {id: 1, name: "DJ Partner Wanted for Cool Remix Project :)",
+  job: 1,
+  location: "TBD",
+  poster: 1,
+  start_day: 11,
+  start_month: 5,
+  start_year: 2023,
+  end_day: 11,
+  end_month: 5,
+  end_year: 2023,
+  overview: "Sorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate libero et velit interdum, ac aliquet odio mattis. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Curabitur tempus urna at turpis condimentum lobortis. Ut commodo efficitur neque. Ut diam quam, semper iaculis condimentum ac, vestibulum eu nisl.",
 }
+
+  
+const [currentCredential, setCurrentCredential] = useState<string>();
+const [currentUser, setCurrentUser] = useState<User>();
+const [profiles, setProfiles] = useState<User[]> ([]);
+const [idToIndex, setIdToIndex] = useState<Map<string, number>>(new Map());
+const [opportunities, setOpportunities] = useState<Opportunity[]> ([job1, job1, job1, job1, job1, job1, job1, job1]);
+
+export async function getDataUser() {
+  const response = await fetch(
+    `http://localhost:2000/user/list/`
+  ).then(response => response.json());
+  
+  const users : User[] = response
+  setProfiles(users)
+
+  if ((currentUser != undefined) && (idToIndex != undefined)){
+    const idx = idToIndex.get(currentUser.id)
+    if (idx != undefined){
+      setCurrentUser(profiles[idx])
+    }
+  }
+}
+
+export async function getDataOpportunity() {
+  const response = await fetch(
+    `http://localhost:2000/job/list/`
+  ).then(response => response.json());
+  
+  const jobs : Opportunity[] = response
+  setOpportunities(jobs)
+  console.log(JSON.parse(response))
+}
+
 
 /**
  * Function that renders the REPL web app
@@ -68,45 +114,10 @@ function App(props: AppProps) {
   //                          qualification: ["Sorem ipsum dolor sit amet, consectetur adipiscing elit.", "Nunc vulputate libero et velit interdum, ac aliquet odio mattis.", "per conubia nostra, per inceptos himenaeos. Curabitur tempus " ],
   //                          applicants: [user1, user1, user1, user1, user1, user1, user1, user1, user1, user1],
   //                          id: 1
-                           
-  
   // }
-
-  let job1: Opportunity = {id: 1, name: "DJ Partner Wanted for Cool Remix Project :)",
-  job: 1,
-  location: "TBD",
-  poster: 1,
-  start_day: 11,
-  start_month: 5,
-  start_year: 2023,
-  end_day: 11,
-  end_month: 5,
-  end_year: 2023,
-
-  overview: "Sorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate libero et velit interdum, ac aliquet odio mattis. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Curabitur tempus urna at turpis condimentum lobortis. Ut commodo efficitur neque. Ut diam quam, semper iaculis condimentum ac, vestibulum eu nisl.",
-
-  
-
-  }
-  
-  const [currentCredential, setCurrentCredential] = useState<string>();
-  const [currentUser, setCurrentUser] = useState<User>();
-  const [profiles, setProfiles] = useState<User[]> ([]);
-  const [idToIndex, setIdToIndex] = useState<Map<string, number>>(new Map());
-  const [opportunities, setOpportunities] = useState<Opportunity[]> ([job1, job1, job1, job1, job1, job1, job1, job1]);
-
 
   // Fetching all existing users in db
   useEffect(() => {
-     async function getDataUser() {
-      const response = await fetch(
-        `http://localhost:2000/user/list/`
-      ).then(response => response.json());
-      
-      const users : User[] = response
-      setProfiles(users)
-    }
-
     getDataUser()
   }, [])
 
@@ -116,18 +127,7 @@ function App(props: AppProps) {
     setIdToIndex(new Map(idToIndex.set(user.id, i)))
   })}, [profiles])
 
-
   useEffect(() => {
-    async function getDataOpportunity() {
-      const response = await fetch(
-        `http://localhost:2000/job/list/`
-      ).then(response => response.json());
-      
-      const jobs : Opportunity[] = response
-      setOpportunities(jobs)
-      console.log(JSON.parse(response))
-      
-    }
     getDataOpportunity()
   }, [])
  
