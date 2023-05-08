@@ -175,12 +175,13 @@ class Job(db.Model):
             'name': self.name,
             'poster': self.poster,
             'location': self.location,
-            'start-day': self.start_day,
-            'start-month': self.start_month,
-            'start-year': self.start_year,
-            'end-day': self.end_day,
-            'end-month': self.end_month,
-            'end-year': self.end_year
+            'start_day': self.start_day,
+            'start_month': self.start_month,
+            'start_year': self.start_year,
+            'end_day': self.end_day,
+            'end_month': self.end_month,
+            'end_year': self.end_year,
+            'overview': self.overview
         }
 
 
@@ -242,12 +243,15 @@ def get_all_users():
 
 
 # Searching for users by unique id
-@app.route("/user/<int:id_user>/", methods=["GET"])
+@app.route("/user/id/<int:id_user>/", methods=["GET"])
 def get_user(id_user):
     user = User.query.get(id_user)
     if user is None:
-        abort()
-    return jsonify(user.to_json())
+         abort()
+   
+    resp =  jsonify(user.to_json())
+    resp.headers.add('Access-Control-Allow-Origin', '*')
+    return resp
 
 
 # Searching for users by their service (only works if we provide id)

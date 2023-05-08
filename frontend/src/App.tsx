@@ -125,7 +125,8 @@ function App(props: AppProps) {
       
       const jobs : Opportunity[] = response
       setOpportunities(jobs)
-      console.log(JSON.parse(response))
+      console.log(jobs);
+  
       
     }
     getDataOpportunity()

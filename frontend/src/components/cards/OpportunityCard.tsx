@@ -26,7 +26,7 @@ export default function OpportunityCard(props: OpportunityCardProps) {
   const idString : string = props.job.id.toString();
   async function getDataUser(id:number ) {
     const response = await fetch(
-      `http://localhost:2000/user/${id}/`
+      `http://localhost:2000/user/id/${id}/`
     ).then(response => response.json());
     
     const user : User = response
@@ -48,7 +48,7 @@ export default function OpportunityCard(props: OpportunityCardProps) {
     <Card className="opportunity-card">
       <Link to={"/opportunity/" + idString}>
       <Card.Body className="opportunity-card-body">
-        <Card.Text style={{color: "#8A8A8A"}}>{props.job.job}</Card.Text>
+        <Card.Text style={{color: "#8A8A8A"}}>{service_type}</Card.Text>
         <Card.Title className="text-left opportunity-card-title" >{props.job.name}</Card.Title>
         {(() => {
             if(poster === undefined){
@@ -71,7 +71,8 @@ export default function OpportunityCard(props: OpportunityCardProps) {
         </Card.Text>
 
         <Card.Text>
-          <span><IoCalendarClear size={36}></IoCalendarClear></span> {props.job.start_day}/{props.job.start_month}/{props.job.start_year} - {props.job.end_day}/{props.job.end_month}/{props.job.end_day}
+          {/* <span><IoCalendarClear size={36}></IoCalendarClear></span> {props.job.start_day.toString()}/{props.job.start_month.toString()}/{props.job.start_year.toString()} - {props.job.end_day.toString()}/{props.job.end_month.toString()}/{props.job.end_day.toString()} */}
+          <span><IoCalendarClear size={36}></IoCalendarClear></span> {String(props.job.start_day)}/{String(props.job.start_month)}/{String(props.job.start_year)} - {String(props.job.end_day)}/{String(props.job.end_month)}/{String(props.job.end_day)}
         </Card.Text>
     
     
