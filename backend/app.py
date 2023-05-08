@@ -322,9 +322,8 @@ def get_recipient_reviews(recipient_id):
 # Seeing all jobs a specific user posted
 @app.route("/user/<user_id>/jobs")
 def get_user_jobs(user_id):
-    user = User.query.filter_by(id=user_id).all()
-    jobs = Job.query.filter_by()
-    return jobs
+    jobs = Job.query.filter_by(poster=user_id)
+    return jsonify([job.to_json() for job in jobs])
 
 
 """
