@@ -128,6 +128,20 @@ function App(props: AppProps) {
   })}, [profiles])
 
   useEffect(() => {
+<<<<<<< HEAD
+=======
+    async function getDataOpportunity() {
+      const response = await fetch(
+        `http://localhost:2000/job/list/`
+      ).then(response => response.json());
+      
+      const jobs : Opportunity[] = response
+      setOpportunities(jobs)
+      console.log(jobs);
+  
+      
+    }
+>>>>>>> refs/remotes/origin/main
     getDataOpportunity()
   }, [])
  
