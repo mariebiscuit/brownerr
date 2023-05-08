@@ -150,7 +150,7 @@ class Job(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     job = db.Column(db.Integer, db.ForeignKey('service.id'))
     name = db.Column(db.Text)
-    poster = db.Column(db.Integer, db.ForeignKey('user.id'))
+    poster = db.Column(db.Text, db.ForeignKey('user.id'))
     location = db.Column(db.Text)
     start_day = db.Column(db.Integer)
     start_month = db.Column(db.Integer)

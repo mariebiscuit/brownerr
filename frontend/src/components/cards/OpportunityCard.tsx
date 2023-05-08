@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Opportunity, User } from "../../Utilities";
 import Card from 'react-bootstrap/Card';
 import {IoLocationSharp, IoCalendarClear} from "react-icons/io5";
@@ -25,6 +25,8 @@ export default function OpportunityCard(props: OpportunityCardProps) {
   const [service_type, setType] = useState<string>();
   const idString : string = props.job.id.toString();
   async function getDataUser(id:number ) {
+
+    
     const response = await fetch(
       `http://localhost:2000/user/id/${id}/`
     ).then(response => response.json());
@@ -42,8 +44,10 @@ export default function OpportunityCard(props: OpportunityCardProps) {
       setType(service)
       }
 
-  getServiceType(props.job.job)
-  getDataUser(props.job.poster)
+  useEffect(() => {
+    getServiceType(props.job.job)
+    getDataUser(props.job.poster)}, [])    
+  
   return (
     <Card className="opportunity-card">
       <Link to={"/opportunity/" + idString}>
