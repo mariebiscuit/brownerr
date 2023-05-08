@@ -3,7 +3,7 @@ import json
 
 def sort_provider(data):
     sorted_data = sorted(data, key=lambda x: x['rating_provider'], reverse=True)
-    return json.dumps(sorted_data)
+    return sorted_data
 
 
 def sort_recipient(data):

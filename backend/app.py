@@ -10,6 +10,8 @@ from sqlalchemy import func, CheckConstraint, event
 from flask import Flask, jsonify, request, abort
 from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
+
+from backend.handlers.sorting.rating_sort import sort_provider
 from config import Auth
 
 # Inspiration for the database and CRUD operations: https://www.thepythoncode.com/article/building-crud-app-with-flask-and-sqlalchemy
@@ -152,11 +154,11 @@ class Job(db.Model):
     location = db.Column(db.Text)
     start_day = db.Column(db.Integer)
     start_month = db.Column(db.Integer)
-    start_year= db.Column(db.Integer)
+    start_year = db.Column(db.Integer)
 
     end_day = db.Column(db.Integer)
     end_month = db.Column(db.Integer)
-    end_year= db.Column(db.Integer)
+    end_year = db.Column(db.Integer)
     overview = db.Column(db.Text)
 
     __table_args__ = (
@@ -164,9 +166,8 @@ class Job(db.Model):
         CheckConstraint('start_month >= 0 AND start_month <= 12', name='start_month_range'),
         CheckConstraint('end_day >= 0 AND end_day <= 31', name='start_day_range'),
         CheckConstraint('end_month >= 0 AND end_month <= 12', name='start_month_range')
-        
+
     )
-    
 
     def to_json(self):
         return {
@@ -237,19 +238,21 @@ def token_required(f):
 @app.route("/user/list/", methods=["GET"])
 def get_all_users():
     users = User.query.all()
-    resp = jsonify([user.to_json() for user in users])
+    user_list = [user.to_json() for user in users]
+    sorted = sort_provider(user_list)
+    resp = jsonify(sorted)
     resp.headers['Access-Control-Allow-Origin'] = '*'
     return resp
 
 
 # Searching for users by unique id
-@app.route("/user/id/<int:id_user>/", methods=["GET"])
+@app.route("/user/id/<id_user>/", methods=["GET"])
 def get_user(id_user):
     user = User.query.get(id_user)
     if user is None:
-         abort()
-   
-    resp =  jsonify(user.to_json())
+        abort()
+
+    resp = jsonify(user.to_json())
     resp.headers.add('Access-Control-Allow-Origin', '*')
     return resp
 
@@ -436,8 +439,8 @@ def create_job():
     end_year = data['end_year']
     overview = data['overview']
 
-    job = Job(job=job, name=name, poster=poster, location=location, start_day=start_day, start_month=start_month, start_year=start_year, end_day=end_day, end_month=end_month, end_year=end_year, overview=overview )
-    
+    job = Job(job=job, name=name, poster=poster, location=location, start_day=start_day, start_month=start_month,
+              start_year=start_year, end_day=end_day, end_month=end_month, end_year=end_year, overview=overview)
 
     db.session.add(job)
     db.session.commit()
@@ -521,9 +524,9 @@ def update_user_info(current_user, id):
         user.bio = request.json.get('bio', user.bio)
         # user.available_provider = request.json.get('available_provider', user.available_provider)
         db.session.commit()
-        resp = jsonify({'code': 200 , 'message': 'Bio and availability successfully updated.'})
+        resp = jsonify({'code': 200, 'message': 'Bio and availability successfully updated.'})
     else:
-        resp = jsonify({'code': 404 , 'message': 'You must be logged in to edit your own profile.'})
+        resp = jsonify({'code': 404, 'message': 'You must be logged in to edit your own profile.'})
 
     resp.headers['Access-Control-Allow-Origin'] = '*'
     resp.headers['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE'
