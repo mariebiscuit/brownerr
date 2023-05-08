@@ -11,7 +11,7 @@ from flask import Flask, jsonify, request, abort
 from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
 
-from backend.handlers.sorting.rating_sort import sort_provider
+from handlers.sorting.rating_sort import sort_provider
 from config import Auth
 
 # Inspiration for the database and CRUD operations: https://www.thepythoncode.com/article/building-crud-app-with-flask-and-sqlalchemy

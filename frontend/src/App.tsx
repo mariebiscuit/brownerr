@@ -90,6 +90,7 @@ function App(props: AppProps) {
   }
   
   const [currentCredential, setCurrentCredential] = useState<string>();
+  const [serviceTypes, setServiceTypes] = useState<string[]>();
   const [currentUser, setCurrentUser] = useState<User>();
   const [profiles, setProfiles] = useState<User[]> ([]);
   const [idToIndex, setIdToIndex] = useState<Map<string, number>>(new Map());
@@ -131,6 +132,20 @@ function App(props: AppProps) {
     }
     getDataOpportunity()
   }, [])
+
+  useEffect(() => {
+    async function getServiceType() {
+      const response = await fetch(
+        `http://localhost:2000/service/list/`
+      ).then(response => response.json());
+      
+      const service : string[] = response.service
+      setServiceTypes(service)
+     }
+    getServiceType()
+  }, [])
+
+
  
   return (
     <body>

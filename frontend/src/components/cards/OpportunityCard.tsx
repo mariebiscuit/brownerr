@@ -13,6 +13,7 @@ import { Link } from "react-router-dom";
  */
 interface OpportunityCardProps {
   job: Opportunity;
+  idToIndexO: Map<string, number>;
 }
 
 /**
@@ -24,33 +25,45 @@ export default function OpportunityCard(props: OpportunityCardProps) {
   const [poster, setPoster] = useState<User>();
   const [service_type, setType] = useState<string>();
   const idString : string = props.job.id.toString();
-  async function getDataUser(id:number ) {
-
-    
-    const response = await fetch(
-      `http://localhost:2000/user/id/${id}/`
-    ).then(response => response.json());
-    
-    const user : User = response
-    setPoster(user)
-   }
-
-  async function getServiceType(id:number) {
-      const response = await fetch(
-        `http://localhost:2000/service/${id}/`
-      ).then(response => response.json());
-      
-      const service : string = response.service
-      setType(service)
-      }
 
   useEffect(() => {
-    getServiceType(props.job.job)
-    getDataUser(props.job.poster)}, [])    
+    async function getDataUser(id:number ) {
+
+    
+      const response = await fetch(
+        `http://localhost:2000/user/id/${id}/`
+      ).then(response => response.json());
+      
+      const user : User = response
+      setPoster(user)
+     }
+
+   getDataUser(props.job.poster)
+ }, [])
+ 
+
+ useEffect(() => {
+  async function getServiceType(id:number) {
+    const response = await fetch(
+      `http://localhost:2000/service/${id}/`
+    ).then(response => response.json());
+    
+    const service : string = response.service
+    setType(service)
+    }
+
+ getServiceType(props.job.job)
+}, [])
+  
+ 
+
+  
+
   
   return (
     <Card className="opportunity-card">
       <Link to={"/opportunity/" + idString}>
+    
       <Card.Body className="opportunity-card-body">
         <Card.Text style={{color: "#8A8A8A"}}>{service_type}</Card.Text>
         <Card.Title className="text-left opportunity-card-title" >{props.job.name}</Card.Title>
