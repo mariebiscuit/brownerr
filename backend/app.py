@@ -306,19 +306,17 @@ def get_all_jobs():
 # Seeing all reviews for a specific provider
 @app.route("/user/provider/<provider_id>/reviews/", methods=["GET"])
 def get_provider_reviews(provider_id):
-    provider = User.query.filter_by(id=provider_id).all()
-    transactions = Transaction.query.filter_by(provider_id=provider)
+    transactions = Transaction.query.filter_by(provider_id=provider_id)
     provider_reviews = [transaction.review_provider for transaction in transactions]
-    return provider_reviews
+    return jsonify([review for review in provider_reviews])
 
 
 # Seeing all reviews for a specific recipient
 @app.route("/user/recipient/<recipient_id>/reviews/", methods=["GET"])
 def get_recipient_reviews(recipient_id):
-    recipient = User.query.filter_by(id=recipient_id).all()
-    transactions = Transaction.query.filter_by(recipient_id=recipient)
+    transactions = Transaction.query.filter_by(recipient_id=recipient_id)
     recipient_reviews = [transaction.review_recipient for transaction in transactions]
-    return recipient_reviews
+    return jsonify([review for review in recipient_reviews])
 
 
 # Seeing all jobs a specific user posted
