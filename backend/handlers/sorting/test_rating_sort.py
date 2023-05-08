@@ -1,3 +1,4 @@
+import json
 import unittest
 from rating_sort import sort_provider, sort_recipient
 from mocked_ratings import data
@@ -14,7 +15,7 @@ class TestSortByRating(unittest.TestCase):
                           ' {"id": 1, "name": "Alice", "rating_provider": 3.2, "rating_recipient": 2.9},' \
                           ' {"id": 2, "name": "Bob", "rating_provider": 2.0, "rating_recipient": 3.6},' \
                           ' {"id": 7, "name": "Geicko", "rating_provider": 1.7, "rating_recipient": 5.0}]'
-        self.assertEqual(sort_provider(data), expected_output)
+        self.assertEqual(json.dumps(sort_provider(data)), expected_output)
 
     def test_sort_by_rating_recipient(self):
         expected_output = '[{"id": 7, "name": "Geicko", "rating_provider": 1.7, "rating_recipient": 5.0}, ' \
@@ -25,7 +26,8 @@ class TestSortByRating(unittest.TestCase):
                           ' {"id": 2, "name": "Bob", "rating_provider": 2.0, "rating_recipient": 3.6},' \
                           ' {"id": 3, "name": "Charlie", "rating_provider": 4.9, "rating_recipient": 3.3},' \
                           ' {"id": 1, "name": "Alice", "rating_provider": 3.2, "rating_recipient": 2.9}]'
-        self.assertEqual(sort_recipient(data), expected_output)
+        self.assertEqual(json.dumps(sort_recipient(data)), expected_output)
+
 
 if __name__ == '__main__':
     unittest.main()
