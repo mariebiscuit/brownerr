@@ -148,7 +148,7 @@ class Job(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     job = db.Column(db.Integer, db.ForeignKey('service.id'))
     name = db.Column(db.Text)
-    poster = db.Column(db.Integer, db.ForeignKey('user.id'))
+    poster = db.Column(db.Text, db.ForeignKey('user.id'))
     location = db.Column(db.Text)
     start_day = db.Column(db.Integer)
     start_month = db.Column(db.Integer)
@@ -243,7 +243,7 @@ def get_all_users():
 
 
 # Searching for users by unique id
-@app.route("/user/id/<int:id_user>/", methods=["GET"])
+@app.route("/user/id/<id_user>/", methods=["GET"])
 def get_user(id_user):
     user = User.query.get(id_user)
     if user is None:

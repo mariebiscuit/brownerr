@@ -42,19 +42,19 @@ export default function OpportunityPage(props: OpportunityProps) {
     jobID = Number(id);
   }
   catch{
-    console.log("could not find user")
+    console.log("could not find job")
   }
   
   const [job, setJob] = useState<Opportunity>();
   useEffect(() => {
-     setJob(props.jobList[jobID-1])
+     setJob(props.jobList[jobID])
   }, [id]);
 
 
  
   async function getDataUser(id:number ) {
      const response = await fetch(
-       `http://localhost:2000/user/${id}/`
+       `http://localhost:2000/user/id/${id}/`
      ).then(response => response.json());
      
      const user : User = response
@@ -83,8 +83,10 @@ export default function OpportunityPage(props: OpportunityProps) {
   }
   
   else{
+    
+  
       // Fetching all existing users in db
-      getDataUser(job.id)
+      getDataUser(job.poster)
       getServiceType(job.job)
       if(poster === undefined){
         return (<body>
