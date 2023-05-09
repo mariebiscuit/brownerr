@@ -8,7 +8,7 @@ import {GiRoundStar} from "react-icons/gi"
 import {AiOutlineSmile, AiOutlineFrown, AiOutlineMeh} from "react-icons/ai"
 import { Container } from "react-bootstrap";
 import {FiShare2} from "react-icons/fi"
-import { useEffect, useState } from "react";
+import { ReactElement, ReactNode, useEffect, useState } from "react";
 import TalentSection from "./TalentSection";
 import OrganizerSection from "./OrganizerSection";
 import { Link, useParams } from "react-router-dom";
@@ -50,6 +50,8 @@ export default function ProfilePage(props: ProfileProps) {
 
   // ------ Contact Tooltip ------
   const [open, setOpen] = useState(false);
+
+  
   const handleTooltipClose = () => {
     setOpen(false);
   };
@@ -87,6 +89,7 @@ export default function ProfilePage(props: ProfileProps) {
   // ===== Editing functionality =======
   const [editing, setEditing] = useState<boolean>(false);
   const [editableUser, setEditableUser] = useState<Map<string, string>>(new Map());
+  const [availState, setAvail] = useState<string>();
 
   function handleSubmitEdits(){
     if (props.currentUser != undefined){
@@ -112,6 +115,7 @@ export default function ProfilePage(props: ProfileProps) {
 
   function createEditableUser(){
       if (props.currentUser !== undefined){
+      
         setEditableUser(new Map([
           ['bio', props.currentUser.bio],
           ['name', props.currentUser.name],
@@ -126,6 +130,40 @@ export default function ProfilePage(props: ProfileProps) {
     setEditableUser(new Map(editableUser.set(key, value)))
   };
 
+  function handleChangeAvail(key: string, value: string){
+    setEditableUser(new Map(editableUser.set(key, value)))
+    setAvail(value)
+  };
+
+  // function availabilityBadgeByString(avail: string):ReactElement{
+  //   var res;
+  //   (() => {
+  //     switch(avail) {
+  //       case '2': res = <Button className="availability-profile-edit green" onClick={
+  //         () => handleChangeAvail('available_provider', '0')}><AiOutlineSmile size={20} className="avail-icons"></AiOutlineSmile> Open to Work</Button> ;
+  //       case '1': res = <Button className="availability-profile-edit orange"  onClick={
+  //         () => handleChangeAvail('available_provider', '2')}><AiOutlineMeh size={20} className="avail-icons"></AiOutlineMeh> Slightly Busy</Button> ;
+  //       case '0': res = <Button className="availability-profile-edit red" onClick={
+  //         () => handleChangeAvail('available_provider', '1')}><AiOutlineFrown size={20} className="avail-icons"></AiOutlineFrown> Unavailable</Button> ;
+  //       default: res =<Button className="availability-profile-edit red" onClick={
+  //         () => handleChangeAvail('available_provider', '1')}><AiOutlineFrown size={20} className="avail-icons"></AiOutlineFrown> Unavailable</Button> 
+  //     }
+  //   })()
+
+  //   return res;
+  // }
+
+  // function handleChangeAvail(key: string, value: string){
+  //   setEditableUser(new Map(editableUser.set(key, value)))
+  //   setAvailabilityBadge(availabilityBadgeByString(value))
+  // };
+
+  
+  
+
+  
+
+ 
   // ====== Displaying the right viewedUser from URL =======
   const {id} = useParams();
   var idx = -1;
@@ -152,6 +190,13 @@ export default function ProfilePage(props: ProfileProps) {
   const handleClick = (variable: boolean, setter: (newVar: boolean) => void) => {
     setter(!variable)
   }
+  
+
+
+
+
+  
+
 
   if(viewedUser === undefined){
     return (<body>
@@ -160,7 +205,16 @@ export default function ProfilePage(props: ProfileProps) {
       </div>
     </body>);
   } else{
+
+
+
+
+
+  
+
+    
     return (
+      
         <div className="profile">
           <Container>
             <Row className="align-items-center py-5">
@@ -193,21 +247,29 @@ export default function ProfilePage(props: ProfileProps) {
 
                     {// Editable availability, if in edit mode
                     (editing)?
-                    (
+                    ( 
+
                       (() => {
-                        switch(viewedUser.available_provider) {
-                          case "0": return <Button className="availability-profile green" onClick={
-                            () => handleChange('available_provider', '2')}><AiOutlineSmile size={20} className="avail-icons"></AiOutlineSmile> Open to Work</Button> ;
-                          case "1": return <Button className="availability-profile orange"><AiOutlineMeh size={20} className="avail-icons"></AiOutlineMeh> Slightly Busy</Button> ;
-                          case "2": return <Button className="availability-profile red"><AiOutlineFrown size={20} className="avail-icons"></AiOutlineFrown> Unavailable</Button> ;
-                          default: return <Button className="availability-profile red"><AiOutlineFrown size={20} className="avail-icons"></AiOutlineFrown> Unavailable</Button> 
+                        switch(availState) {
+                          case '2':  return <Button className="availability-profile-edit green" onClick={
+                            () => handleChangeAvail('available_provider', '0')}><AiOutlineSmile size={20} className="avail-icons"></AiOutlineSmile> Open to Work</Button> ;
+                          case '1': return <Button className="availability-profile-edit orange"  onClick={
+                            () => handleChangeAvail('available_provider', '2')}><AiOutlineMeh size={20} className="avail-icons"></AiOutlineMeh> Slightly Busy</Button> ;
+                          case '0': return <Button className="availability-profile-edit red" onClick={
+                            () => handleChangeAvail('available_provider', '1')}><AiOutlineFrown size={20} className="avail-icons"></AiOutlineFrown> Unavailable</Button> ;
+                          default: return <Button className="availability-profile-edit red" onClick={
+                            () => handleChangeAvail('available_provider', '1')}><AiOutlineFrown size={20} className="avail-icons"></AiOutlineFrown> Unavailable</Button> 
                         }
                       })()
+
+
+                    
+                    
                       ):((() => {
                         switch(viewedUser.available_provider) {
-                          case "2": return <Button className="availability-profile green"><AiOutlineSmile size={20} className="avail-icons"></AiOutlineSmile> Open to Work</Button> ;
-                          case "1": return <Button className="availability-profile orange"><AiOutlineMeh size={20} className="avail-icons"></AiOutlineMeh> Slightly Busy</Button> ;
-                          case "0": return <Button className="availability-profile red"><AiOutlineFrown size={20} className="avail-icons"></AiOutlineFrown> Unavailable</Button> ;
+                          case '2': return <Button className="availability-profile green"><AiOutlineSmile size={20} className="avail-icons"></AiOutlineSmile> Open to Work</Button> ;
+                          case '1': return <Button className="availability-profile orange"><AiOutlineMeh size={20} className="avail-icons"></AiOutlineMeh> Slightly Busy</Button> ;
+                          case '0': return <Button className="availability-profile red"><AiOutlineFrown size={20} className="avail-icons"></AiOutlineFrown> Unavailable</Button> ;
                           default: return <Button className="availability-profile red"><AiOutlineFrown size={20} className="avail-icons"></AiOutlineFrown> Unavailable</Button> 
                         }
                       })())

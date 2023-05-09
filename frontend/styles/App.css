@@ -178,6 +178,15 @@
     pointer-events:none;
   }
 
+  .availability-profile-edit{
+    margin-bottom: 30px;
+    display: flex;
+    border-radius: 9px;
+    font-weight: 900;
+    font-size: 12px;
+    margin-top: -5px !important;
+  }
+
   .review-card-img {
     vertical-align: middle;
     width: 80px;
@@ -224,6 +233,8 @@
   pointer-events:none;
   opacity: 0.9;
 }
+
+
 
 .organizer-type{
   
