@@ -11,8 +11,11 @@ import {FiShare2} from "react-icons/fi"
 import { useEffect, useState } from "react";
 import TalentSection from "./TalentSection";
 import OrganizerSection from "./OrganizerSection";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { URLPREFIX } from "../../Utilities";
+import Modal from "react-modal"
+import Tooltip from '@mui/material/Tooltip';
+import ClickAwayListener from '@mui/material/ClickAwayListener';
 
 
 /**
@@ -28,6 +31,7 @@ interface ProfileProps {
   currentCredential: string | undefined;
   currentUser: User | undefined;
   triggerDbUpdate: () => void;
+  logout: () => void;
 }
 
 /**
@@ -35,35 +39,75 @@ interface ProfileProps {
  * @param props InputBoxProps mentioned above
  * @returns a new InputBox as functional HTML Element
  */
+Modal.setAppElement("#root");
+
 export default function ProfilePage(props: ProfileProps) {
-  // ===== For editing functionality =======
+
+  // ===== Contact Functionality =====
+     function sendMail(email:string){
+      window.open("mailto:" + email + "?subject=I found you on BrownRR!")
+    }
+
+  // ------ Contact Tooltip ------
+  const [open, setOpen] = useState(false);
+  const handleTooltipClose = () => {
+    setOpen(false);
+  };
+  const handleTooltipOpen = () => {
+    setOpen(true);
+  };
+
+  // ===== Delete Functionality =====
+  function handleDelete(){
+    if (props.currentUser != undefined){
+      const requestOptions = {
+        method: 'DELETE',
+        headers: {'Content-Type': 'text/plain'},
+        body: JSON.stringify({
+          'credential': props.currentCredential})
+      }
+      
+      fetch(URLPREFIX + "user/delete/" + props.currentUser.id, requestOptions).then(
+        response => response.json()).then(data => {
+          if (data['code'] == 200){
+              console.log("alyssa is gone")
+              props.triggerDbUpdate()
+              props.logout()
+            }})
+    }
+  }
+
+  // ---- Delete Modal --------
+  const [showModal, setShowModal] = useState(false);
+  function toggleModal() {
+    setShowModal(!showModal);
+  }
+
+
+  // ===== Editing functionality =======
   const [editing, setEditing] = useState<boolean>(false);
   const [editableUser, setEditableUser] = useState<Map<string, string>>(new Map());
 
-    function handleSubmitEdits(){
-      if (props.currentUser != undefined){
-        const requestOptions = {
-          method: 'POST',
-          headers: {'Content-Type': 'text/plain'},
-          body: JSON.stringify({
-            'credential': props.currentCredential,
-            'bio': editableUser.get('bio'),
-            'name': editableUser.get('name'),
-            'picture': editableUser.get('picture')})
-        }
-        
-        fetch(URLPREFIX + "user/update/" + props.currentUser.id, requestOptions).then(
-          response => response.json()).then(data => {
-            if (data['code'] == 200){
-              fetch(
-                `http://localhost:2000/user/list/`
-              ).then(response => response.json()).then(
-                users => {
-                props.triggerDbUpdate()})
-            }
-          })
+  function handleSubmitEdits(){
+    if (props.currentUser != undefined){
+      const requestOptions = {
+        method: 'POST',
+        headers: {'Content-Type': 'text/plain'},
+        body: JSON.stringify({
+          'credential': props.currentCredential,
+          'bio': editableUser.get('bio'),
+          'name': editableUser.get('name'),
+          'picture': editableUser.get('picture')})
       }
-    };
+      
+      fetch(URLPREFIX + "user/update/" + props.currentUser.id, requestOptions).then(
+        response => response.json()).then(data => {
+          if (data['code'] == 200){
+              props.triggerDbUpdate()}
+          }
+        )
+    }
+  };
 
   function createEditableUser(){
       if (props.currentUser !== undefined){
@@ -80,7 +124,7 @@ export default function ProfilePage(props: ProfileProps) {
     setEditableUser(new Map(editableUser.set(key, value)))
   };
 
-   // ===== Displaying the right viewedUser from URL =======
+  // ====== Displaying the right viewedUser from URL =======
   const {id} = useParams();
   var idx = -1;
   try{
@@ -113,7 +157,7 @@ export default function ProfilePage(props: ProfileProps) {
         <h1>No Profile Found</h1>
       </div>
     </body>);
-  } else {
+  } else{
     return (
         <div className="profile">
           <Container>
@@ -183,32 +227,73 @@ export default function ProfilePage(props: ProfileProps) {
                   <div>
                     <Row className="align-items-center">
                       <Col>
-                        <Button className="contactButton green" onClick={() => handleClick(contactActive, setContactActive)}
-                        style={{ backgroundColor: contactActive ? "#c7ffe4" : "#00bc61", borderColor: contactActive ? "#c7ffe4" : "#00bc61", color: contactActive ? "#00bc61" : "white" }}> Get in Touch</Button>
+                      <ClickAwayListener onClickAway={handleTooltipClose}>
+                      <Tooltip
+                            PopperProps={{
+                              disablePortal: true,
+                            }}
+                            onClose={handleTooltipClose}
+                            open={open}
+                            disableFocusListener
+                            disableHoverListener
+                            disableTouchListener
+                            title="Please log in to access contact details."
+                          >
+                        <Button className="contactButton green" 
+                          onClick={() => {
+                          if (props.currentUser != undefined){
+                            sendMail(viewedUser.email)
+                          } else {
+                            handleTooltipOpen()
+                          }
+                          handleClick(contactActive, setContactActive)
+                          }
+                        }
+                        style={{ backgroundColor: contactActive ? "#c7ffe4" : "#00bc61", borderColor: contactActive ? "#c7ffe4" : "#00bc61", color: contactActive ? "#00bc61" : "white" }}> 
+                        Get in Touch
+                        </Button>
+                        </Tooltip>
+                        </ClickAwayListener>
                       </Col>
                       <Col>
                         <Button className="beige"> <FiShare2 size={"20px"} color="black" strokeWidth={"2.5px"}></FiShare2>  </Button>
                       </Col>
                     </Row>
-                    <div className="edit-bg">
-                    <Row>
+                    <Modal overlayClassName="contactOverlay" className="contactModal" isOpen={showModal} onRequestClose={toggleModal} contentLabel="test"> 
+                        <div> <b> Are you sure you want to delete your profile? </b> </div> 
+
+                        <div className= "modal-buttons">
+                         <button className="edit-button"  onClick={toggleModal}> Nevermind </button>
+                         <Link to="/"> <button className="delete-button" onClick={handleDelete}> Yes, delete </button>  </Link>
+                        </div>
+
+                      </Modal>
+                    <Row className="edit-del">
+                      <Col>
                       {// Edit button visible if logged-in user is viewed user
                       ((props.currentUser != undefined) && (props.currentUser.id == viewedUser.id))?
-                       ((editing)? (<Button className="edit" onClick=
+                       ((editing)? (<Button className="edit-button" onClick=
                                       {() => {
                                         handleClick(editing, setEditing)
                                         handleSubmitEdits()
                                       }
                                       }> Save Changes</Button>
                                     ): (
-                                      <Button className="edit" onClick=
+                                      <Button className="edit-button" onClick=
                                           {() => 
                                           { handleClick(editing, setEditing);
                                             createEditableUser();}
                                           }> Edit Profile </Button>
-                                      )):(<p></p>)}
+                          )):(<p></p>)}
+                          </Col>
+                          <Col>
+                      {// Edit button visible if logged-in user is viewed user
+                      ((props.currentUser != undefined) && (props.currentUser.id == viewedUser.id))?
+                      ((<Button className="delete-button" onClick={toggleModal}> Delete Profile </Button>
+                                   )):(<p></p>)}
+
+                          </Col>
                     </Row>
-                    </div>
                   </div>
                 </div>
               </Col>

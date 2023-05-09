@@ -105,6 +105,11 @@ function App(props: AppProps) {
     setDbUpdateHook(!dbUpdateHook);
   }
 
+  function logout(){
+    setCurrentUser(undefined);
+    setCurrentCredential(undefined);
+  }
+
   function getDataUser() {
     fetch(
       `http://localhost:2000/user/list/`
@@ -177,7 +182,7 @@ function App(props: AppProps) {
               onSuccess={credentialResponse => {
                 setCurrentCredential(credentialResponse.credential)
                 fetch(`http://localhost:2000/user/signin/` + credentialResponse.credential).then(
-                  response => response.json().then(user => setCurrentUser(user))
+                  response => response.json().then(user => {triggerDbUpdate(); setCurrentUser(user)})
                   )}}
               onError={() => {
                 console.log('Login Failed');
@@ -208,7 +213,10 @@ function App(props: AppProps) {
             talentView={true} 
             talentList={profiles} 
             idToIndex={idToIndex}
-            triggerDbUpdate={triggerDbUpdate}></ProfilePage>}/>
+            triggerDbUpdate={triggerDbUpdate}
+            logout={logout}>
+
+            </ProfilePage>}/>
         </Route>
         <Route path="/organizer">
         <Route path=":id" element={

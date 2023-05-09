@@ -26,9 +26,12 @@
     "react-bootstrap": "^2.7.4",
     "react-dom": "^18.2.0",
     "react-icons": "^4.8.0",
+    "react-modal": "^3.16.1",
+    "react-overlays": "^5.2.1",
     "react-rating-stars-component": "^2.2.0",
     "react-router-dom": "^6.11.0",
     "react-simple-star-rating": "^5.1.7",
+    "reactjs-popup": "^2.0.5",
     "sort-by": "^1.2.0"
   },
   "devDependencies": {
@@ -37,6 +40,7 @@
     "@testing-library/user-event": "^14.4.3",
     "@types/react": "^18.0.27",
     "@types/react-dom": "^18.0.10",
+    "@types/react-modal": "^3.16.0",
     "@vitejs/plugin-react": "^3.1.0",
     "jsdom": "^21.1.0",
     "prettier": "^2.8.4",
