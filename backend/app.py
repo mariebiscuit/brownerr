@@ -82,8 +82,8 @@ class Transaction(db.Model):
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     service_id = db.Column(db.Integer, db.ForeignKey('service.id'))
-    provider_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    recipient_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    provider_id = db.Column(db.Text, db.ForeignKey('user.id'))
+    recipient_id = db.Column(db.Text, db.ForeignKey('user.id'))
     rating_provider = db.Column(db.Float, default=0.0)
     rating_recipient = db.Column(db.Float, default=0.0)
     review_provider = db.Column(db.Text)

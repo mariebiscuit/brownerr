@@ -94,7 +94,8 @@ function App(props: AppProps) {
   const [currentUser, setCurrentUser] = useState<User>();
   const [profiles, setProfiles] = useState<User[]> ([]);
   const [idToIndex, setIdToIndex] = useState<Map<string, number>>(new Map());
-  const [opportunities, setOpportunities] = useState<Opportunity[]> ([job1, job1, job1, job1, job1, job1, job1, job1]);
+  const [idToIndexO, setIdToIndexO] = useState<Map<string, number>>(new Map());
+  const [opportunities, setOpportunities] = useState<Opportunity[]> ([]);
 
 
   // Fetching all existing users in db
@@ -133,19 +134,10 @@ function App(props: AppProps) {
     getDataOpportunity()
   }, [])
 
-  useEffect(() => {
-    async function getServiceType() {
-      const response = await fetch(
-        `http://localhost:2000/service/list/`
-      ).then(response => response.json());
-      
-      const service : string[] = response.service
-      setServiceTypes(service)
-     }
-    getServiceType()
-  }, [])
-
-
+  useEffect(() => {  
+    opportunities.forEach((opportunity, i) => {
+    setIdToIndexO(new Map(idToIndexO.set(String(opportunity.id), i)))
+  })}, [opportunities])
  
   return (
     <body>
@@ -192,7 +184,7 @@ function App(props: AppProps) {
           <Route path=":id" element={<ProfilePage talentView={false} talentList={profiles} idToIndex={idToIndex}></ProfilePage>}/>
         </Route>
         <Route path="/opportunity">
-          <Route path=":id" element={<OpportunityPage jobList={opportunities}></OpportunityPage>}/>
+          <Route path=":id" element={<OpportunityPage jobList={opportunities} talentList={profiles} idToIndex={idToIndex}></OpportunityPage>}/>
         </Route>
       </Routes>
 

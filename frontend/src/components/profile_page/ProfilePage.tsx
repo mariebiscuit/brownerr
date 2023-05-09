@@ -138,9 +138,9 @@ export default function ProfilePage(props: ProfileProps) {
           <div className="content-div">
             {
               talentActive ? (
-                <TalentSection user={user}></TalentSection>
+                <TalentSection user={user} talentList={props.talentList} idToIndex={props.idToIndex}></TalentSection>
               ):(
-                <OrganizerSection user={user}></OrganizerSection>
+                <OrganizerSection user={user} talentList={props.talentList} idToIndex={props.idToIndex}></OrganizerSection>
               )
             }
           </div>

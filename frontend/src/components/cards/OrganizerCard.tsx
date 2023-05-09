@@ -17,6 +17,7 @@ import { Link } from "react-router-dom";
  */
 interface OrganizerProps {
   user: User;
+
 }
 
 /**
@@ -36,7 +37,7 @@ export default function OrganizerCard(props: OrganizerProps) {
         <Row className="row-organizer-card">
           <Col sm="5"> 
             
-            <Card.Img variant="top" className="organizer-card-img" src={"../user_img.jpeg"} />
+            <Card.Img variant="top" className="organizer-card-img" src={props.user.picture} />
             {/* {(() => {
             switch(props.user.isOrganization) {
               case true: return <Button className="organizer-type green"><MdGroups3 size={20} className="avail-icons"></MdGroups3> Organization</Button> ;

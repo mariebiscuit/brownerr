@@ -10,6 +10,7 @@ import { Container } from "react-bootstrap";
 import { Opportunity } from "../../Utilities";
 import ReviewCard from "../cards/ReviewCard";
 import StatsCard from "../cards/StatsCard";
+import { useEffect, useState } from "react";
 
 
 /**
@@ -20,7 +21,9 @@ import StatsCard from "../cards/StatsCard";
  */
 interface JobProps {
   job: Opportunity;
-  poster:User;
+  poster: User;
+  talentList: User[];
+  idToIndex: Map<string, number>;
 
 }
 
@@ -60,6 +63,29 @@ export default function OpportunitySection(props: JobProps) {
   // const listItemsQua = qualifications.map((qua) =>
   // <li className="mb-2">{qua}</li>
   // );
+
+  const [reviews, setReviews] = useState<Review[]> ([]);
+
+  useEffect(() => {
+    async function getDataReviews() {
+     const response = await fetch(
+       `http://localhost:2000/user/recipient/${props.poster.id}/transactions/`
+     ).then(response => response.json());
+     
+     const reviewsNew : Review[] = []
+     
+     response.forEach((item:any) => {
+      const rev: Review =  {rating: item.rating_recipient, content: item.review_recipient, poster: item.provider_id} 
+      reviewsNew.push(rev)
+    })
+
+    setReviews(reviewsNew)
+     
+   }
+
+   getDataReviews()
+ }, [])
+
   return (
     <div>
       <Container>
@@ -103,6 +129,18 @@ export default function OpportunitySection(props: JobProps) {
                 <h2>Reviews</h2> {/** Have to be fetched from the api */}
                 
                 {/* <ReviewCard review={dummyReview}></ReviewCard> */}
+                {(() => {
+                  if(reviews.length === 0){
+                    return <p className="py-5">No reviews</p>
+                  }
+                  else{
+                    return (<div>
+                    {reviews.map((item, index) => ( 
+                                        <ReviewCard review={item} idToIndex={props.idToIndex} key={index} talentList={props.talentList}/>
+                                      ))}
+                    </div>)
+                  }
+                  })()} 
               </div>
           </Col>
         </Row>

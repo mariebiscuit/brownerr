@@ -42,10 +42,7 @@ export interface EditableUser{
 export interface Review{
   rating: number;
   content: string;
-  title: string;
-  user: User;
-  type: string;
-  receipient: User;
+  poster: string;
 
 }
 

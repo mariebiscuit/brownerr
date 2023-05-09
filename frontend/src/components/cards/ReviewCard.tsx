@@ -3,6 +3,8 @@ import Card from 'react-bootstrap/Card';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import {GiRoundStar} from "react-icons/gi"
+import { useEffect, useState } from "react";
+
 
 
 
@@ -14,6 +16,9 @@ import {GiRoundStar} from "react-icons/gi"
  */
 interface ReviewProps {
   review: Review;
+  idToIndex: Map<string, number>;
+  talentList: User[];
+
 }
 
 /**
@@ -22,17 +27,45 @@ interface ReviewProps {
  * @returns a new InputBox as functional HTML Element
  */
 export default function ReviewCard(props: ReviewProps) {
+  const id = props.review.poster;
+  var idx = -1;
+  try{
+    if (id != undefined){
+      const initIdx = props.idToIndex.get(String(id))
+      console.log(id)
+      if (initIdx != undefined) {
+        idx = initIdx;
+      }
+    }
+  } catch{
+    console.log("Could not find user")
+  }
+  
+  const [user, setUser] = useState<User>();
+  useEffect(() => {
+    setUser(props.talentList[idx])
+    console.log(user)
+  }, [idx]);
+
+
 
   return (
-    <Card className="align-items-center review-card">
+    <Card className="review-card">
     
      
       <Card.Body >
         
-          <Row className="align-items-center">
+          <Row className="align-items-start">
             <Col sm="3"> 
+            {(() => {
+            if(user === undefined){
+              return <Card.Img variant="top" className="review-card-img" src={"../../user2.jpeg"} />
+            }
+            else{
+              return  <Card.Img variant="top" className="review-card-img" src={user.picture} />
+            }
+            })()} 
               
-              <Card.Img variant="top" className="review-card-img" src={props.review.user.picture} />
             
             </Col>
               
@@ -40,7 +73,7 @@ export default function ReviewCard(props: ReviewProps) {
             
                   <Row className="align-items-center"> 
                     <Col xs="8">
-                      <Card.Title style={{fontWeight:"900"}}>"{props.review.title}"</Card.Title>
+                     
                     </Col>
 
                     <Col xs="4">
@@ -49,7 +82,10 @@ export default function ReviewCard(props: ReviewProps) {
 
 
                   </Row>
-                  <p>{props.review.content}</p>
+                  
+                    <p>{props.review.content}</p>
+                  
+            
         
             
 
