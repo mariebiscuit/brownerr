@@ -45,7 +45,7 @@ export default function ProfilePage(props: ProfileProps) {
 
   // ===== Contact Functionality =====
      function sendMail(email:string){
-      window.open("mailto:" + email + "?subject=I found you on BrownRR!")
+      window.open("mailto:" + email + "?subject=I found you on BrowneRR!")
     }
 
   // ------ Contact Tooltip ------
