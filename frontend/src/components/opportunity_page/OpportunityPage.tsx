@@ -56,7 +56,7 @@ export default function OpportunityPage(props: OpportunityProps) {
 
 
  
-  async function getDataUser(id:number ) {
+  async function getDataUser(id:string) {
      const response = await fetch(
        `http://localhost:2000/user/id/${id}/`
      ).then(response => response.json());

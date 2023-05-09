@@ -32,14 +32,14 @@ export default function TalentCard(props: TalentCardProps) {
     
       <Card className="talent-card">
         <Link to={"/talent/" + idString}> 
-        {/* {(() => {
-            switch(props.user.availability) {
-              case "open": return <Button className="availability green"><AiOutlineSmile size={20} className="avail-icons"></AiOutlineSmile> Open to Work</Button> ;
-              case "moderate": return <Button className="availability orange"><AiOutlineMeh size={20} className="avail-icons"></AiOutlineMeh> Slightly Busy</Button> ;
-              case "busy": return <Button className="availability red"><AiOutlineFrown size={20} className="avail-icons"></AiOutlineFrown> Unavailable</Button> ;
+        {(() => {
+            switch(props.user.available_provider) {
+              case 2: return <Button className="availability green"><AiOutlineSmile size={20} className="avail-icons"></AiOutlineSmile> Open to Work</Button> ;
+              case 1: return <Button className="availability orange"><AiOutlineMeh size={20} className="avail-icons"></AiOutlineMeh> Slightly Busy</Button> ;
+              case 0: return <Button className="availability red"><AiOutlineFrown size={20} className="avail-icons"></AiOutlineFrown> Unavailable</Button> ;
               default: return <Button className="availability red"><AiOutlineFrown size={20} className="avail-icons"></AiOutlineFrown> Unavailable</Button> 
             }
-          })()} */}
+          })()} 
       
         <Card.Img variant="top" className="talent-card-img" src={props.user.picture} />
         <Card.Body className="talent-card-body">
