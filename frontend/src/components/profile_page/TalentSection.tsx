@@ -21,10 +21,9 @@ import ReviewCard from "../cards/ReviewCard";
 interface TalentProps {
   editing: boolean;
   user: User;
-  currentUser: User | undefined;
-  currentCredential: string | undefined;
   talentList: User[];
   idToIndex: Map<string, number>;
+  handleChange: (key: string, value: string) => void;
 }
 
 /**
@@ -33,13 +32,6 @@ interface TalentProps {
  * @returns a new InputBox as functional HTML Element
  */
 export default function TalentSection(props: TalentProps) {
-
-  const [data, setData] = useState<Map<string, string>>(
-    new Map([['bio', props.user.bio], ['name', props.user.name], ['picture', props.user.picture]]))
-
-  function handleChange(key: string, value: string){
-    setData(new Map(data.set(key, value)));
-  };
   
   const [reviews, setReviews] = useState<Review[]> ([]);
 
@@ -57,7 +49,6 @@ export default function TalentSection(props: TalentProps) {
     })
 
     setReviews(reviewsNew)
-     
    }
 
    getDataReviews()
@@ -72,15 +63,15 @@ export default function TalentSection(props: TalentProps) {
           <Col className="px-5" sm="6">
             <div className="mb-4">
               <h2>Overview</h2>
-              {(props.editing)?
-              (<p className="overview" contentEditable="true" onInput={
-                  e => (e.currentTarget.textContent != null)? 
-                        handleChange('bio', e.currentTarget.textContent):({})
-                }>
-                {props.user.bio} </p>):
-              (<p className="content-text">{props.user.bio}</p>)}
 
-              {/* <p className="content-text">{props.user.overviews}</p> */}
+              
+              {//Make bio editable if in edit mode
+               props.editing && <p className="editable" contentEditable="true" suppressContentEditableWarning={true} onInput={
+                  e => {(e.currentTarget.textContent != null)? 
+                      (props.handleChange('bio', e.currentTarget.textContent)):({})}
+                }> {props.user.bio} </p>}
+
+              {!props.editing && <p className="content-text">{props.user.bio}</p>}
 
 
             </div>

@@ -36,6 +36,10 @@ interface ProfileProps {
  * @returns a new InputBox as functional HTML Element
  */
 export default function ProfilePage(props: ProfileProps) {
+  console.log(props.currentUser)
+  // ===== For editing functionality =======
+  const [editing, setEditing] = useState<boolean>(false);
+  const [editableUser, setEditableUser] = useState<Map<string, string>>(new Map());
 
     function handleSubmitEdits(){
       if (props.currentUser != undefined){
@@ -48,16 +52,21 @@ export default function ProfilePage(props: ProfileProps) {
             'name': editableUser.get('name'),
             'picture': editableUser.get('picture')})
         }
-
+        
         fetch(URLPREFIX + "user/update/" + props.currentUser.id, requestOptions).then(
           response => response.json()).then(data => {
-            (data['code'] == 200)? (
-              props.triggerDbUpdate()):({})
-            })
+            if (data['code'] == 200){
+              fetch(
+                `http://localhost:2000/user/list/`
+              ).then(response => response.json()).then(
+                users => {
+                props.triggerDbUpdate()})
+            }
+          })
       }
     };
 
-    function createEditableUser(){
+  function createEditableUser(){
       if (props.currentUser !== undefined){
         setEditableUser(new Map([
           ['bio', props.currentUser.bio],
@@ -67,6 +76,12 @@ export default function ProfilePage(props: ProfileProps) {
       }
     };
 
+
+  function handleChange(key: string, value: string){
+    setEditableUser(new Map(editableUser.set(key, value)))
+  };
+
+   // ===== Displaying the right viewedUser from URL =======
   const {id} = useParams();
   var idx = -1;
   try{
@@ -81,23 +96,17 @@ export default function ProfilePage(props: ProfileProps) {
   }
   
   const [viewedUser, setViewedUser] = useState<User>();
-    useEffect(() => {
+
+  useEffect(() => {
       setViewedUser(props.talentList[idx])
-  }, [idx]);
+  }, [idx, props.talentList]);
 
   const [contactActive, setContactActive] = useState(false);
   const [talentActive, setTalentActive] = useState(props.talentView);
-  const [editing, setEditing] = useState<boolean>(false);
-  const [editableUser, setEditableUser] = useState<Map<string, string>>(new Map());
 
   const handleClick = (variable: boolean, setter: (newVar: boolean) => void) => {
     setter(!variable)
   }
-
-  function handleChange(key: string, value: string){
-    setEditableUser(new Map(editableUser.set(key, value)))
-  };
-
 
   if(viewedUser === undefined){
     return (<body>
@@ -116,9 +125,11 @@ export default function ProfilePage(props: ProfileProps) {
                     <Card.Img className="avatar-big" src={viewedUser.picture} />  {/** To be changed */}
                   </Col>
                   <Col sm="6" >
-                    {(editing)?
+                    
+                    {// Editable name, if in edit mode
+                    (editing)?
                     (
-                      <h1> <span className="editable" contentEditable="true" onInput={
+                      <h1> <span className="editable" contentEditable="true" suppressContentEditableWarning={true} onInput={
                       e => (e.currentTarget.textContent != null)? 
                             handleChange('name', e.currentTarget.textContent):({})}> {viewedUser.name} </span> </h1>
                       ):(<h1><span>{viewedUser.name} </span> <span className="ultra-thin"></span></h1>
@@ -161,17 +172,20 @@ export default function ProfilePage(props: ProfileProps) {
                       </Col>
                     </Row>
                     <Row>
-                      {((props.currentUser != undefined) && (props.currentUser.id == viewedUser.id))?
+                      {// Edit button visible if logged-in user is viewed user
+                      ((props.currentUser != undefined) && (props.currentUser.id == viewedUser.id))?
                        ((editing)? (
                                     <Button onClick=
                                         {() => {
                                         handleClick(editing, setEditing)
-                                        handleSubmitEdits()}}> Save </Button>
+                                        handleSubmitEdits()
+                                      }
+                                      }> Save </Button>
                                     ): (
                                       <Button onClick=
                                           {() => 
-                                          {createEditableUser();
-                                            handleClick(editing, setEditing);}
+                                          { handleClick(editing, setEditing);
+                                            createEditableUser();}
                                           }> Edit </Button>
                                       )
                        ):(<p></p>)}
@@ -196,9 +210,8 @@ export default function ProfilePage(props: ProfileProps) {
           </Container>
   
           <div className="content-div">
-            {
-              talentActive ? (
-                <TalentSection user={viewedUser} editing={editing} currentUser={props.currentUser} currentCredential={props.currentCredential} talentList={props.talentList} idToIndex={props.idToIndex}></TalentSection>
+            {talentActive ? (
+                <TalentSection user={viewedUser} editing={editing} handleChange={handleChange} talentList={props.talentList} idToIndex={props.idToIndex}></TalentSection>
               ):(
                 <OrganizerSection user={viewedUser} talentList={props.talentList} idToIndex={props.idToIndex}></OrganizerSection>
               )

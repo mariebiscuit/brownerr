@@ -106,21 +106,12 @@ function App(props: AppProps) {
     setDbUpdateHook(!dbUpdateHook);
   }
 
-  async function getDataUser() {
-    const response = await fetch(
+  function getDataUser() {
+    fetch(
       `http://localhost:2000/user/list/`
-    ).then(response => response.json());
-    
-    const users : User[] = response
-    setProfiles(users)
-
-    if ((currentUser != undefined) && (idToIndex != undefined)){
-      const idx = idToIndex.get(currentUser.id)
-      if (idx != undefined){
-        setCurrentUser(profiles[idx])
-      }
+    ).then(response => response.json()).then(
+      users => {setProfiles(users)})
     }
-  }
 
   async function getDataOpportunity() {
     const response = await fetch(
@@ -143,9 +134,14 @@ function App(props: AppProps) {
     setIdToIndex(new Map(idToIndex.set(user.id, i)))
   })}, [profiles])
 
-  useEffect(() => {  
-    setCurrentUser(currentUser)
-  }, [currentUser])
+  useEffect(() => {
+    if ((currentUser != undefined) && (idToIndex != undefined)){
+      const idx = idToIndex.get(currentUser.id)
+      if (idx != undefined){
+        setCurrentUser(profiles[idx])
+      }
+    }
+  }, [profiles]);
 
   useEffect(() => {
     async function getDataOpportunity() {
@@ -155,7 +151,7 @@ function App(props: AppProps) {
       
       const jobs : Opportunity[] = response
       setOpportunities(jobs)
-      console.log(jobs);
+      // console.log(jobs);
   
       
     }
@@ -193,9 +189,10 @@ function App(props: AppProps) {
           {// If user has logged in
           currentUser != undefined &&
             <div className="account-info"> 
+              <Link to={"/talent/"+currentUser.id}>
               <span style={{color:"white"}}>Welcome, <strong>{currentUser.name}</strong> 
               <img className="avatar-stats mx-3" src= {currentUser.picture}/></span>
-              <Link to={"/edit"}> <button> Edit </button> </Link>
+              </Link>
             </div>
           }
        
