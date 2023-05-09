@@ -6,7 +6,7 @@ import ProfilePage from "./components/profile_page/ProfilePage";
 import OpportunityPage from "./components/opportunity_page/OpportunityPage";
 import MainPage from "./components/main_page/MainPage";
 import { Link, Route, Routes } from "react-router-dom";
-import { Container, Navbar } from "react-bootstrap";
+import { Container, Dropdown, Modal, Navbar } from "react-bootstrap";
 import { GoogleLogin } from '@react-oauth/google';
 
 
@@ -101,6 +101,11 @@ function App(props: AppProps) {
   const [idToIndexO, setIdToIndexO] = useState<Map<string, number>>(new Map());
   const [opportunities, setOpportunities] = useState<Opportunity[]> ([]);
 
+  const [showModal, setShowModal] = useState(false);
+  function toggleModal() {
+    setShowModal(!showModal);
+  }
+
   function triggerDbUpdate(){
     setDbUpdateHook(!dbUpdateHook);
   }
@@ -192,12 +197,23 @@ function App(props: AppProps) {
 
           {// If user has logged in
           currentUser != undefined &&
-            <div className="account-info"> 
-              <Link to={"/talent/"+currentUser.id}>
-              <span style={{color:"white"}}>Welcome, <strong>{currentUser.name}</strong> 
-              <img className="avatar-stats mx-3" src= {currentUser.picture}/></span>
-              </Link>
-              <Button className="logout-button" onClick={logout}> Logout </Button>
+            <div className="account-info d-flex align-items-center"> 
+              
+              <span className="px-4" style={{color:"white"}}>Welcome, <strong>{currentUser.name}   </strong> </span>
+              <Dropdown>
+                <Dropdown.Toggle variant="light" id="dropdown-basic">
+                <img className="avatar-stats mx-3" src= {currentUser.picture}/>
+                </Dropdown.Toggle>
+
+                <Dropdown.Menu>
+                  <Dropdown.Item><Link to={"/talent/"+currentUser.id}>My Profile</Link></Dropdown.Item>
+                  <Dropdown.Item onClick={toggleModal}>Create new job</Dropdown.Item>
+                  <Dropdown.Item><Button className="logout-button" onClick={logout}> Logout </Button></Dropdown.Item>
+                </Dropdown.Menu>
+              </Dropdown>
+              
+              
+              
             </div>
           }
        
