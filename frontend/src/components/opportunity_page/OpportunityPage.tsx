@@ -23,6 +23,8 @@ import { useParams } from "react-router-dom";
  */
 interface OpportunityProps {
   jobList: Opportunity[];
+  talentList: User[];
+  idToIndex: Map<string, number>;
 
 }
 
@@ -166,7 +168,7 @@ export default function OpportunityPage(props: OpportunityProps) {
             </Container>
     
             <div className="content-div">
-             <OpportunitySection job={job} poster = {poster}></OpportunitySection>
+             <OpportunitySection job={job} poster = {poster} talentList={props.talentList} idToIndex={props.idToIndex}></OpportunitySection>
             </div>
             
             

@@ -198,9 +198,9 @@ export default function ProfilePage(props: ProfileProps) {
           <div className="content-div">
             {
               talentActive ? (
-                <TalentSection user={viewedUser} currentUser={props.currentUser} currentCredential={props.currentCredential} editing={false}></TalentSection>
+                <TalentSection user={viewedUser} editing={editing} currentUser={props.currentUser} currentCredential={props.currentCredential} talentList={props.talentList} idToIndex={props.idToIndex}></TalentSection>
               ):(
-                <OrganizerSection user={viewedUser}></OrganizerSection>
+                <OrganizerSection user={viewedUser} talentList={props.talentList} idToIndex={props.idToIndex}></OrganizerSection>
               )
             }
           </div>

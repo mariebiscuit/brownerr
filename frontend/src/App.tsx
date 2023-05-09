@@ -85,7 +85,8 @@ function App(props: AppProps) {
   const [profiles, setProfiles] = useState<User[]> ([]);
   const [dbUpdateHook, setDbUpdateHook] = useState<boolean> (false);
   const [idToIndex, setIdToIndex] = useState<Map<string, number>>(new Map());
-  const [opportunities, setOpportunities] = useState<Opportunity[]> ([job1, job1, job1, job1, job1, job1, job1, job1]);
+  const [idToIndexO, setIdToIndexO] = useState<Map<string, number>>(new Map());
+  const [opportunities, setOpportunities] = useState<Opportunity[]> ([]);
 
   function triggerDbUpdate(){
     setDbUpdateHook(!dbUpdateHook);
@@ -135,6 +136,11 @@ function App(props: AppProps) {
   useEffect(() => {
     getDataOpportunity()
   }, [])
+
+  useEffect(() => {  
+    opportunities.forEach((opportunity, i) => {
+    setIdToIndexO(new Map(idToIndexO.set(String(opportunity.id), i)))
+  })}, [opportunities])
  
   return (
     <body>
@@ -194,7 +200,7 @@ function App(props: AppProps) {
             triggerDbUpdate={triggerDbUpdate}></ProfilePage>}/>
         </Route>
         <Route path="/opportunity">
-          <Route path=":id" element={<OpportunityPage jobList={opportunities}></OpportunityPage>}/>
+          <Route path=":id" element={<OpportunityPage jobList={opportunities} talentList={profiles} idToIndex={idToIndex}></OpportunityPage>}/>
         </Route>
       </Routes>
 

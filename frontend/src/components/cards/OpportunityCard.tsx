@@ -13,7 +13,7 @@ import { Link } from "react-router-dom";
  */
 interface OpportunityCardProps {
   job: Opportunity;
-  idToIndexO: Map<string, number>;
+
 }
 
 /**
@@ -89,7 +89,7 @@ export default function OpportunityCard(props: OpportunityCardProps) {
 
         <Card.Text>
           {/* <span><IoCalendarClear size={36}></IoCalendarClear></span> {props.job.start_day.toString()}/{props.job.start_month.toString()}/{props.job.start_year.toString()} - {props.job.end_day.toString()}/{props.job.end_month.toString()}/{props.job.end_day.toString()} */}
-          <span><IoCalendarClear size={36}></IoCalendarClear></span> {String(props.job.start_day)}/{String(props.job.start_month)}/{String(props.job.start_year)} - {String(props.job.end_day)}/{String(props.job.end_month)}/{String(props.job.end_day)}
+          <span><IoCalendarClear size={36}></IoCalendarClear></span> {String(props.job.start_month)}/{String(props.job.start_day)}/{String(props.job.start_year)} - {String(props.job.end_month)}/{String(props.job.end_day)}/{String(props.job.end_year)}
         </Card.Text>
     
     
