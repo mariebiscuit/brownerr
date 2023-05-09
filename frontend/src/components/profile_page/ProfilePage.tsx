@@ -36,7 +36,6 @@ interface ProfileProps {
  * @returns a new InputBox as functional HTML Element
  */
 export default function ProfilePage(props: ProfileProps) {
-  console.log(props.currentUser)
   // ===== For editing functionality =======
   const [editing, setEditing] = useState<boolean>(false);
   const [editableUser, setEditableUser] = useState<Map<string, string>>(new Map());
@@ -122,18 +121,22 @@ export default function ProfilePage(props: ProfileProps) {
               <Col sm="6">
                 <Row className="align-items-center">
                   <Col sm="6">
-                    <Card.Img className="avatar-big" src={viewedUser.picture} />  {/** To be changed */}
+                    {(editing)? (<div> Upload a new Image URL (leave blank to cancel): <input className="editable" onInput={
+                                  e => {if (e.currentTarget.value != undefined){
+                                      handleChange('picture', e.currentTarget.value)}
+                                   if (e.currentTarget.value.length == 0){
+                                      handleChange('picture', viewedUser.picture)
+                                    }}}/> </div>
+                            ):(<Card.Img className="avatar-big" src={viewedUser.picture} />)}
                   </Col>
                   <Col sm="6" >
-                    
                     {// Editable name, if in edit mode
                     (editing)?
                     (
                       <h1> <span className="editable" contentEditable="true" suppressContentEditableWarning={true} onInput={
                       e => (e.currentTarget.textContent != null)? 
                             handleChange('name', e.currentTarget.textContent):({})}> {viewedUser.name} </span> </h1>
-                      ):(<h1><span>{viewedUser.name} </span> <span className="ultra-thin"></span></h1>
-                      )
+                      ):(<h1><span>{viewedUser.name} </span> <span className="ultra-thin"></span></h1>)
                     }
                     
                     {/* {(() => {
