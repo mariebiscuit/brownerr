@@ -258,6 +258,7 @@
   background-color: #FFD5AE ;
   border-color: #FFD5AE ;
 }
+
 .avail-icons{
   margin-right: 1rem;
 }
@@ -461,6 +462,18 @@ a:hover {
   color: black;
   cursor:pointer;
  }
+
+ .edit{
+  margin:auto;
+ }
+
+ .edit-bg{
+  border-radius: 12px;
+  padding-left: 12px;
+  padding-top:10px;
+  padding-right: 12px;
+  max-width: fit-content;
+}
 
 .wrapper {
   display:grid;

@@ -121,22 +121,28 @@ export default function ProfilePage(props: ProfileProps) {
               <Col sm="6">
                 <Row className="align-items-center">
                   <Col sm="6">
-                    {(editing)? (<div> Upload a new Image URL (leave blank to cancel): <input className="editable" onInput={
+                    {//Editing profile picture
+                    (editing)? (
+                    <div> Upload a new Image URL: 
+                      <input className="editable" placeholder="Leave blank to cancel" 
+                            onInput={
                                   e => {if (e.currentTarget.value != undefined){
                                       handleChange('picture', e.currentTarget.value)}
                                    if (e.currentTarget.value.length == 0){
                                       handleChange('picture', viewedUser.picture)
-                                    }}}/> </div>
-                            ):(<Card.Img className="avatar-big" src={viewedUser.picture} />)}
+                                    }}
+                                  }/> 
+                      </div>):(<Card.Img className="avatar-big" src={viewedUser.picture} />)
+                    }
                   </Col>
                   <Col sm="6" >
-                    {// Editable name, if in edit mode
+                    {//Editing name
                     (editing)?
-                    (
+                    ( <div> <p> Click to edit highlighted areas </p>
                       <h1> <span className="editable" contentEditable="true" suppressContentEditableWarning={true} onInput={
                       e => (e.currentTarget.textContent != null)? 
                             handleChange('name', e.currentTarget.textContent):({})}> {viewedUser.name} </span> </h1>
-                      ):(<h1><span>{viewedUser.name} </span> <span className="ultra-thin"></span></h1>)
+                      </div>):(<h1><span>{viewedUser.name} </span> <span className="ultra-thin"></span></h1>)
                     }
                     
                     {/* {(() => {
@@ -174,25 +180,25 @@ export default function ProfilePage(props: ProfileProps) {
                         <Button className="beige"> <FiShare2 size={"20px"} color="black" strokeWidth={"2.5px"}></FiShare2>  </Button>
                       </Col>
                     </Row>
+                    <div className="edit-bg">
                     <Row>
                       {// Edit button visible if logged-in user is viewed user
                       ((props.currentUser != undefined) && (props.currentUser.id == viewedUser.id))?
-                       ((editing)? (
-                                    <Button onClick=
-                                        {() => {
+                       ((editing)? (<Button className="edit" onClick=
+                                      {() => {
                                         handleClick(editing, setEditing)
                                         handleSubmitEdits()
                                       }
-                                      }> Save </Button>
+                                      }> Save Changes</Button>
                                     ): (
-                                      <Button onClick=
+                                      <Button className="edit" onClick=
                                           {() => 
                                           { handleClick(editing, setEditing);
                                             createEditableUser();}
-                                          }> Edit </Button>
-                                      )
-                       ):(<p></p>)}
+                                          }> Edit Profile </Button>
+                                      )):(<p></p>)}
                     </Row>
+                    </div>
                   </div>
                 </div>
               </Col>
