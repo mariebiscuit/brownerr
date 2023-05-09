@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import "../styles/App.css";
 import { Opportunity, User } from "./Utilities";
-
+import Button from 'react-bootstrap/Button';
 import ProfilePage from "./components/profile_page/ProfilePage";
 import OpportunityPage from "./components/opportunity_page/OpportunityPage";
 import MainPage from "./components/main_page/MainPage";
@@ -197,6 +197,7 @@ function App(props: AppProps) {
               <span style={{color:"white"}}>Welcome, <strong>{currentUser.name}</strong> 
               <img className="avatar-stats mx-3" src= {currentUser.picture}/></span>
               </Link>
+              <Button className="logout-button" onClick={logout}> Logout </Button>
             </div>
           }
        
