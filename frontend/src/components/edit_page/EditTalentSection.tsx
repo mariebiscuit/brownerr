@@ -1,5 +1,5 @@
 import { EditableUser, User } from "../../Utilities";
-import { getDataUser } from "../../App";
+
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
 import Row from 'react-bootstrap/Row';
