@@ -1,4 +1,5 @@
 import { EditableUser, User } from "../../Utilities";
+import { getDataUser } from "../../App";
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
 import Row from 'react-bootstrap/Row';
@@ -31,7 +32,8 @@ interface TalentProps {
  */
 export default function EditTalentSection(props: TalentProps) {
 
-  const [data, setData] = useState<Map<string, string>>(new Map([['bio', props.user.bio], ['name', props.user.name], ['picture', props.user.picture]]))
+  const [data, setData] = useState<Map<string, string>>(
+    new Map([['bio', props.user.bio], ['name', props.user.name], ['picture', props.user.picture]]))
 
   function handleChange(key: string, value: string){
     setData(new Map(data.set(key, value)));
@@ -42,12 +44,17 @@ export default function EditTalentSection(props: TalentProps) {
       if (bio !== undefined){
       const requestOptions = {
         method: 'POST',
-        headers: {'credentials': props.currentCredential,
-                  'Access-Control-Allow-Origin': '*'},
-        body: JSON.stringify({'bio': bio})
+        headers: {'Content-Type': 'text/plain'},
+        body: JSON.stringify({
+          'credential': props.currentCredential,
+          'bio': bio})
       }
       fetch(URLPREFIX + "user/update/" + props.user.id, requestOptions).then(
-        response => console.log(response)
+        response => response.json()).then(data => {
+          (data.get('code') == 200)? (
+            getDataUser()
+          )
+        })
       )
     }
       // take data to submit

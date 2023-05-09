@@ -32,24 +32,6 @@ interface EditPageProps {
  * @returns a new InputBox as functional HTML Element
  */
 export default function EditPage(props: EditPageProps) {
-//   const {id} = useParams();
-//   var idx = -1;
-//   try{
-//     if (id != undefined){
-//       const initIdx = props.idToIndex.get(id)
-//       if (initIdx != undefined) {
-//         idx = initIdx;
-//       }
-//     }
-//   } catch{
-//     console.log("Could not find user")
-//   }
-  
-//   const [user, setUser] = useState<User>();
-//   useEffect(() => {
-//     setUser(props.talentList[idx])
-// }, [idx]);
-
   const [contactActive, setContactActive] = useState(false);
   const [talentActive, setTalentActive] = useState(props.talentView);
   const handleClick = (variable: boolean, setter: (newVar: boolean) => void) => {

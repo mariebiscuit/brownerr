@@ -4,11 +4,12 @@ from functools import wraps
 from google.oauth2 import id_token
 from google.auth.transport import requests
 from google.auth import jwt
+import json
 
 from sqlalchemy import func, CheckConstraint, event
 
 from flask import Flask, jsonify, request, abort
-from flask_cors import CORS
+from flask_cors import CORS, cross_origin
 from flask_sqlalchemy import SQLAlchemy
 
 from handlers.sorting.rating_sort import sort_provider
@@ -75,6 +76,10 @@ class User(db.Model):
     # Associating the records to user's first name
     def __repr__(self):
         return f'<User {self.name}>'
+    
+    def __iter__(self):
+        for attr, _ in self.__dict__.items():
+            yield attr
 
 
 class Transaction(db.Model):
@@ -197,16 +202,18 @@ def token_required(f):
     def decorated(*args, **kwargs):
         token = None
         if "credential" in request.headers:
-            token = request.headers["credential"].split(" ")[1]  # maybe in headers?
+            token = request.headers["credential"]
+        elif "credential" in json.loads(request.data):
+            token = json.loads(request.data)["credential"]
         if not token:
             return {
-                       "message": "Authentication Token is missing!",
+                       "mssage": "Authentication Token is missing!",
                        "data": None,
                        "error": "Unauthorized"
                    }, 401
         try:
-            idinfo = id_token.verify_oauth2_token(token, requests.Request(), Auth.CLIENT_ID)  # Token verified
-            userid = idinfo['sub']  # Google ID
+            idinfo = id_token.verify_oauth2_token(token, requests.Request(), Auth.CLIENT_ID) 
+            userid = idinfo['sub']
             current_user = User.query.get(userid)
 
             if current_user is None:
@@ -215,8 +222,8 @@ def token_required(f):
                            "data": None,
                            "error": "Unauthorized"
                        }, 401
-            if not current_user["active"]:
-                abort(403)
+            # if not current_user["active"]:
+            #     abort(403)
         except Exception as e:
             return {
                        "message": "Something went wrong",
@@ -511,14 +518,21 @@ def delete_jobs(current_user):
 
 
 # All users should have access to this endpoint
-@app.route("/user/update/<int:id>/", methods=["POST"])
-# @token_required
+@app.route("/user/update/<string:id>/", methods=["POST"])
+@token_required
 def update_user_info(current_user, id):
-    print("hi")
     if current_user.id == id or current_user.role == 'admin':
         user = User.query.get(id)
-        # user.service = request.json.get('service', user.service)
-        user.bio = request.json.get('bio', user.bio)
+        print(type(user))
+        if request.content_type == "text/plain":
+            data = json.loads(request.data)
+        elif request.content_type == "application/json":
+            data = request.get_json()
+
+        for key in data:
+            if key in user:
+                setattr(user, key, data[key])
+        # user.bio = data['bio']
         # user.available_provider = request.json.get('available_provider', user.available_provider)
         db.session.commit()
         resp = jsonify({'code': 200, 'message': 'Bio and availability successfully updated.'})
