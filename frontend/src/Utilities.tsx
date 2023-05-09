@@ -20,7 +20,7 @@
 export const URLPREFIX = "http://localhost:2000/"
 
 export interface User{
-  available_provider: number,
+  available_provider: string,
   bio: string,
   created_at: string,
   email: string,
@@ -36,7 +36,8 @@ export interface EditableUser{
   bio: string,
   name: string,
   picture: string,
-  service: number
+  service: number,
+  available_provider: string
 }
 
 export interface Review{

@@ -52,7 +52,7 @@ function App(props: AppProps) {
 
   // }
 
-  let user1: User = {available_provider: 1,
+  let user1: User = {available_provider: "1",
     bio: "I am a professional landscaper",
     created_at: "Tue, 02 May 2023 15:03:58 GMT",
     email: "bob.johnson2@example.com",
