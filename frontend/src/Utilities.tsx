@@ -51,7 +51,7 @@ export interface Opportunity{
   id: number;
   job: number;
   name: string;
-  poster: number;
+  poster: string;
   location: string;
   start_day: number;
   start_month: number;

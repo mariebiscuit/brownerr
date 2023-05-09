@@ -43,13 +43,14 @@ class User(db.Model):
     rating_recipient = db.Column(db.Float, default=0.0)
     num_ratings_provider = db.Column(db.Integer, default=0)
     num_ratings_recipient = db.Column(db.Integer, default=0)
-    available_provider = db.Column(db.Integer, default=1)
+    available_provider = db.Column(db.Integer, default=0)
     created_at = db.Column(db.DateTime(timezone=True), server_default=func.now())
     role = db.Column(db.String(100), nullable=False)
 
     __table_args__ = (
         CheckConstraint('rating_provider >= 0.0 AND rating_recipient <= 5.0', name='rating_provider_range'),
         CheckConstraint('rating_recipient >= 0.0 AND rating_recipient <= 5.0', name='rating_recipient_range'),
+        CheckConstraint('available_provider == 1 OR available_provider == 0 OR available_provider == 2', name='available_provider_range')
     )
 
     transactions_as_provider = db.relationship('Transaction', backref='provider_transactions',

@@ -139,14 +139,14 @@ export default function ProfilePage(props: ProfileProps) {
                       ):(<h1><span>{viewedUser.name} </span> <span className="ultra-thin"></span></h1>)
                     }
                     
-                    {/* {(() => {
-                      switch(user.availability) {
-                        case "open": return <Button className="availability-profile green"><AiOutlineSmile size={20} className="avail-icons"></AiOutlineSmile> Open to Work</Button> ;
-                        case "moderate": return <Button className="availability-profile orange"><AiOutlineMeh size={20} className="avail-icons"></AiOutlineMeh> Slightly Busy</Button> ;
-                        case "busy": return <Button className="availability-profile red"><AiOutlineFrown size={20} className="avail-icons"></AiOutlineFrown> Unavailable</Button> ;
+                    {(() => {
+                      switch(viewedUser.available_provider) {
+                        case 2: return <Button className="availability-profile green"><AiOutlineSmile size={20} className="avail-icons"></AiOutlineSmile> Open to Work</Button> ;
+                        case 1: return <Button className="availability-profile orange"><AiOutlineMeh size={20} className="avail-icons"></AiOutlineMeh> Slightly Busy</Button> ;
+                        case 0: return <Button className="availability-profile red"><AiOutlineFrown size={20} className="avail-icons"></AiOutlineFrown> Unavailable</Button> ;
                         default: return <Button className="availability-profile red"><AiOutlineFrown size={20} className="avail-icons"></AiOutlineFrown> Unavailable</Button> 
                       }
-                    })()} */}
+                    })()} 
                   </Col>
                 </Row>
           
