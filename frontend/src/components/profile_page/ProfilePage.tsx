@@ -12,6 +12,7 @@ import { useEffect, useState } from "react";
 import TalentSection from "./TalentSection";
 import OrganizerSection from "./OrganizerSection";
 import { useParams } from "react-router-dom";
+import { URLPREFIX } from "../../Utilities";
 
 
 /**
@@ -24,6 +25,9 @@ interface ProfileProps {
   talentList: User[];
   talentView: boolean;
   idToIndex: Map<string, number>;
+  currentCredential: string | undefined;
+  currentUser: User | undefined;
+  triggerDbUpdate: () => void;
 }
 
 /**
@@ -32,6 +36,37 @@ interface ProfileProps {
  * @returns a new InputBox as functional HTML Element
  */
 export default function ProfilePage(props: ProfileProps) {
+
+    function handleSubmitEdits(){
+      if (props.currentUser != undefined){
+        const requestOptions = {
+          method: 'POST',
+          headers: {'Content-Type': 'text/plain'},
+          body: JSON.stringify({
+            'credential': props.currentCredential,
+            'bio': editableUser.get('bio'),
+            'name': editableUser.get('name'),
+            'picture': editableUser.get('picture')})
+        }
+
+        fetch(URLPREFIX + "user/update/" + props.currentUser.id, requestOptions).then(
+          response => response.json()).then(data => {
+            (data['code'] == 200)? (
+              props.triggerDbUpdate()):({})
+            })
+      }
+    };
+
+    function createEditableUser(){
+      if (props.currentUser !== undefined){
+        setEditableUser(new Map([
+          ['bio', props.currentUser.bio],
+          ['name', props.currentUser.name],
+          ['picture', props.currentUser.picture]
+        ]))
+      }
+    };
+
   const {id} = useParams();
   var idx = -1;
   try{
@@ -45,39 +80,51 @@ export default function ProfilePage(props: ProfileProps) {
     console.log("Could not find user")
   }
   
-  const [user, setUser] = useState<User>();
-  useEffect(() => {
-    setUser(props.talentList[idx])
-}, [idx]);
+  const [viewedUser, setViewedUser] = useState<User>();
+    useEffect(() => {
+      setViewedUser(props.talentList[idx])
+  }, [idx]);
 
   const [contactActive, setContactActive] = useState(false);
   const [talentActive, setTalentActive] = useState(props.talentView);
+  const [editing, setEditing] = useState<boolean>(false);
+  const [editableUser, setEditableUser] = useState<Map<string, string>>(new Map());
+
   const handleClick = (variable: boolean, setter: (newVar: boolean) => void) => {
     setter(!variable)
   }
 
-  if(user === undefined){
+  function handleChange(key: string, value: string){
+    setEditableUser(new Map(editableUser.set(key, value)))
+  };
+
+
+  if(viewedUser === undefined){
     return (<body>
       <div className="profile">
         <h1>No Profile Found</h1>
       </div>
     </body>);
-  }
-  
-  else{
+  } else {
     return (
-
         <div className="profile">
           <Container>
             <Row className="align-items-center py-5">
               <Col sm="6">
                 <Row className="align-items-center">
                   <Col sm="6">
-                    <Card.Img className="avatar-big" src={user.picture} />  {/** To be changed */}
+                    <Card.Img className="avatar-big" src={viewedUser.picture} />  {/** To be changed */}
                   </Col>
                   <Col sm="6" >
-                    <h1><span>{user.name} </span> <span className="ultra-thin"></span></h1>
-                    <p>{user.bio}</p>
+                    {(editing)?
+                    (
+                      <h1> <span className="editable" contentEditable="true" onInput={
+                      e => (e.currentTarget.textContent != null)? 
+                            handleChange('name', e.currentTarget.textContent):({})}> {viewedUser.name} </span> </h1>
+                      ):(<h1><span>{viewedUser.name} </span> <span className="ultra-thin"></span></h1>
+                      )
+                    }
+                    
                     {/* {(() => {
                       switch(user.availability) {
                         case "open": return <Button className="availability-profile green"><AiOutlineSmile size={20} className="avail-icons"></AiOutlineSmile> Open to Work</Button> ;
@@ -95,7 +142,7 @@ export default function ProfilePage(props: ProfileProps) {
               <Col sm="4" >
                 <div>
                   <div className="stars-bg">
-                  <Rating initialValue={user.rating_provider} allowHover={false} fillColor= {"#FF7A00"} disableFillHover={true} fillIcon={<GiRoundStar size={32}/>} emptyIcon={<GiRoundStar size={32}/>} className="talent-card-stars"/>
+                  <Rating initialValue={viewedUser.rating_provider} allowHover={false} fillColor= {"#FF7A00"} disableFillHover={true} fillIcon={<GiRoundStar size={32}/>} emptyIcon={<GiRoundStar size={32}/>} className="talent-card-stars"/>
      
                   </div>
                   <div>
@@ -113,11 +160,24 @@ export default function ProfilePage(props: ProfileProps) {
                         <Button className="beige"> <FiShare2 size={"20px"} color="black" strokeWidth={"2.5px"}></FiShare2>  </Button>
                       </Col>
                     </Row>
-                    
+                    <Row>
+                      {((props.currentUser != undefined) && (props.currentUser.id == viewedUser.id))?
+                       ((editing)? (
+                                    <Button onClick=
+                                        {() => {
+                                        handleClick(editing, setEditing)
+                                        handleSubmitEdits()}}> Save </Button>
+                                    ): (
+                                      <Button onClick=
+                                          {() => 
+                                          {createEditableUser();
+                                            handleClick(editing, setEditing);}
+                                          }> Edit </Button>
+                                      )
+                       ):(<p></p>)}
+                    </Row>
                   </div>
                 </div>
-                
-             
               </Col>
             </Row>
   
@@ -138,9 +198,9 @@ export default function ProfilePage(props: ProfileProps) {
           <div className="content-div">
             {
               talentActive ? (
-                <TalentSection user={user}></TalentSection>
+                <TalentSection user={viewedUser} currentUser={props.currentUser} currentCredential={props.currentCredential} editing={false}></TalentSection>
               ):(
-                <OrganizerSection user={user}></OrganizerSection>
+                <OrganizerSection user={viewedUser}></OrganizerSection>
               )
             }
           </div>

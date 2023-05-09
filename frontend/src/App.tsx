@@ -27,39 +27,6 @@ let job1: Opportunity = {id: 1, name: "DJ Partner Wanted for Cool Remix Project 
   overview: "Sorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate libero et velit interdum, ac aliquet odio mattis. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Curabitur tempus urna at turpis condimentum lobortis. Ut commodo efficitur neque. Ut diam quam, semper iaculis condimentum ac, vestibulum eu nisl.",
 }
 
-  
-const [currentCredential, setCurrentCredential] = useState<string>();
-const [currentUser, setCurrentUser] = useState<User>();
-const [profiles, setProfiles] = useState<User[]> ([]);
-const [idToIndex, setIdToIndex] = useState<Map<string, number>>(new Map());
-const [opportunities, setOpportunities] = useState<Opportunity[]> ([job1, job1, job1, job1, job1, job1, job1, job1]);
-
-export async function getDataUser() {
-  const response = await fetch(
-    `http://localhost:2000/user/list/`
-  ).then(response => response.json());
-  
-  const users : User[] = response
-  setProfiles(users)
-
-  if ((currentUser != undefined) && (idToIndex != undefined)){
-    const idx = idToIndex.get(currentUser.id)
-    if (idx != undefined){
-      setCurrentUser(profiles[idx])
-    }
-  }
-}
-
-export async function getDataOpportunity() {
-  const response = await fetch(
-    `http://localhost:2000/job/list/`
-  ).then(response => response.json());
-  
-  const jobs : Opportunity[] = response
-  setOpportunities(jobs)
-  console.log(JSON.parse(response))
-}
-
 
 /**
  * Function that renders the REPL web app
@@ -95,10 +62,7 @@ function App(props: AppProps) {
     rating_provider: 0.0,
     rating_recipient: 0.0,
     service: 3,
-    picture: '../user_img.jpeg'
-
-}
-
+    picture: '../user_img.jpeg'}
 
   // let job1: Opportunity = {name: "DJ Partner Wanted for Cool Remix Project :)",
   //                          type: "Collab",
@@ -116,38 +80,47 @@ function App(props: AppProps) {
   //                          id: 1
   // }
 
-<<<<<<< HEAD
-=======
-  let job1: Opportunity = {id: 1, name: "DJ Partner Wanted for Cool Remix Project :)",
-  job: 1,
-  location: "TBD",
-  poster: 1,
-  start_day: 11,
-  start_month: 5,
-  start_year: 2023,
-  end_day: 11,
-  end_month: 5,
-  end_year: 2023,
-
-  overview: "Sorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate libero et velit interdum, ac aliquet odio mattis. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Curabitur tempus urna at turpis condimentum lobortis. Ut commodo efficitur neque. Ut diam quam, semper iaculis condimentum ac, vestibulum eu nisl.",
-
-  
-
-  }
-  
   const [currentCredential, setCurrentCredential] = useState<string>();
-  const [serviceTypes, setServiceTypes] = useState<string[]>();
   const [currentUser, setCurrentUser] = useState<User>();
   const [profiles, setProfiles] = useState<User[]> ([]);
+  const [dbUpdateHook, setDbUpdateHook] = useState<boolean> (false);
   const [idToIndex, setIdToIndex] = useState<Map<string, number>>(new Map());
   const [opportunities, setOpportunities] = useState<Opportunity[]> ([job1, job1, job1, job1, job1, job1, job1, job1]);
 
+  function triggerDbUpdate(){
+    setDbUpdateHook(!dbUpdateHook);
+  }
 
->>>>>>> refs/remotes/origin/main
+  async function getDataUser() {
+    const response = await fetch(
+      `http://localhost:2000/user/list/`
+    ).then(response => response.json());
+    
+    const users : User[] = response
+    setProfiles(users)
+
+    if ((currentUser != undefined) && (idToIndex != undefined)){
+      const idx = idToIndex.get(currentUser.id)
+      if (idx != undefined){
+        setCurrentUser(profiles[idx])
+      }
+    }
+  }
+
+  async function getDataOpportunity() {
+    const response = await fetch(
+      `http://localhost:2000/job/list/`
+    ).then(response => response.json());
+    
+    const jobs : Opportunity[] = response
+    setOpportunities(jobs)
+    console.log(JSON.parse(response))
+  }
+
   // Fetching all existing users in db
   useEffect(() => {
     getDataUser()
-  }, [])
+  }, [, dbUpdateHook])
 
   // Update GoogleID-profile index mapping
   useEffect(() => {  
@@ -155,37 +128,13 @@ function App(props: AppProps) {
     setIdToIndex(new Map(idToIndex.set(user.id, i)))
   })}, [profiles])
 
+  useEffect(() => {  
+    setCurrentUser(currentUser)
+  }, [currentUser])
+
   useEffect(() => {
-<<<<<<< HEAD
-=======
-    async function getDataOpportunity() {
-      const response = await fetch(
-        `http://localhost:2000/job/list/`
-      ).then(response => response.json());
-      
-      const jobs : Opportunity[] = response
-      setOpportunities(jobs)
-      console.log(jobs);
-  
-      
-    }
->>>>>>> refs/remotes/origin/main
     getDataOpportunity()
   }, [])
-
-  useEffect(() => {
-    async function getServiceType() {
-      const response = await fetch(
-        `http://localhost:2000/service/list/`
-      ).then(response => response.json());
-      
-      const service : string[] = response.service
-      setServiceTypes(service)
-     }
-    getServiceType()
-  }, [])
-
-
  
   return (
     <body>
@@ -224,12 +173,25 @@ function App(props: AppProps) {
       </Navbar>
       <Routes>
         <Route path="/" element={<MainPage user={user1} talentList={profiles} organizerList={profiles} opportunityList={opportunities}></MainPage>}/>
-        <Route path="/edit" element={<EditPage user={currentUser} talentView={true} currentCredential={currentCredential}></EditPage>}/>
         <Route path="/talent">
-          <Route path=":id" element={<ProfilePage talentView={true} talentList={profiles} idToIndex={idToIndex}></ProfilePage>}/>
+          <Route path=":id" element={
+          <ProfilePage 
+            currentUser={currentUser} 
+            currentCredential={currentCredential} 
+            talentView={true} 
+            talentList={profiles} 
+            idToIndex={idToIndex}
+            triggerDbUpdate={triggerDbUpdate}></ProfilePage>}/>
         </Route>
         <Route path="/organizer">
-          <Route path=":id" element={<ProfilePage talentView={false} talentList={profiles} idToIndex={idToIndex}></ProfilePage>}/>
+        <Route path=":id" element={
+          <ProfilePage 
+            currentUser={currentUser} 
+            currentCredential={currentCredential} 
+            talentView={false} 
+            talentList={profiles} 
+            idToIndex={idToIndex}
+            triggerDbUpdate={triggerDbUpdate}></ProfilePage>}/>
         </Route>
         <Route path="/opportunity">
           <Route path=":id" element={<OpportunityPage jobList={opportunities}></OpportunityPage>}/>

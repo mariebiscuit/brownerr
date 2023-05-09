@@ -456,7 +456,11 @@ a:hover {
 }
 
 
- 
+ .editable{
+  background-color: #ffff;
+  color: black;
+  cursor:pointer;
+ }
 
 .wrapper {
   display:grid;

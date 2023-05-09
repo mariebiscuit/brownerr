@@ -52,13 +52,10 @@ export default function EditTalentSection(props: TalentProps) {
       fetch(URLPREFIX + "user/update/" + props.user.id, requestOptions).then(
         response => response.json()).then(data => {
           (data.get('code') == 200)? (
-            getDataUser()
-          )
-        })
-      )
+            {}):({})
+          })
     }
-      // take data to submit
-    };
+  };
 
   // const lastNameChar: string = props.user.lastName.slice(0,1)
   return (
