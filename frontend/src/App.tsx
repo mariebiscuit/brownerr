@@ -116,8 +116,6 @@ function App(props: AppProps) {
   //                          id: 1
   // }
 
-<<<<<<< HEAD
-=======
   let job1: Opportunity = {id: 1, name: "DJ Partner Wanted for Cool Remix Project :)",
   job: 1,
   location: "TBD",
@@ -144,7 +142,6 @@ function App(props: AppProps) {
   const [opportunities, setOpportunities] = useState<Opportunity[]> ([]);
 
 
->>>>>>> refs/remotes/origin/main
   // Fetching all existing users in db
   useEffect(() => {
     getDataUser()
@@ -157,8 +154,6 @@ function App(props: AppProps) {
   })}, [profiles])
 
   useEffect(() => {
-<<<<<<< HEAD
-=======
     async function getDataOpportunity() {
       const response = await fetch(
         `http://localhost:2000/job/list/`
@@ -170,7 +165,6 @@ function App(props: AppProps) {
   
       
     }
->>>>>>> refs/remotes/origin/main
     getDataOpportunity()
   }, [])
 

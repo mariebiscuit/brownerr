@@ -49,13 +49,15 @@ export default function EditTalentSection(props: TalentProps) {
           'credential': props.currentCredential,
           'bio': bio})
       }
-      fetch(URLPREFIX + "user/update/" + props.user.id, requestOptions).then(
-        response => response.json()).then(data => {
-          (data.get('code') == 200)? (
-            getDataUser()
-          )
-        })
-      )
+      // fetch(URLPREFIX + "user/update/" + props.user.id, requestOptions).then(
+      //   response => response.json()).then(data => {
+      //     (data.get('code') == 200)? (
+      //       getDataUser()
+      //     )
+      //   })
+      
+
+      
     }
       // take data to submit
     };
