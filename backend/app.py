@@ -33,7 +33,7 @@ app.app_context().push()
 class User(db.Model):
     __tablename__ = 'user'
 
-    id = db.Column(db.Text, primary_key=True)
+    id = db.Column(db.String(80), primary_key=True)
     picture = name = db.Column(db.Text, nullable=False)
     name = db.Column(db.String(100), nullable=False)  # split into first and last time
     service = db.Column(db.Integer, db.ForeignKey('service.id'), nullable=True)  # String
@@ -87,8 +87,8 @@ class Transaction(db.Model):
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     service_id = db.Column(db.Integer, db.ForeignKey('service.id'))
-    provider_id = db.Column(db.Text, db.ForeignKey('user.id'))
-    recipient_id = db.Column(db.Text, db.ForeignKey('user.id'))
+    provider_id = db.Column(db.String(80), db.ForeignKey('user.id'))
+    recipient_id = db.Column(db.String(80), db.ForeignKey('user.id'))
     rating_provider = db.Column(db.Float, default=0.0)
     rating_recipient = db.Column(db.Float, default=0.0)
     review_provider = db.Column(db.Text)
