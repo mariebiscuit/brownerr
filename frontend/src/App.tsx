@@ -1,13 +1,15 @@
 import { useEffect, useState } from "react";
 import "../styles/App.css";
-import { Opportunity, User } from "./Utilities";
+import { Opportunity, ServiceType, User } from "./Utilities";
 import Button from 'react-bootstrap/Button';
 import ProfilePage from "./components/profile_page/ProfilePage";
 import OpportunityPage from "./components/opportunity_page/OpportunityPage";
 import MainPage from "./components/main_page/MainPage";
 import { Link, Route, Routes } from "react-router-dom";
-import { Container, Dropdown, Modal, Navbar } from "react-bootstrap";
+import { Container, Dropdown, Navbar } from "react-bootstrap";
 import { GoogleLogin } from '@react-oauth/google';
+import Modal from "react-modal"
+import CreateJobOverlay from "./components/edit_page/CreateJobOverlay";
 
 
 interface AppProps {}
@@ -31,6 +33,8 @@ interface AppProps {}
  * Function that renders the REPL web app
  * @returns the div that contains headers, history box, and input box
  */
+Modal.setAppElement("#root");
+
 function App(props: AppProps) {
   
 
@@ -100,10 +104,13 @@ function App(props: AppProps) {
   const [idToIndex, setIdToIndex] = useState<Map<string, number>>(new Map());
   const [idToIndexO, setIdToIndexO] = useState<Map<string, number>>(new Map());
   const [opportunities, setOpportunities] = useState<Opportunity[]> ([]);
+  const [service_type, setTypes] = useState<ServiceType[]> ([]);
 
-  const [showModal, setShowModal] = useState(false);
-  function toggleModal() {
-    setShowModal(!showModal);
+
+  const [showModalApp, setShowModalApp] = useState(false);
+  function toggleModalApp() {
+    setShowModalApp(!showModalApp);
+    console.log(showModalApp)
   }
 
   function triggerDbUpdate(){
@@ -114,6 +121,20 @@ function App(props: AppProps) {
     setCurrentUser(undefined);
     setCurrentCredential(undefined);
   }
+
+  useEffect(() => {
+    async function getServiceTypes() {
+     const response = await fetch(
+       `http://localhost:2000/service/list/`
+     ).then(response => response.json());
+     const types : ServiceType[] = response
+     setTypes(types)
+     console.log(types)
+     
+   }
+
+   getServiceTypes()
+ }, [])
 
   function getDataUser() {
     fetch(
@@ -198,6 +219,8 @@ function App(props: AppProps) {
           {// If user has logged in
           currentUser != undefined &&
             <div className="account-info d-flex align-items-center"> 
+
+             
               
               <span className="px-4" style={{color:"white"}}>Welcome, <strong>{currentUser.name}   </strong> </span>
               <Dropdown>
@@ -206,17 +229,25 @@ function App(props: AppProps) {
                 </Dropdown.Toggle>
 
                 <Dropdown.Menu>
-                  <Dropdown.Item><Link to={"/talent/"+currentUser.id}>My Profile</Link></Dropdown.Item>
-                  <Dropdown.Item onClick={toggleModal}>Create new job</Dropdown.Item>
+                  <Link to={"/talent/"+currentUser.id} className="dropdown-item">My Profile</Link>
+                  <Dropdown.Item onClick={toggleModalApp}>Create new job</Dropdown.Item>
                   <Dropdown.Item><Button className="logout-button" onClick={logout}> Logout </Button></Dropdown.Item>
                 </Dropdown.Menu>
               </Dropdown>
               
+              <Modal overlayClassName="contactOverlay" className="contactModal" isOpen={showModalApp} onRequestClose={toggleModalApp} contentLabel="test"> 
+                                    <div> 
+                                    <CreateJobOverlay user={currentUser} serviceList={service_type} toggleModal={toggleModalApp} ></CreateJobOverlay>
+
+                                    </div>
+                                   
+              </Modal>
               
               
             </div>
           }
        
+      
 
         </Container>
       </Navbar>
