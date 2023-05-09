@@ -248,19 +248,22 @@ export default function ProfilePage(props: ProfileProps) {
                     {// Editable availability, if in edit mode
                     (editing)?
                     ( 
-
-                      (() => {
-                        switch(availState) {
-                          case '2':  return <Button className="availability-profile-edit green" onClick={
-                            () => handleChangeAvail('available_provider', '0')}><AiOutlineSmile size={20} className="avail-icons"></AiOutlineSmile> Open to Work</Button> ;
-                          case '1': return <Button className="availability-profile-edit orange"  onClick={
-                            () => handleChangeAvail('available_provider', '2')}><AiOutlineMeh size={20} className="avail-icons"></AiOutlineMeh> Slightly Busy</Button> ;
-                          case '0': return <Button className="availability-profile-edit red" onClick={
-                            () => handleChangeAvail('available_provider', '1')}><AiOutlineFrown size={20} className="avail-icons"></AiOutlineFrown> Unavailable</Button> ;
-                          default: return <Button className="availability-profile-edit red" onClick={
-                            () => handleChangeAvail('available_provider', '1')}><AiOutlineFrown size={20} className="avail-icons"></AiOutlineFrown> Unavailable</Button> 
-                        }
-                      })()
+                      <div>
+                        <p>Click the button to change availability</p>
+                        {(() => {
+                          switch(availState) {
+                            case '2':  return <Button className="availability-profile-edit green" onClick={
+                              () => handleChangeAvail('available_provider', '0')}><AiOutlineSmile size={20} className="avail-icons"></AiOutlineSmile> Open to Work</Button> ;
+                            case '1': return <Button className="availability-profile-edit orange"  onClick={
+                              () => handleChangeAvail('available_provider', '2')}><AiOutlineMeh size={20} className="avail-icons"></AiOutlineMeh> Slightly Busy</Button> ;
+                            case '0': return <Button className="availability-profile-edit red" onClick={
+                              () => handleChangeAvail('available_provider', '1')}><AiOutlineFrown size={20} className="avail-icons"></AiOutlineFrown> Unavailable</Button> ;
+                            default: return <Button className="availability-profile-edit red" onClick={
+                              () => handleChangeAvail('available_provider', '1')}><AiOutlineFrown size={20} className="avail-icons"></AiOutlineFrown> Unavailable</Button> 
+                          }
+                        })()}
+                      </div>
+                      
 
 
                     
