@@ -89,7 +89,7 @@ export default function ProfilePage(props: ProfileProps) {
   // ===== Editing functionality =======
   const [editing, setEditing] = useState<boolean>(false);
   const [editableUser, setEditableUser] = useState<Map<string, string>>(new Map());
-  const [availState, setAvail] = useState<string>();
+  const [availState, setAvail] = useState<string>('0');
 
   function handleSubmitEdits(){
     if (props.currentUser != undefined){
