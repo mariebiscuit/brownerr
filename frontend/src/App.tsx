@@ -5,7 +5,6 @@ import { Opportunity, User } from "./Utilities";
 import ProfilePage from "./components/profile_page/ProfilePage";
 import OpportunityPage from "./components/opportunity_page/OpportunityPage";
 import MainPage from "./components/main_page/MainPage";
-import EditPage from "./components/edit_page/EditPage";
 import { Link, Route, Routes } from "react-router-dom";
 import { Container, Navbar } from "react-bootstrap";
 import { GoogleLogin } from '@react-oauth/google';
