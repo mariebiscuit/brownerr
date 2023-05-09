@@ -8,7 +8,7 @@ import json
 
 from sqlalchemy import func, CheckConstraint, event
 
-from flask import Flask, jsonify, request, abort
+from flask import Flask, jsonify, request, abort, Response
 from flask_cors import CORS, cross_origin
 from flask_sqlalchemy import SQLAlchemy
 
@@ -29,6 +29,13 @@ db = SQLAlchemy(app)
 app.app_context().push()
 
 
+@app.before_request
+def handle_preflight():
+    if request.method == "OPTIONS":
+        res = Response()
+        res.headers['X-Content-Type-Options'] = '*'
+        return res
+    
 # Creating the schema for User table in the database
 class User(db.Model):
     __tablename__ = 'user'
@@ -338,14 +345,12 @@ def get_user_jobs(user_id):
 -------- Create Functionality --------
 """
 
-
+# Users sign-in automatically with Google Oauth; account is automatically created if user does not already exist
 @app.route("/user/signin/<credential>", methods=["GET"])
 def signin_user(credential):
     try:
         data = jwt.decode(credential, verify=False)
-
         user = User.query.get(data['sub'])
-
         if user == None:
             new_user = User(id=data['sub'],
                             name=data['name'],
@@ -468,16 +473,21 @@ def delete_users():
 
 
 # All users should have access to this endpoint; however should only be able to delete their own id
-@app.route("/user/delete/<int:id>/", methods=["DELETE"])
+@app.route("/user/delete/<string:id>/", methods=["DELETE"])
 @token_required
 def delete_user(current_user, id):
     if current_user.id == id or current_user.role == 'admin':
         user = User.query.get(id)
         db.session.delete(user)
         db.session.commit()
-        return {'message': 'User deleted successfully.'}
+        resp = jsonify({'code': 200, 'message': 'Successfully deleted'})
     else:
-        abort(401)
+        resp = jsonify({'code': 404, 'message': 'You must be logged in to delete your own profile.'})
+
+    resp.headers['Access-Control-Allow-Methods'] = "DELETE"
+    resp.headers['Access-Control-Allow-Origin'] = '*'
+    resp.headers["Access-Control-Allow-Headers"] = "Origin, X-Requested-With, Content-Type, Accept, Authorization"
+    return resp
 
 
 # Only the admin should have access to this (mainly for testing purposes)
