@@ -139,7 +139,7 @@ export default function ProfilePage(props: ProfileProps) {
                       ):(<h1><span>{viewedUser.name} </span> <span className="ultra-thin"></span></h1>)
                     }
 
-                    {// Editable name, if in edit mode
+                    {// Editable availability, if in edit mode
                     (editing)?
                     (
                       <h1> <span className="editable" contentEditable="true" suppressContentEditableWarning={true} onInput={
