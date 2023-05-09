@@ -97,7 +97,8 @@ export default function ProfilePage(props: ProfileProps) {
           'credential': props.currentCredential,
           'bio': editableUser.get('bio'),
           'name': editableUser.get('name'),
-          'picture': editableUser.get('picture')})
+          'picture': editableUser.get('picture'),
+          'available_provider': editableUser.get('available_provider')})
       }
       
       fetch(URLPREFIX + "user/update/" + props.currentUser.id, requestOptions).then(
@@ -114,7 +115,8 @@ export default function ProfilePage(props: ProfileProps) {
         setEditableUser(new Map([
           ['bio', props.currentUser.bio],
           ['name', props.currentUser.name],
-          ['picture', props.currentUser.picture]
+          ['picture', props.currentUser.picture],
+          ['available_provider', props.currentUser.available_provider]
         ]))
       }
     };
@@ -192,14 +194,20 @@ export default function ProfilePage(props: ProfileProps) {
                     {// Editable availability, if in edit mode
                     (editing)?
                     (
-                      <h1> <span className="editable" contentEditable="true" suppressContentEditableWarning={true} onInput={
-                      e => (e.currentTarget.textContent != null)? 
-                            handleChange('name', e.currentTarget.textContent):({})}> {viewedUser.name} </span> </h1>
+                      (() => {
+                        switch(viewedUser.available_provider) {
+                          case "0": return <Button className="availability-profile green" onClick={
+                            () => handleChange('available_provider', '2')}><AiOutlineSmile size={20} className="avail-icons"></AiOutlineSmile> Open to Work</Button> ;
+                          case "1": return <Button className="availability-profile orange"><AiOutlineMeh size={20} className="avail-icons"></AiOutlineMeh> Slightly Busy</Button> ;
+                          case "2": return <Button className="availability-profile red"><AiOutlineFrown size={20} className="avail-icons"></AiOutlineFrown> Unavailable</Button> ;
+                          default: return <Button className="availability-profile red"><AiOutlineFrown size={20} className="avail-icons"></AiOutlineFrown> Unavailable</Button> 
+                        }
+                      })()
                       ):((() => {
                         switch(viewedUser.available_provider) {
-                          case 2: return <Button className="availability-profile green"><AiOutlineSmile size={20} className="avail-icons"></AiOutlineSmile> Open to Work</Button> ;
-                          case 1: return <Button className="availability-profile orange"><AiOutlineMeh size={20} className="avail-icons"></AiOutlineMeh> Slightly Busy</Button> ;
-                          case 0: return <Button className="availability-profile red"><AiOutlineFrown size={20} className="avail-icons"></AiOutlineFrown> Unavailable</Button> ;
+                          case "2": return <Button className="availability-profile green"><AiOutlineSmile size={20} className="avail-icons"></AiOutlineSmile> Open to Work</Button> ;
+                          case "1": return <Button className="availability-profile orange"><AiOutlineMeh size={20} className="avail-icons"></AiOutlineMeh> Slightly Busy</Button> ;
+                          case "0": return <Button className="availability-profile red"><AiOutlineFrown size={20} className="avail-icons"></AiOutlineFrown> Unavailable</Button> ;
                           default: return <Button className="availability-profile red"><AiOutlineFrown size={20} className="avail-icons"></AiOutlineFrown> Unavailable</Button> 
                         }
                       })())

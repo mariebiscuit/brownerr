@@ -50,7 +50,7 @@ class User(db.Model):
     rating_recipient = db.Column(db.Float, default=0.0)
     num_ratings_provider = db.Column(db.Integer, default=0)
     num_ratings_recipient = db.Column(db.Integer, default=0)
-    available_provider = db.Column(db.Integer, default=0)
+    available_provider = db.Column(db.String, default=0)
     created_at = db.Column(db.DateTime(timezone=True), server_default=func.now())
     role = db.Column(db.String(100), nullable=False)
 

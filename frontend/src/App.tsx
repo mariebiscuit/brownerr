@@ -13,18 +13,18 @@ import { GoogleLogin } from '@react-oauth/google';
 interface AppProps {}
 
 
-let job1: Opportunity = {id: 1, name: "DJ Partner Wanted for Cool Remix Project :)",
-  job: 1,
-  location: "TBD",
-  poster: 1,
-  start_day: 11,
-  start_month: 5,
-  start_year: 2023,
-  end_day: 11,
-  end_month: 5,
-  end_year: 2023,
-  overview: "Sorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate libero et velit interdum, ac aliquet odio mattis. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Curabitur tempus urna at turpis condimentum lobortis. Ut commodo efficitur neque. Ut diam quam, semper iaculis condimentum ac, vestibulum eu nisl.",
-}
+// let job1: Opportunity = {id: 1, name: "DJ Partner Wanted for Cool Remix Project :)",
+//   job: 1,
+//   location: "TBD",
+//   poster: 1,
+//   start_day: 11,
+//   start_month: 5,
+//   start_year: 2023,
+//   end_day: 11,
+//   end_month: 5,
+//   end_year: 2023,
+//   overview: "Sorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate libero et velit interdum, ac aliquet odio mattis. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Curabitur tempus urna at turpis condimentum lobortis. Ut commodo efficitur neque. Ut diam quam, semper iaculis condimentum ac, vestibulum eu nisl.",
+// }
 
 
 /**
@@ -79,19 +79,19 @@ function App(props: AppProps) {
   //                          id: 1
   // }
 
-  let job1: Opportunity = {id: 1, name: "DJ Partner Wanted for Cool Remix Project :)",
-  job: 1,
-  location: "TBD",
-  poster: 1,
-  start_day: 11,
-  start_month: 5,
-  start_year: 2023,
-  end_day: 11,
-  end_month: 5,
-  end_year: 2023,
+  // let job1: Opportunity = {id: 1, name: "DJ Partner Wanted for Cool Remix Project :)",
+  // job: 1,
+  // location: "TBD",
+  // poster: 1,
+  // start_day: 11,
+  // start_month: 5,
+  // start_year: 2023,
+  // end_day: 11,
+  // end_month: 5,
+  // end_year: 2023,
 
-  overview: "Sorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate libero et velit interdum, ac aliquet odio mattis. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Curabitur tempus urna at turpis condimentum lobortis. Ut commodo efficitur neque. Ut diam quam, semper iaculis condimentum ac, vestibulum eu nisl.",
-  }
+  // overview: "Sorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate libero et velit interdum, ac aliquet odio mattis. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Curabitur tempus urna at turpis condimentum lobortis. Ut commodo efficitur neque. Ut diam quam, semper iaculis condimentum ac, vestibulum eu nisl.",
+  // }
   
   const [currentCredential, setCurrentCredential] = useState<string>();
   const [currentUser, setCurrentUser] = useState<User>();
@@ -215,9 +215,7 @@ function App(props: AppProps) {
             talentList={profiles} 
             idToIndex={idToIndex}
             triggerDbUpdate={triggerDbUpdate}
-            logout={logout}>
-
-            </ProfilePage>}/>
+            logout={logout}></ProfilePage>}/>
         </Route>
         <Route path="/organizer">
         <Route path=":id" element={
@@ -227,7 +225,8 @@ function App(props: AppProps) {
             talentView={false} 
             talentList={profiles} 
             idToIndex={idToIndex}
-            triggerDbUpdate={triggerDbUpdate}></ProfilePage>}/>
+            triggerDbUpdate={triggerDbUpdate}
+            logout={logout}></ProfilePage>}/>
         </Route>
         <Route path="/opportunity">
           <Route path=":id" element={<OpportunityPage jobList={opportunities} talentList={profiles} idToIndex={idToIndex}></OpportunityPage>}/>

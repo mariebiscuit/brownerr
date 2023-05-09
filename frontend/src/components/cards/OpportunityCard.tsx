@@ -27,7 +27,7 @@ export default function OpportunityCard(props: OpportunityCardProps) {
   const idString : string = props.job.id.toString();
 
   useEffect(() => {
-    async function getDataUser(id:number ) {
+    async function getDataUser(id:string ) {
 
     
       const response = await fetch(

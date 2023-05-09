@@ -31,7 +31,7 @@ export default function ReviewCard(props: ReviewProps) {
   var idx = -1;
   try{
     if (id != undefined){
-      const initIdx = props.idToIndex.get(String(id))
+      const initIdx = props.idToIndex.get(id)
       console.log(id)
       if (initIdx != undefined) {
         idx = initIdx;
