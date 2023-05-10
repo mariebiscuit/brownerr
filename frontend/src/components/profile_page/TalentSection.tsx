@@ -77,7 +77,7 @@ export default function TalentSection(props: TalentProps) {
             </div>
 
             <div className="mb-4">
-              <h2>Works/Portfoliio</h2>
+              <h2>Works/Portfolio</h2>
               <p>add carousel here</p>
             </div>
 

@@ -39,7 +39,7 @@ interface ProfileProps {
  * @param props InputBoxProps mentioned above
  * @returns a new InputBox as functional HTML Element
  */
-Modal.setAppElement("#root");
+if (process.env.NODE_ENV !== 'test') {Modal.setAppElement("#root")};
 
 export default function ProfilePage(props: ProfileProps) {
 
@@ -159,11 +159,6 @@ export default function ProfilePage(props: ProfileProps) {
   // };
 
   
-  
-
-  
-
- 
   // ====== Displaying the right viewedUser from URL =======
   const {id} = useParams();
   var idx = -1;

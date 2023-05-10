@@ -33,7 +33,7 @@ interface AppProps {}
  * Function that renders the REPL web app
  * @returns the div that contains headers, history box, and input box
  */
-Modal.setAppElement("#root");
+if (process.env.NODE_ENV !== 'test') {Modal.setAppElement("#root")};
 
 function App(props: AppProps) {
   
@@ -200,7 +200,7 @@ function App(props: AppProps) {
               onSuccess={credentialResponse => {
                 setCurrentCredential(credentialResponse.credential)
                 fetch(`http://localhost:2000/user/signin/` + credentialResponse.credential).then(
-                  response => response.json().then(user => {triggerDbUpdate(); setCurrentUser(user)})
+                  response => response.json().then(user => {setCurrentUser(user); triggerDbUpdate();})
                   )}}
               onError={() => {
                 console.log('Login Failed');
