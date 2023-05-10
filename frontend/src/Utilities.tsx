@@ -47,6 +47,12 @@ export interface Review{
 
 }
 
+export interface ServiceType{
+  id: number,
+  service: string
+
+}
+
 
 export interface Opportunity{
   id: number;
