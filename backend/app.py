@@ -454,7 +454,9 @@ def create_job():
 
     db.session.add(job)
     db.session.commit()
-    return {'message': 'job added successfully'}
+    resp = jsonify({'code': 200, 'message': 'Job successfully added'})
+
+    return resp
 
 
 """

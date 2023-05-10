@@ -89,8 +89,11 @@ export default function CreateJobOverlay(props: JobProps) {
       }
       fetch(URLPREFIX + "job/create/", requestOptions).then(
         response => response.json()).then(data => {
+        console.log(data['code']);
          if (data['code'] == 200){
+            console.log('triggered');
             props.triggerDbUpdate()
+            
          }})
       }
     };
