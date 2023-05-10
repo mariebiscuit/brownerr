@@ -143,19 +143,11 @@ function App(props: AppProps) {
       users => {setProfiles(users)})
     }
 
-  async function getDataOpportunity() {
-    const response = await fetch(
-      `http://localhost:2000/job/list/`
-    ).then(response => response.json());
-    
-    const jobs : Opportunity[] = response
-    setOpportunities(jobs)
-    console.log(JSON.parse(response))
-  }
 
   // Fetching all existing users in db
   useEffect(() => {
     getDataUser()
+  
   }, [, dbUpdateHook])
 
   // Update GoogleID-profile index mapping
@@ -186,7 +178,7 @@ function App(props: AppProps) {
       
     }
     getDataOpportunity()
-  }, [])
+  }, [ ,dbUpdateHook])
 
   useEffect(() => {  
     opportunities.forEach((opportunity, i) => {
@@ -237,7 +229,7 @@ function App(props: AppProps) {
               
               <Modal overlayClassName="contactOverlay" className="contactModal" isOpen={showModalApp} onRequestClose={toggleModalApp} contentLabel="test"> 
                                     <div> 
-                                    <CreateJobOverlay user={currentUser} serviceList={service_type} toggleModal={toggleModalApp} ></CreateJobOverlay>
+                                    <CreateJobOverlay user={currentUser} serviceList={service_type} toggleModal={toggleModalApp} triggerDbUpdate={triggerDbUpdate}></CreateJobOverlay>
 
                                     </div>
                                    

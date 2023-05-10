@@ -469,6 +469,7 @@ def delete_users():
     for user in users:
         db.session.delete(user)
     db.session.commit()
+    
     return {'message': 'All users deleted successfully.'}
 
 
@@ -480,6 +481,10 @@ def delete_user(current_user, id):
         user = User.query.get(id)
         db.session.delete(user)
         db.session.commit()
+        user_jobs = Job.query.filter_by(poster=id)
+        for job in user_jobs:
+            db.session.delete(job)
+            db.session.commit()
         resp = jsonify({'code': 200, 'message': 'Successfully deleted'})
     else:
         resp = jsonify({'code': 404, 'message': 'You must be logged in to delete your own profile.'})

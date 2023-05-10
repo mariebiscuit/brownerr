@@ -24,6 +24,7 @@ interface JobProps {
   user: User;
   serviceList: ServiceType[];
   toggleModal: () => void;
+  triggerDbUpdate: () => void;
 }
 
 
@@ -67,9 +68,12 @@ export default function CreateJobOverlay(props: JobProps) {
       const overview = data.get('overview')
       
       
+      if(job !== '' && name !== '' && location !== ''){
+
+      
       const requestOptions = {
-        method: 'POST',
-        headers: {'Content-Type': 'text/plain'},
+        method: 'POST', 
+        headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({
           'job': job,
           'name': name,
@@ -85,9 +89,10 @@ export default function CreateJobOverlay(props: JobProps) {
       }
       fetch(URLPREFIX + "job/create/", requestOptions).then(
         response => response.json()).then(data => {
-          (data.get('code') == 200)? (
-            {}):({})
-          })
+         if (data['code'] == 200){
+            props.triggerDbUpdate()
+         }})
+      }
     };
 
   // const lastNameChar: string = props.user.lastName.slice(0,1)
@@ -176,7 +181,7 @@ export default function CreateJobOverlay(props: JobProps) {
       </Col>
 
       <Col sm="4">
-      <Button onClick={()=>handleSubmit()} variant="success" className="submit-btn" style={{width:"60%"}}>Submit</Button>
+      <Button onClick={()=>{handleSubmit(); props.toggleModal();}} variant="success" className="submit-btn" style={{width:"60%"}}>Submit</Button>
       <Button onClick={props.toggleModal} variant="secondary" className="submit-btn" style={{width:"30%"}}>Cancel</Button>
       
       </Col>
