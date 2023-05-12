@@ -24,6 +24,9 @@ interface JobProps {
   poster: User;
   talentList: User[];
   idToIndex: Map<string, number>;
+  editing: boolean;
+  handleChange: (key: string, value: string) => void;
+
 
 }
 
@@ -94,7 +97,13 @@ export default function OpportunitySection(props: JobProps) {
             <div className="mb-4">
               
               <h2>Overview</h2>
-              <p>{props.job.overview}</p>
+              {//Make bio editable if in edit mode
+               props.editing && <p className="editable" contentEditable="true" suppressContentEditableWarning={true} onInput={
+                e => {(e.currentTarget.textContent != null)? 
+                    (props.handleChange('overview', e.currentTarget.textContent)):({})}
+              }> {props.job.overview} </p>}
+
+              {!props.editing && <p className="content-text">{props.job.overview}</p>}
             </div>
 
             {/* <div className="mb-4">
@@ -122,7 +131,6 @@ export default function OpportunitySection(props: JobProps) {
                 <h2>Organizer Rating</h2>
                 <div className="stars-bg">
                 <Rating initialValue={props.poster.rating_recipient} allowHover={false} fillColor= {"#FF7A00"} disableFillHover={true} fillIcon={<GiRoundStar size={32}/>} emptyIcon={<GiRoundStar size={32}/>} className="talent-card-stars"/>
-   
                 </div>
               </div>
             <div className="mb-4">

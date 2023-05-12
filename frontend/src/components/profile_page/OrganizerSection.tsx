@@ -35,13 +35,13 @@ export default function OrganizerSection(props: OrganizerProps) {
   useEffect(() => {
     async function getDataReviews() {
      const response = await fetch(
-       `http://localhost:2000/user/recipient/${props.user.id}/transactions/`
+       `http://localhost:2000/user/provider/${props.user.id}/transactions/`
      ).then(response => response.json());
      
      const reviewsNew : Review[] = []
      
      response.forEach((item:any) => {
-      const rev: Review =  {rating: item.rating_recipient, content: item.review_recipient, poster: item.provider_id} 
+      const rev: Review =  {rating: item.rating_recipient, content: item.review_recipient, poster: item.recipient_id} 
       reviewsNew.push(rev)
     })
 

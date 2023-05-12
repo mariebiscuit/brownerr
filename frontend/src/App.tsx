@@ -174,8 +174,6 @@ function App(props: AppProps) {
       const jobs : Opportunity[] = response
       setOpportunities(jobs)
       // console.log(jobs);
-  
-      
     }
     getDataOpportunity()
   }, [ ,dbUpdateHook])
@@ -211,9 +209,6 @@ function App(props: AppProps) {
           {// If user has logged in
           currentUser != undefined &&
             <div className="account-info d-flex align-items-center"> 
-
-             
-              
               <span className="px-4" style={{color:"white"}}>Welcome, <strong>{currentUser.name}   </strong> </span>
               <Dropdown>
                 <Dropdown.Toggle variant="light" id="dropdown-basic">
@@ -238,9 +233,6 @@ function App(props: AppProps) {
               
             </div>
           }
-       
-      
-
         </Container>
       </Navbar>
       <Routes>
@@ -268,7 +260,16 @@ function App(props: AppProps) {
             logout={logout}></ProfilePage>}/>
         </Route>
         <Route path="/opportunity">
-          <Route path=":id" element={<OpportunityPage jobList={opportunities} talentList={profiles} idToIndex={idToIndex}></OpportunityPage>}/>
+          <Route path=":id" element={
+          <OpportunityPage 
+            jobList={opportunities} 
+            idToIndexO={idToIndexO} 
+            talentList={profiles} 
+            idToIndex={idToIndex}
+            currentUser={currentUser} 
+            currentCredential={currentCredential} 
+            triggerDbUpdate={triggerDbUpdate}></OpportunityPage>}/>
+            
         </Route>
       </Routes>
 

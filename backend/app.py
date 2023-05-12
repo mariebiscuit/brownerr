@@ -95,6 +95,8 @@ class Transaction(db.Model):
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     service_id = db.Column(db.Integer, db.ForeignKey('service.id'))
+    # job_id = db.Column(db.Integer, db.ForeignKey('job.id'))
+    # status= db.Column(db.String)
     provider_id = db.Column(db.String(80), db.ForeignKey('user.id'))
     recipient_id = db.Column(db.String(80), db.ForeignKey('user.id'))
     rating_provider = db.Column(db.Float, default=0.0)
@@ -103,6 +105,10 @@ class Transaction(db.Model):
     review_recipient = db.Column(db.Text)
     transaction_timestamp = db.Column(db.DateTime(timezone=True), server_default=func.now())
 
+    # __table_args__ = (
+    #     CheckConstraint('status == "1" OR status == "0" OR status == "2"', name='status_range'),
+    # )
+
     provider = db.relationship('User', backref='provider_transactions', foreign_keys=[provider_id], lazy='joined')
     recipient = db.relationship('User', backref='recipient_transactions', foreign_keys=[recipient_id], lazy='joined')
 
@@ -110,6 +116,7 @@ class Transaction(db.Model):
     def to_json(self):
         return {
             'id': self.id,
+            # 'job_id': self.job_id,
             'service_id': self.service_id,
             'provider_id': self.provider_id,
             'recipient_id': self.recipient_id,
@@ -168,7 +175,6 @@ class Job(db.Model):
     start_day = db.Column(db.Integer)
     start_month = db.Column(db.Integer)
     start_year = db.Column(db.Integer)
-
     end_day = db.Column(db.Integer)
     end_month = db.Column(db.Integer)
     end_year = db.Column(db.Integer)
@@ -197,6 +203,10 @@ class Job(db.Model):
             'end_year': self.end_year,
             'overview': self.overview
         }
+    
+    def __iter__(self):
+        for attr, _ in self.__dict__.items():
+            yield attr
 
 
 # Creating the database with above defined table(s)
@@ -528,6 +538,24 @@ def delete_jobs(current_user):
             db.session.delete(job)
         db.session.commit()
         return {'message': 'All jobs deleted successfully.'}
+    
+# Only the admin should have access to this (mainly for testing purposes)
+@app.route("/job/delete/<string:id>/", methods=["DELETE"])
+@token_required
+def delete_job(current_user, id):
+    job = Job.query.get(id)
+    if current_user.id == job.poster or current_user.role == 'admin':
+        job = Job.query.get(id)
+        db.session.delete(job)
+        db.session.commit()
+        resp = jsonify({'code': 200, 'message': 'Job successfully deleted'})
+    else:
+        resp = jsonify({'code': 404, 'message': 'You must be logged in to delete your own profile.'})
+
+    resp.headers['Access-Control-Allow-Methods'] = "DELETE"
+    resp.headers['Access-Control-Allow-Origin'] = '*'
+    resp.headers["Access-Control-Allow-Headers"] = "Origin, X-Requested-With, Content-Type, Accept, Authorization"
+    return resp
 
 
 """
@@ -541,7 +569,6 @@ def delete_jobs(current_user):
 def update_user_info(current_user, id):
     if current_user.id == id or current_user.role == 'admin':
         user = User.query.get(id)
-        print(type(user))
         if request.content_type == "text/plain":
             data = json.loads(request.data)
         elif request.content_type == "application/json":
@@ -560,6 +587,32 @@ def update_user_info(current_user, id):
     resp.headers['Access-Control-Allow-Origin'] = '*'
     resp.headers['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE'
     return resp
+
+# All posters should be able to edit their own job
+@app.route("/job/update/<string:id>/", methods=["POST"])
+@token_required
+def update_job_info(current_user, id):
+    job = Job.query.get(id)
+    if current_user.id == job.poster or current_user.role == 'admin':
+        if request.content_type == "text/plain":
+            data = json.loads(request.data)
+        elif request.content_type == "application/json":
+            data = request.get_json()
+        print(job)
+        for key in data:
+            if key in job:
+                setattr(job, key, data[key])
+    
+        db.session.commit()
+
+        resp = jsonify({'code': 200, 'message': 'Job details successfully updated.'})
+    else:
+        resp = jsonify({'code': 404, 'message': "You must be logged in to edit a job you've posted"})
+
+    resp.headers['Access-Control-Allow-Origin'] = '*'
+    resp.headers['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE'
+    return resp
+
 
 
 if __name__ == "__main__":

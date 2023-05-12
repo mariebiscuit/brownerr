@@ -44,7 +44,7 @@ export default function TalentSection(props: TalentProps) {
      const reviewsNew : Review[] = []
      
      response.forEach((item:any) => {
-      const rev: Review =  {rating: item.rating_provider, content: item.review_provider, poster: item.recipient_id} 
+      const rev: Review =  {rating: item.rating_provider, content: item.review_provider, poster: item.provider_id} 
       reviewsNew.push(rev)
     })
 
@@ -76,7 +76,7 @@ export default function TalentSection(props: TalentProps) {
 
             </div>
 
-            <div className="mb-4">
+            {/* <div className="mb-4">
               <h2>Works/Portfolio</h2>
               <p>add carousel here</p>
             </div>
@@ -84,7 +84,7 @@ export default function TalentSection(props: TalentProps) {
             <div className="mb-4">
               <h2>Availability</h2>
               <p>add calendar here</p>
-            </div>
+            </div> */}
           </Col >
           <Col className="px-5" sm="6">
             <div className="mb-4">

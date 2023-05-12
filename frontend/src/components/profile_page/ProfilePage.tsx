@@ -50,8 +50,6 @@ export default function ProfilePage(props: ProfileProps) {
 
   // ------ Contact Tooltip ------
   const [open, setOpen] = useState(false);
-
-  
   const handleTooltipClose = () => {
     setOpen(false);
   };
@@ -187,12 +185,6 @@ export default function ProfilePage(props: ProfileProps) {
   }
   
 
-
-
-
-  
-
-
   if(viewedUser === undefined){
     return (<body>
       <div className="profile">
@@ -200,14 +192,7 @@ export default function ProfilePage(props: ProfileProps) {
       </div>
     </body>);
   } else{
-
-
-
-
-
-  
-
-    
+    console.log(viewedUser)
     return (
       
         <div className="profile">
@@ -355,7 +340,7 @@ export default function ProfilePage(props: ProfileProps) {
                           )):(<p></p>)}
                           </Col>
                           <Col>
-                      {// Edit button visible if logged-in user is viewed user
+                      {// Delete button visible if logged-in user is viewed user
                       ((props.currentUser != undefined) && (props.currentUser.id == viewedUser.id))?
                       ((<Button className="delete-button" onClick={toggleModal}> Delete Profile </Button>
                                    )):(<p></p>)}
